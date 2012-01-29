@@ -1,0 +1,95 @@
+<html><head><title>Add a connected line segment to a tile plot</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="Rchm.css">
+</head>
+<body>
+
+<table width="100%"><tr><td>linesTile(tile)</td><td align="right">R Documentation</td></tr></table><object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+<param name="keyword" value="R:   linesTile">
+<param name="keyword" value=" Add a connected line segment to a tile plot">
+</object>
+
+
+<h2>Add a connected line segment to a tile plot</h2>
+
+
+<h3>Description</h3>
+
+<p>
+Initializes a simple line graphic.  For more advanced features
+suitable for summarizing inference from a model, use instead
+<code><a href="lineplot.html">lineplot</a></code>.
+</p>
+<p>
+This function does no plotting; it only creates a <code>linesTile</code> object to
+be drawn on one or more plots in a tiled arrangement of plots.  To
+complete the drawing include the object as an input to <code><a href="tile.html">tile</a></code>.  From
+<code>tile</code>, it is possible to set further options including plot and
+axis titles, axis ranges and labels, logged axes, and annotations to
+the plot.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+linesTile(...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>...</code></td>
+<td>
+Any
+number of arguments given below.   Must include exactly one horizontal
+dimension (<code>x</code> or <code>top</code>) and exactly one vertical dimension
+(<code>y</code> or <code>right</code>).  All inputs should be identified by
+appropriate tags; i.e., use <code>linesTile(x=myxvar, y=myyvar)</code>,
+<EM>not</EM> <code>linesTile(myxvar,myyvar)</code></td></tr>
+</table>
+
+<h3>Details</h3>
+
+<p>
+<code>linesTile</code> simply creates a line or series of connected line
+segments to add to a tile plot.  It serves as the <code>tile</code> equivalent to the base
+graphics <code>lines</code> or grid graphics <code>linesGrob</code>, and is
+primarily useful for annotating plots which also use other traces.  If
+you need to draw a large number of disconnected line segments,
+creating a single trace made by <code><a href="polylinesTile.html">polylinesTile</a></code> will be much faster
+than creating a large number of linesTile traces.
+</p>
+<p>
+The parameters available for constructing a <code>linesTile</code> trace are
+similar to other trace functions for <code>tile</code>.
+</p>
+<p>
+trace functions, then layout function
+</p>
+
+
+<h3>Value</h3>
+
+<p>
+A linesTile object, used only as an input to tile</p>
+
+<h3>Author(s)</h3>
+
+<p>
+Christopher Adolph &lt;<a href="mailto:cadolph@u.washington.edu">cadolph@u.washington.edu</a>&gt;
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<a href="tile.html">tile</a>, <code><a href="polylinesTile.html">polylinesTile</a></code>, <code><a href="lineplot.html">lineplot</a></code>
+</p>
+
+
+
+<hr><div align="center">[Package <em>tile</em> version 0.2 <a href="00Index.html">Index]</a></div>
+
+</body></html>

@@ -1,0 +1,136 @@
+<html><head><title>Simulate quantities of interest and confidence intervals for
+binary logit</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="Rchm.css">
+</head>
+<body>
+
+<table width="100%"><tr><td>logitsimev(simcf)</td><td align="right">R Documentation</td></tr></table><object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+<param name="keyword" value="R:   logitsimev">
+<param name="keyword" value="R:   logitsimfd">
+<param name="keyword" value=" Simulate quantities of interest and confidence intervals for
+binary logit">
+</object>
+
+
+<h2>Simulate quantities of interest and confidence intervals for
+binary logit</h2>
+
+
+<h3>Description</h3>
+
+<p>
+Simulate and summarize uncertainty of conditional expected values, first
+differences and (eventually) other quantities of interest from
+estimated binary logit models
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+logitsimev(x, b, ci=0.95, constant=1)
+
+logitsimfd(xpre, xpost, b, ci=0.95, constant=1)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+vector or matrix, counterfactual values of the covariates.
+Include multiple rows to simulate different counterfactual scenarios</td></tr>
+<tr valign="top"><td><code>b</code></td>
+<td>
+matrix, simulated parameters, one row per draw from the
+estimated model, and one column per parameter, including any constants</td></tr>
+<tr valign="top"><td><code>ci</code></td>
+<td>
+vector, the requested intervals of the simulated quantity of
+interest to be reported</td></tr>
+<tr valign="top"><td><code>constant</code></td>
+<td>
+scalar, the column of <code>b</code> containing the model
+constant, or NA for no constant</td></tr>
+<tr valign="top"><td><code>xpre</code></td>
+<td>
+vector or matrix, counterfactual initial values of the
+covariates.  Include multiple rows to simulate
+different counterfactual scenarios; rows must match <code>xpost</code></td></tr>
+<tr valign="top"><td><code>xpost</code></td>
+<td>
+vector or matrix, counterfactual final values of the
+covariates.  Include multiple rows to simulate
+different counterfactual scenarios; rows must match <code>xpre</code></td></tr>
+</table>
+
+<h3>Details</h3>
+
+<p>
+Given simulated parameters from an estimated logit model, and counterfactual
+values of the covariates, these functions calculate either the
+conditional expected value of the response, or the conditional first
+difference, and confidence intervals around that point estimate.
+</p>
+<p>
+If the function you used to estimate the model does not provide
+simulated parameter values, you can draw often them yourself, e.g., using
+functions such as <code><a onclick="findlink('stats', 'vcov.html')" style="text-decoration: underline; color: blue; cursor: hand">vcov</a></code> and <code>mvrnorm</code> in the
+<code>MASS</code> package, as shown below.
+</p>
+<p>
+zelig, in the package Zelig, offers similar features for a wide array of
+models and with automated handling of the simulation process.  These
+functions are offered as a simple alternative for users with
+simulations already in hand.
+</p>
+
+
+<h3>Value</h3>
+
+<p>
+Returns a list with three components
+</p>
+<table summary="R argblock">
+<tr valign="top"><td><code>pe</code></td>
+<td>
+vector, the point estimate(s) of the requested quantity of interest</td></tr>
+<tr valign="top"><td><code>lower</code></td>
+<td>
+matrix, the requested lower bounds around the quantity of
+interest; rows are scenarios, columns are intervals</td></tr>
+<tr valign="top"><td><code>upper</code></td>
+<td>
+matrix, the requested upper bounds around the quantity of
+interest; rows are scenarios, columns are intervals</td></tr>
+</table>
+
+<h3>Author(s)</h3>
+
+<p>
+Christopher Adolph &lt;<a href="mailto:cadolph@u.washington.edu">cadolph@u.washington.edu</a>&gt;
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code><a href="probitsimev.html">probitsimev</a></code>, <code><a href="mlogitsimev.html">mlogitsimev</a></code>
+</p>
+
+<script Language="JScript">
+function findlink(pkg, fn) {
+var Y, link;
+Y = location.href.lastIndexOf("\\") + 1;
+link = location.href.substring(0, Y);
+link = link + "../../" + pkg + "/chtml/" + pkg + ".chm::/" + fn;
+location.href = link;
+}
+</script>
+
+
+<hr><div align="center">[Package <em>simcf</em> version 0.1 <a href="00Index.html">Index]</a></div>
+
+</body></html>

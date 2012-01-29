@@ -1,0 +1,76 @@
+<html><head><title>Create a set of counterfactuals using a factorial design</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="Rchm.css">
+</head>
+<body>
+
+<table width="100%"><tr><td>setfactorial(simcf)</td><td align="right">R Documentation</td></tr></table><object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+<param name="keyword" value="R:   setfactorial">
+<param name="keyword" value=" Create a set of counterfactuals using a factorial design">
+</object>
+
+
+<h2>Create a set of counterfactuals using a factorial design</h2>
+
+
+<h3>Description</h3>
+
+<p>
+Converts multiple sets of hypothetical covariate values into a single
+dataframe with all possible combinations of covariate values
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+setfactorial(...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>...</code></td>
+<td>
+vectors of hypothetical values for each of several
+covariates, usually provided in <code>tag</code> = <code>value</code> format,
+where <code>tag</code> matches the name of the original (ie, factual) data</td></tr>
+</table>
+
+<h3>Details</h3>
+
+<p>
+Useful for creating counterfactuals to input into the post-estimation simulation
+functions of the <code>simcf</code> package or into <code>whatif</code> in the
+<code>WhatIf</code> package.
+</p>
+
+
+<h3>Value</h3>
+
+<p>
+A dataframe with columns corresponding to the provided variables, and
+rows containing every possible combination of the given covariate values</p>
+
+<h3>Author(s)</h3>
+
+<p>
+Christopher Adolph &lt;<a href="mailto:cadolph@u.washington.edu">cadolph@u.washington.edu</a>&gt;
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+xhyp &lt;- c(1,2,3)
+whyp &lt;- c(TRUE, FALSE)
+zhyp &lt;- c("a","b","c")
+setfactorial(x = xhyp, w = whyp, z = zhyp)
+</pre>
+
+
+
+<hr><div align="center">[Package <em>simcf</em> version 0.1 <a href="00Index.html">Index]</a></div>
+
+</body></html>

@@ -1,0 +1,19 @@
+Package: tile
+Title: Plot multiple graphical displays in a tiled layout with
+       automated or customizable titles, axes, and annotations
+Version: 0.4.6
+Date: 2011-11-26
+Author: Christopher Adolph
+Description: A generic layout function, tile, and a set of 
+       graphicals displays plotable within a tiled layout,
+       including standard displays like scatterplots, lineplots, 
+       and dotcharts, and more experimental formats like nightplots
+       and riceplots.  Includes tools for summarizing
+       uncertain inferences from models, showing extrapolation
+       from the original data range, fitting simple models to data, 
+       annotating plots, adding rugs to axes, and controlling the 
+       layering of plot elements. 
+Maintainer: Christopher Adolph <cadolph@uw.edu>
+License: GPL version 2 or later
+Depends: grid
+Suggests: Cairo, car, colorspace, MASS, simcf, WhatIf, Zelig

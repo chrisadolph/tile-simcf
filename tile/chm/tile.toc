@@ -1,0 +1,511 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HEAD></HEAD><HTML><BODY>
+<UL>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Package tile:  Contents">
+<param name="Local" value="00Index.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Package tile:  R objects">
+</OBJECT>
+<UL>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="adjlinebreaks">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="cbindfill">
+<param name="Local" value="cbindfill.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="convertRtoY">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="convertTtoX">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="delif">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="fillout">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="fillout.axis">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="fillout.axistitle">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="fillout.list">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="fillout.matrix">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="fillout.title">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="filloutunits">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="getplotnums">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="getplottraces">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="getplottracesall">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="gridlines">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="insertrow">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="lighten">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="lineplot">
+<param name="Local" value="lineplot.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="lineplotTilePlot">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="lineplotTilePrep">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="lineplotTileTraceDefaults">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="lineplotTileTraceFillout">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="linesTile">
+<param name="Local" value="linesTile.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="linesTilePlot">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="linesTilePrep">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="linesTileTraceDefaults">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="linesTileTraceFillout">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="maxUnit">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="mergelist">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="nightplot">
+<param name="Local" value="nightplot.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="nightplotTilePlot">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="nightplotTilePrep">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="nightplotTileTraceDefaults">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="nightplotTileTraceFillout">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="pointsTile">
+<param name="Local" value="pointsTile.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="pointsTilePlot">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="pointsTilePrep">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="pointsTileTraceDefaults">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="pointsTileTraceFillout">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="polygonTile">
+<param name="Local" value="polygonTile.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="polygonTilePlot">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="polygonTilePrep">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="polygonTileTraceDefaults">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="polygonTileTraceFillout">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="polylinesTile">
+<param name="Local" value="polylinesTile.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="polylinesTileTraceDefaults">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="polylinesTileTraceFillout">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="polylineTilePlot">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="polylineTilePrep">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="posquad">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="pretty.axis">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="pretty.logaxis">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="rbindfill">
+<param name="Local" value="cbindfill.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="rgbscale">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="riceplot">
+<param name="Local" value="riceplot.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="riceplotTilePlot">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="riceplotTilePrep">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="riceplotTileTraceDefaults">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="riceplotTileTraceFillout">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="ropeladder">
+<param name="Local" value="ropeladder.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="ropeladderTileAxisTitle">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="ropeladderTileHarmonize">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="ropeladderTilePlot">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="ropeladderTilePrep">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="ropeladderTileTraceDefaults">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="ropeladderTileTraceFillout">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="roundnums">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="scatter">
+<param name="Local" value="scatter.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="scatterTilePlot">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="scatterTilePrep">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="scatterTileTraceDefaults">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="scatterTileTraceFillout">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="selif">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="sortmc">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="stacked">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="switch.variables">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="textTile">
+<param name="Local" value="textTile.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="textTilePlot">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="textTilePrep">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="textTileTraceDefaults">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="textTileTraceFillout">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="tile">
+<param name="Local" value="tile.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="tileAxis">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="tileAxistitle">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="tileAxistitleprep">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="tileCartouche">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="tiledimensions">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="tiledimensionsIter">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="tileDraw">
+<param name="Local" value="tileDraw.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="tileDrawChildren">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="tileDrawGrob">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="tilefilloutinputs">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="tilefindplotarea">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="tilefitlinear">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="tilefitloess">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="tilefitmmest">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="tilefitrobust">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="tilefitwls">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="tileGetBlocks">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="tilegrobNest">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="tileHarmonizeAxes">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="tileInitWH">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="tileMakePlot">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="tileopendevice">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="tileProcessTraces">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="tileRug">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="tilesetdefaults">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="tileSetgpar">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="tileSetLayer">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="tilesimulates">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="tileSplitBlocks">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="tileTitle">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="tileWhatIf">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="titlebox">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="updateRxC">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+</UL>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Package tile:  Titles">
+</OBJECT>
+<UL>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="(Re-)draw a tile graphical object">
+<param name="Local" value="tileDraw.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Add a connected line segment to a tile plot ">
+<param name="Local" value="linesTile.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Combine uneven vectors or matrices">
+<param name="Local" value="cbindfill.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Internal Functions in the Tile Package">
+<param name="Local" value="tileInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Plot a tiled graphical layout ">
+<param name="Local" value="tile.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Summarize inferences using lineplots">
+<param name="Local" value="lineplot.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="~~function to do ... ~~ ">
+<param name="Local" value="textTile.html">
+</OBJECT>
+</UL>
+</UL>
+</BODY></HTML>

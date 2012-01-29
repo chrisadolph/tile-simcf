@@ -1,0 +1,695 @@
+<html><head><title>Summarize inferences using lineplots</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="Rchm.css">
+</head>
+<body>
+
+<table width="100%"><tr><td>lineplot(tile)</td><td align="right">R Documentation</td></tr></table><object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+<param name="keyword" value="R:   lineplot">
+<param name="keyword" value=" Summarize inferences using lineplots">
+</object>
+
+
+<h2>Summarize inferences using lineplots</h2>
+
+
+<h3>Description</h3>
+
+<p>
+Initializes a line graphic with several optional
+features aimed at summarizing inferences from regression models: e.g.,
+confidence intervals, perhaps created from simulations; clipping the
+plot to the convex hull to avoid unwarranted extrapolation; simple
+linear or robust fits to the data.  If you simply want to draw a line on a
+tile plot, use <code>linesTile</code> instead.
+</p>
+<p>
+This function does no plotting; it only creates a lineplot object to
+be drawn on one or more plots in a tiled arrangement of plots.  To
+complete the drawing include the object as an input to <code>tile</code>.  From
+<code>tile</code>, it is possible to set further options including plot and
+axis titles, axis ranges and labels, logged axes, and annotations to
+the plot.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre> lineplot(...)  </pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>...</code></td>
+<td>
+Any
+number of arguments given below.   Must include exactly one horizontal
+dimension (<code>x</code> or <code>top</code>) and exactly one vertical dimension
+(<code>y</code> or <code>right</code>).  All inputs should be identified by
+appropriate tags; i.e., use <code>lineplot(x=myxvar, y=myyvar)</code>,
+<EM>not</EM> <code>lineplot(myxvar,myyvar)</code></td></tr>
+</table>
+
+<h3>Details</h3>
+
+<p>
+Lineplots offer a plethora of data processing and formatting options.
+Confidence intervals (shown as shaded regions or dashed lines) can be
+calculated from simulations or posterior draws, or may be provided by
+the user.  Alternatively, lineplot can add simple fit lines and CIs to the
+plotted data (e.g., a linear, robust, or loess fit).  Optionally, only results inside the convex hull
+of the original data be drawn; alternatively, extrapolations outside this
+range can be flagged.  
+</p>
+<p>
+The graphical parameters for each element of the lineplot
+(including lines, shaded or dashed confidence intervals, and symbols or
+text marking points on the line) can be adjusted, often on a point-by-point basis.
+</p>
+<p>
+Used in conjunction with <code>tile</code>, <code>lineplot</code> is a high-level
+plotting function, meaning that this combination will output finished
+plots.  These plots cannot be easily modified after creation; rather,
+users can specify a wealth of graphics options within the initial
+calls to <code>lineplot</code> and <code>tile</code>, as documented below.  For
+example, the graphical parameters for each element of the lineplot
+(including lines, shaded or dashed confidence intervals, and symbols or
+text marking points on the line) can be adjusted, often on a
+point-by-point basis.  Users should carefully study the examples below and in <code>tile</code> before use.
+</p>
+<p>
+A call to <code>lineplot</code> *must* provide an orthogonal pair of the
+following inputs:
+</p>
+
+<ul>
+<dt><code>x</code></dt><dd>co-ordinate vector of data to plot, attached to the x
+(bottom) axis.  <code>x</code> may be plotted directly, or treated as
+simulation data to summarize (see parameter <code>simulates</code> below)</dd>
+<dt><code>y</code></dt><dd>co-ordinate vector of data to plot, attached to the y
+(left) axis; may be simulation data</dd>
+<dt><code>top</code></dt><dd>co-ordinate vector of data to plot, attached to the top
+axis; may be simulation data</dd>
+<dt><code>right</code></dt><dd>co-ordinate vector of data to plot, attached to
+the right  axis; may be simulation data</dd>
+</ul>
+
+<p>
+Users will often wish to provide the following inputs:
+<ul>
+<dt><code>simulates</code></dt><dd>string, identifies one of the
+variables (<code>x</code>, <code>y</code>, <code>top</code>, or <code>right</code>) as
+simulation data (default = <code>NULL</code>, for no simulation data).  If
+<code>simulates</code> is set, the other dimension of data will be treated
+as a matching list of scenarios over which to summarize the
+simulates.  For example, to plot summaries of 1,000
+simulates drawn from the conditional distribution of a response for
+each of 10 different values of a particular covariate, stack all
+10,000 simulates in a single vector (e.g., <code>right</code>),
+then create a corresponding 10,000-vector listing the respective
+values of (say) <code>x</code> for each of these simulates.
+<code>lineplot</code> will then calculate confidence intervals
+each scenario, as requested in <code>ci</code> below</dd>
+
+
+<dt><code>lower</code></dt><dd>vector, lower bounds; used when </dd>
+
+
+<dt><code>upper</code></dt><dd>XXX</dd>
+
+
+<dt><code>plot</code></dt><dd>scalar or vector, the plot(s) in which
+this trace will be drawn; defaulting to the first plot.  Plots are numbered consecutively from the
+top left, row-by-row; e.g., in a 2x3 tiling, the first plot in the
+second row is plot number 4.</dd>
+</ul>
+
+<p>
+The next set of inputs are all optional, and control the major
+features of <code>lineplot</code>.  It is usually best to use either <code>ci</code> or <code>fit</code>, but not
+both.
+</p>
+
+<ul>
+<dt><code>ci</code></dt><dd>list, parameters governing
+the appearance and calculation of confidence intervals from data in
+<code>lower</code> and <code>upper</code> or provided by the simulations defined
+in <code>simulates</code>:
+<ul>
+<dt><code>levels</code></dt><dd>XXX</dd>
+<dt><code>mark</code></dt><dd>XXX</dd>
+</ul></dd>
+
+
+<dt><code>fit</code></dt><dd>list, parameters governing
+the appearance and calculation of simple fits to the two plotted
+dimensions:
+<ul>
+<dt><code>method</code></dt><dd>The type of fit to apply:  <code>linear</code>
+(default) fits a bivariate linear regression; <code>wls</code> fits a
+weighted linear regression; <code>robust</code> fits a XXX; <code>loess</code>
+fits a loess smoother</dd>
+<dt><code>ci</code></dt><dd>XXX</dd>
+<dt><code>mark</code></dt><dd>XXX</dd>
+<dt><code>col</code></dt><dd>XXX</dd></ul>
+<p>
+need more
+</dd>
+
+
+<dt><code>extrapolate</code></dt><dd>list, parameters governing
+the plotting of extrapolation outside the convex hull of the
+covariate data, using <code>whatif</code> in the package <code>WhatIf</code>:
+<ul>
+<dt><code>formula</code></dt><dd>optional formula object, used to specify the
+estimated model; useful if the model contains interactions or
+functions of the covariates given in <code>data</code> below</dd>
+<dt><code>data</code></dt><dd>matrix or dataframe, the actual values of all covariates used
+to estimate the model (omit the constant and response variable)</dd>
+<dt><code>cfact</code></dt><dd>matrix or dataframe, the counterfactual values of all the
+covariates (omit the constant and response variable), one row for
+each scenario.  The order of colums must match <code>data</code>, and the
+order of rows must match the order of the scenarios.  If scenarios
+are calculated from simulates, then the rows must be listed from the
+scenario with the smallest factor level to the highest</dd>
+<dt><code>omit.extrapolated</code></dt><dd>If TRUE (default), then the plotted
+trace and CIs are clipped to the convex hull; if FALSE, then
+extrapolation outside the convex hull is printed in a lighter color
+or with dashed/dotted lines</dd>
+</ul></dd>
+</ul>
+
+<p>
+The following graphics parameters mimic the inputs to <code>grid::gpar</code>.
+Starred (*) parameters accept vector as well as scalar input, so that different
+parameter values can be applied to different elements of the plot:
+</p>
+
+<ul>
+<dt><code>fill</code></dt><dd>*Color for filling polygons; default is <code>transparent</code></dd>
+
+
+<dt><code>col</code></dt><dd>*Color for lines, symbols, and text; default is <code>black</code></dd>
+
+
+<dt><code>lty</code></dt><dd>*Line type; default is <code>solid</code></dd>
+
+
+<dt><code>lwd</code></dt><dd>*Line width; default is 1</dd>
+
+
+<dt><code>cex</code></dt><dd>*Multiplier applied to fontsize; default is 1</dd>
+
+
+<dt><code>lex</code></dt><dd>*1</dd>
+
+
+<dt><code>fontsize</code></dt><dd>Size of the text in points; default is 12</dd>
+
+
+<dt><code>lineheight</code></dt><dd>Height of a line as a multple of the size of
+text; default is 1.2</dd>
+
+
+<dt><code>font</code></dt><dd>Font face (alias for fontface); default is 1</dd>
+
+
+<dt><code>fontfamily</code></dt><dd>The font family; default is blank!</dd>
+
+
+<dt><code>fontface</code></dt><dd><code>The font face (\code{bold}, \code{italic}, etc.);
+      default is \code{plain}</code></dd>
+
+
+<dt><code>alpha</code></dt><dd>Alpha channel for transparency; default is 0.8</dd>
+
+
+<dt><code>lineend</code></dt><dd><code>"round"</code></dd>
+
+
+<dt><code>linejoin</code></dt><dd><code>"round"</code></dd>
+
+
+<dt><code>linemitre</code></dt><dd>10</dd>
+</ul>
+
+<p>
+These final graphical parameters are specific to <code>tile</code>-based
+plots, and are available for advanced users to tweak the appearance of
+traces.  Starred (*) parameters accept vector as well as scalar input, so that different
+parameter values can be applied to different elements of the plot:
+</p>
+
+<ul>
+<dt><code>markers</code></dt><dd>*</dd>
+
+
+<dt><code>labels</code></dt><dd>*</dd>
+
+
+<dt><code>labelxoffset</code></dt><dd>*</dd>
+
+
+<dt><code>labelyoffset</code></dt><dd>*</dd>
+
+
+<dt><code>size</code></dt><dd>*1</dd>
+
+
+<dt><code>pch</code></dt><dd>*1</dd>
+
+
+<dt><code>addArrow</code></dt><dd>30</dd>
+
+
+<dt><code>lengthArrow</code></dt><dd><code>unit(0.25, "inches")</code></dd>
+
+
+<dt><code>endsArrow</code></dt><dd>XXX</dd>
+
+
+<dt><code>typeArrow</code></dt><dd>XXX</dd>
+
+
+<dt><code>just</code></dt><dd>XXX</dd>
+
+
+<dt><code>hjust</code></dt><dd>XXX</dd>
+
+
+<dt><code>vjust</code></dt><dd>XXX</dd>
+
+
+<dt><code>rot</code></dt><dd>XXX</dd>
+
+
+<dt><code>check.overlap</code></dt><dd>XXX</dd>
+
+
+<dt><code>clip</code></dt><dd>XXX</dd>
+
+
+<dt><code>lighten</code></dt><dd>XXX</dd>
+
+
+<dt><code>layer</code></dt><dd>Graphical elements with lower <code>layer</code> will
+be drawn later in the plotting process, and hence appear on top of
+elements with higher <code>layer</code>.  By default, layer is 10, though polygons in
+this trace will be plotted at <code>layer + X</code>, and text labels and
+markers at <code>layer - X</code>.</dd>
+</ul>
+
+<h3>Value</h3>
+
+<p>
+A lineplot object, used only as an input to tile</p>
+
+<h3>Author(s)</h3>
+
+<p>
+Christopher Adolph &lt;<a href="mailto:cadolph@u.washington.edu">cadolph@u.washington.edu</a>&gt;
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code><a href="tile.html">tile</a></code>, <code><a href="linesTile.html">linesTile</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# Example 1:  Linear regression on Swiss fertility;
+# Tiled lineplots of counterfactual scenarios calculated by
+# predict() and clipped to convex hull
+data(swiss)
+
+# Estimate model
+lm.result &lt;- lm(Fertility ~ . , data = swiss)
+
+# Create counterfactual scenarios
+cfactbaseline &lt;- apply(swiss[,2:6],2,mean)
+
+cfact1 &lt;- cfact2 &lt;- cfact3 &lt;- cfact4 &lt;- cfact5 &lt;-
+    data.frame(matrix(cfactbaseline,nrow=101,ncol=5,byrow=TRUE,
+           dimnames=list(NULL,names(cfactbaseline))))
+
+cfact1[,1] &lt;- cfact2[,2] &lt;- cfact3[,3] &lt;- cfact4[,4] &lt;- cfact5[,5] &lt;-
+    seq(0,100)
+
+lm.pred1 &lt;- predict(lm.result,newdata=cfact1,interval="confidence",level=0.95)
+lm.pred2 &lt;- predict(lm.result,newdata=cfact2,interval="confidence",level=0.95)
+lm.pred3 &lt;- predict(lm.result,newdata=cfact3,interval="confidence",level=0.95)
+lm.pred4 &lt;- predict(lm.result,newdata=cfact4,interval="confidence",level=0.95)
+lm.pred5 &lt;- predict(lm.result,newdata=cfact5,interval="confidence",level=0.95)
+
+# Create traces of each set of counterfactuals
+trace1 &lt;- lineplot(x=cfact1[,1],
+                   y=lm.pred1[,1],
+                   lower=lm.pred1[,2],
+                   upper=lm.pred1[,3],
+                   ci=list(mark="dashed"),
+                   extrapolate=list(data=swiss[,2:6],cfact=cfact1,
+                                    omit.extrapolated=TRUE),
+                   col="blue",
+                   plot=1
+                   )
+
+trace2 &lt;- lineplot(x=cfact2[,2],
+                   y=lm.pred2[,1],
+                   lower=lm.pred2[,2],
+                   upper=lm.pred2[,3],
+                   ci=list(mark="dashed"),
+                   extrapolate=list(data=swiss[,2:6],cfact=cfact2,
+                                    omit.extrapolated=TRUE),
+                   col="red",
+                   plot=2
+                   )
+
+trace3 &lt;- lineplot(x=cfact3[,3],
+                   y=lm.pred3[,1],
+                   lower=lm.pred3[,2],
+                   upper=lm.pred3[,3],
+                   ci=list(mark="dashed"),
+                   extrapolate=list(data=swiss[,2:6],cfact=cfact3,
+                                    omit.extrapolated=TRUE),
+                   col="green",
+                   plot=3
+                   )
+
+trace4 &lt;- lineplot(x=cfact4[,4],
+                   y=lm.pred4[,1],
+                   lower=lm.pred4[,2],
+                   upper=lm.pred4[,3],
+                   ci=list(mark="dashed"),
+                   extrapolate=list(data=swiss[,2:6],cfact=cfact4,
+                                    omit.extrapolated=TRUE),
+                   col="brown",
+                   plot=4
+                   )
+
+trace5 &lt;- lineplot(x=cfact5[,5],
+                   y=lm.pred5[,1],
+                   lower=lm.pred5[,2],
+                   upper=lm.pred5[,3],
+                   ci=list(mark="dashed"),
+                   extrapolate=list(data=swiss[,2:6],cfact=cfact5,
+                                    omit.extrapolated=TRUE),
+                   col="violet",
+                   plot=5
+                   )
+
+at.x &lt;- c(0,20,40,60,80,100)
+at.y &lt;- c(50,60,70,80,90,100)
+
+# Plot traces using tile
+tc &lt;- tile(trace1,
+           trace2,
+           trace3,
+           trace4,
+           trace5,
+           RxC = c(2,3),
+           limits = c(0,100,50,100),
+           output = list(wide=7.5,outfile="lineplotExample1",type="pdf"),
+           xaxis = list(at=at.x),
+           yaxis = list(at=at.y),
+           xaxistitle = list(type="all",labels=c(names(cfactbaseline))),
+           yaxistitle = list(type="all",labels=c("Fertility")),
+           plottitle = list(type="all",labels=c("Test")),
+           maintitle = list(labels=c("Linear Model of Fertility")),
+           gridlines = list(type="xy"),
+           frame = TRUE
+           )
+
+# Example 2.1:  Multinomial Logistic Regression of alligator food;
+# Tiled lineplots using *manually simulated counterfactuals*, with
+# extrapolation outside the convex hull flagged
+#
+# See Ex. 2.2 for an automated way to handle simulations 
+
+data(gator)
+require(MASS)
+require(nnet)
+
+# Estimate MNL using the nnet library
+mlogit.result &lt;- multinom(food ~ size + female, Hess=TRUE)
+pe &lt;- mlogit.result$wts[c(6,7,8,10,11,12)]
+                                      # point estimates
+vc &lt;- solve(mlogit.result$Hess)       # var-cov matrix
+
+# Simulate counterfactual results, varying size and sex
+sims &lt;- 10000
+simbetas &lt;- mvrnorm(sims,pe,vc)       # draw parameters, using MASS::mvrnorm
+sizerange &lt;- seq(1,4,by=0.1)          # range of counterfactual sizes
+femalerange &lt;- c(0,1)                 # range of counterfactual sexes
+simycat1 &lt;- simycat2 &lt;- simycat3 &lt;- cfactsize &lt;- cfactfemale &lt;- NULL
+for (isex in 1:length(femalerange)) { # loop over sex scenarios
+    for (isize in 1:length(sizerange)) { # loop over size scenarios
+
+        # Set up a hypothetical X vector for this scenario
+        hypx &lt;- rbind(1, sizerange[isize], femalerange[isex])
+
+        # Calculate simulated MNL denominators for this scenario
+        simdenom &lt;- (1 + exp(simbetas[,1:3]%*%hypx) + exp(simbetas[,4:6]%*%hypx))
+
+        # Add simulated probabilities for each category to storage vectors
+        simycat1 &lt;- c( simycat1, 1/simdenom )
+        simycat2 &lt;- c( simycat2, exp(simbetas[,1:3]%*%hypx)/simdenom )        
+        simycat3 &lt;- c( simycat3, exp(simbetas[,4:6]%*%hypx)/simdenom )
+
+        # Save hypothetical X's to storage vectors:
+        # must match simulated probabilities element for element
+        cfactsize &lt;- c(cfactsize, rep(sizerange[isize],sims) )
+        cfactfemale &lt;- c(cfactfemale, rep(femalerange[isex],sims) )
+    }
+}
+
+# Create one trace for each predicted category of the response, and each sex
+trace1 &lt;- lineplot(x=cfactsize[cfactfemale==0],
+                   y=simycat1[cfactfemale==0],
+                   simulates="y",
+                   ci=list(mark="shaded",levels=0.67),
+                   extrapolate=list(data=cbind(size,female),
+                                    cfact=cbind(sizerange,rep(0,length(sizerange))),
+                                    omit.extrapolated=FALSE),
+                   col="blue",
+                   plot=1
+                   )
+
+trace2 &lt;- lineplot(x=cfactsize[cfactfemale==0],
+                   y=simycat2[cfactfemale==0],
+                   simulates="y",
+                   ci=list(mark="shaded",levels=0.67),
+                   extrapolate=list(data=cbind(size,female),
+                                    cfact=cbind(sizerange,rep(0,length(sizerange))),
+                                    omit.extrapolated=FALSE),
+                   col="red",
+                   plot=1
+                   )
+
+trace3 &lt;- lineplot(x=cfactsize[cfactfemale==0],
+                   y=simycat3[cfactfemale==0],
+                   simulates="y",
+                   ci=list(mark="shaded",levels=0.67),
+                   extrapolate=list(data=cbind(size,female),
+                                    cfact=cbind(sizerange,rep(0,length(sizerange))),
+                                    omit.extrapolated=FALSE),
+                   col="green",
+                   plot=1
+                   )
+
+trace4 &lt;- lineplot(x=cfactsize[cfactfemale==1],
+                   y=simycat1[cfactfemale==1],
+                   simulates="y",
+                   ci=list(mark="shaded",levels=0.67),
+                   extrapolate=list(data=cbind(size,female),
+                                    cfact=cbind(sizerange,rep(1,length(sizerange))),
+                                    omit.extrapolated=FALSE),
+                   col="blue",
+                   plot=2
+                   )
+
+trace5 &lt;- lineplot(x=cfactsize[cfactfemale==1],
+                   y=simycat2[cfactfemale==1],
+                   simulates="y",
+                   ci=list(mark="shaded",levels=0.67),
+                   extrapolate=list(data=cbind(size,female),
+                                    cfact=cbind(sizerange,rep(1,length(sizerange))),
+                                    omit.extrapolated=FALSE),
+                   col="red",
+                   plot=2
+                   )
+
+trace6 &lt;- lineplot(x=cfactsize[cfactfemale==1],
+                   y=simycat3[cfactfemale==1],
+                   simulates="y",
+                   ci=list(mark="shaded",levels=0.67),
+                   extrapolate=list(data=cbind(size,female),
+                                    cfact=cbind(sizerange,rep(1,length(sizerange))),
+                                    omit.extrapolated=FALSE),
+                   col="green",
+                   plot=2
+                   )
+
+at.x &lt;- c(1,2,3,4)
+at.y &lt;- c(0,0.2,0.4,0.6,0.8,1)
+
+# Plot traces using tile
+tc &lt;- tile(trace1,
+           trace2,
+           trace3,
+           trace4,
+           trace5,
+           trace6,
+           RxC = c(1,2),
+           limits = c(1,4,0,1),
+           output = list(wide=6.5,outfile="lineplotExample2",type="pdf"),
+           xaxis = list(at=at.x),
+           yaxis = list(at=at.y),
+           xaxistitle = list(type="all",labels=c("Size of alligator","Size of alligator")),
+           yaxistitle = list(type="first",labels="Pr(Food preference)"),
+           undertitle = list(labels=c("Male","Female")),
+           maintitle = list(labels="Food choice by alligator size"),
+           gridlines = list(type="xy"),
+           frame=TRUE
+           )
+
+
+# Example 2.2:  Multinomial Logistic Regression of alligator food;
+# Tiled lineplots using *preprocessed simulations*, with
+# extrapolation outside the convex hull flagged
+#
+# (Alternative method for constructing Ex 2.1; output is identical)
+
+data(gator)
+require(MASS)
+require(nnet)
+require(simcf)
+
+# Estimate MNL using the nnet library
+mlogit.result &lt;- multinom(food ~ size + female, Hess=TRUE)
+pe &lt;- mlogit.result$wts[c(6,7,8,10,11,12)]
+                                      # point estimates
+vc &lt;- solve(mlogit.result$Hess)       # var-cov matrix
+
+# Alternative code for simulations above which calculates CIs to pass on
+# to lineplot &amp; tile (also could try Zelig)
+sims &lt;- 10000
+simbetas &lt;- mvrnorm(sims,pe,vc)       # draw parameters, using MASS::mvrnorm
+simb &lt;- array(NA, dim = c(sims,3,2))  # re-arrange simulates to array format
+simb[,,1] &lt;- simbetas[,1:3]           #   for MNL simulation
+simb[,,2] &lt;- simbetas[,4:6]
+sizerange &lt;- seq(1,4,by=0.1)          # range of counterfactual sizes
+femalerange &lt;- c(0,1)                 # range of counterfactual sexes
+
+# Create full factorial set of counterfactuals
+xhyp &lt;- setfactorial(size = sizerange, female = femalerange)
+                                      
+# Simulate expected probabilities
+mlogit.qoi1 &lt;- mlogitsimev(xhyp,simb,ci=0.67)
+
+# Create one trace for each predicted category of the response, and each sex
+trace1 &lt;- lineplot(x=xhyp$size[xhyp$female==0],
+                   y=mlogit.qoi1$pe[xhyp$female==0,1],
+                   lower=mlogit.qoi1$lower[xhyp$female==0,,1],
+                   upper=mlogit.qoi1$upper[xhyp$female==0,,1],
+                   ci=list(mark="shaded"),
+                   extrapolate=list(data=cbind(size,female),
+                                    cfact=xhyp[xhyp$female==0,],
+                                    omit.extrapolated=FALSE),
+                   col="blue",
+                   plot=1
+                   )
+
+trace2 &lt;- lineplot(x=xhyp$size[xhyp$female==0],
+                   y=mlogit.qoi1$pe[xhyp$female==0,2],
+                   lower=mlogit.qoi1$lower[xhyp$female==0,,2],
+                   upper=mlogit.qoi1$upper[xhyp$female==0,,2],
+                   ci=list(mark="shaded"),
+                   extrapolate=list(data=cbind(size,female),
+                                    cfact=xhyp[xhyp$female==0,],
+                                    omit.extrapolated=FALSE),
+                   col="red",
+                   plot=1
+                   )
+
+trace3 &lt;- lineplot(x=xhyp$size[xhyp$female==0],
+                   y=mlogit.qoi1$pe[xhyp$female==0,3],
+                   lower=mlogit.qoi1$lower[xhyp$female==0,,3],
+                   upper=mlogit.qoi1$upper[xhyp$female==0,,3],
+                   ci=list(mark="shaded"),
+                   extrapolate=list(data=cbind(size,female),
+                                    cfact=xhyp[xhyp$female==0,],
+                                    omit.extrapolated=FALSE),
+                   col="green",
+                   plot=1
+                   )
+
+trace4 &lt;- lineplot(x=xhyp$size[xhyp$female==1],
+                   y=mlogit.qoi1$pe[xhyp$female==1,1],
+                   lower=mlogit.qoi1$lower[xhyp$female==1,,1],
+                   upper=mlogit.qoi1$upper[xhyp$female==1,,1],
+                   ci=list(mark="shaded"),
+                   extrapolate=list(data=cbind(size,female),
+                                    cfact=xhyp[xhyp$female==1,],
+                                    omit.extrapolated=FALSE),
+                   col="blue",
+                   plot=2
+                   )
+
+trace5 &lt;- lineplot(x=xhyp$size[xhyp$female==1],
+                   y=mlogit.qoi1$pe[xhyp$female==1,2],
+                   lower=mlogit.qoi1$lower[xhyp$female==1,,2],
+                   upper=mlogit.qoi1$upper[xhyp$female==1,,2],
+                   ci=list(mark="shaded"),
+                   extrapolate=list(data=cbind(size,female),
+                                    cfact=xhyp[xhyp$female==1,],
+                                    omit.extrapolated=FALSE),
+                   col="red",
+                   plot=2
+                   )
+
+trace6 &lt;- lineplot(x=xhyp$size[xhyp$female==1],
+                   y=mlogit.qoi1$pe[xhyp$female==1,3],
+                   lower=mlogit.qoi1$lower[xhyp$female==1,,3],
+                   upper=mlogit.qoi1$upper[xhyp$female==1,,3],
+                   ci=list(mark="shaded"),
+                   extrapolate=list(data=cbind(size,female),
+                                    cfact=xhyp[xhyp$female==1,],
+                                    omit.extrapolated=FALSE),
+                   col="green",
+                   plot=2
+                   )
+
+at.x &lt;- c(1,2,3,4)
+at.y &lt;- c(0,0.2,0.4,0.6,0.8,1)
+
+# Plot traces using tile
+tc &lt;- tile(trace1,
+           trace2,
+           trace3,
+           trace4,
+           trace5,
+           trace6,
+           RxC = c(1,2),
+           limits = c(1,4,0,1),
+           output = list(wide=6.5,outfile="lineplotExample2",type="pdf"),
+           xaxis = list(at=at.x),
+           yaxis = list(at=at.y),
+           xaxistitle = list(type="all",labels=c("Size of alligator","Size of alligator")),
+           yaxistitle = list(type="first",labels="Pr(Food preference)"),
+           undertitle = list(labels=c("Male","Female")),
+           maintitle = list(labels="Food choice by alligator size"),
+           gridlines = list(type="xy"),
+           frame=TRUE
+           )
+</pre>
+
+
+
+<hr><div align="center">[Package <em>tile</em> version 0.2 <a href="00Index.html">Index]</a></div>
+
+</body></html>

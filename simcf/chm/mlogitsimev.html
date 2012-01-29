@@ -1,0 +1,209 @@
+<html><head><title>Simulate quantities of interest and confidence intervals for
+multinomial logit</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="Rchm.css">
+</head>
+<body>
+
+<table width="100%"><tr><td>mlogitsimev(simcf)</td><td align="right">R Documentation</td></tr></table><object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+<param name="keyword" value="R:   mlogitsimev">
+<param name="keyword" value="R:   mlogitsimfd">
+<param name="keyword" value=" Simulate quantities of interest and confidence intervals for
+multinomial logit">
+</object>
+
+
+<h2>Simulate quantities of interest and confidence intervals for
+multinomial logit</h2>
+
+
+<h3>Description</h3>
+
+<p>
+Simulate and summarize uncertainty of conditional expected values, first
+differences and (eventually) other quantities of interest from
+estimated multinomial logit models
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+mlogitsimev(x, b, ci=0.95, constant=1, z=NULL, g=NULL)
+
+mlogitsimfd(xpre, xpost, b, ci=0.95, constant=1,
+            zpre=NULL, zpost=NULL, g=NULL)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+vector or matrix, counterfactual values of
+covariates with category-specific parameters.
+Include multiple rows to simulate different counterfactual scenarios</td></tr>
+<tr valign="top"><td><code>b</code></td>
+<td>
+3d array, simulated parameters, one row per draw from the
+estimated model, one column per parameter, including any
+constants, and one "sheet" for all categories except the reference
+category.</td></tr>
+<tr valign="top"><td><code>ci</code></td>
+<td>
+vector, the requested intervals of the simulated quantity of
+interest to be reported</td></tr>
+<tr valign="top"><td><code>constant</code></td>
+<td>
+scalar, the column of <code>b</code> containing the model
+constant, or NA for no constant</td></tr>
+<tr valign="top"><td><code>z</code></td>
+<td>
+3d array, counterfactual values of covariates specific to the
+response category.  Include one row for each counterfactual
+scenario, one column for each parameter, and one "sheet" for each
+category (do not omit any reference categories here)</td></tr>
+<tr valign="top"><td><code>g</code></td>
+<td>
+3d array, simulated parameters, one row per draw from the
+estimated model, one column per parameter,
+and one "sheet" for all categories (do not omit any reference
+categories here)</td></tr>
+<tr valign="top"><td><code>xpre</code></td>
+<td>
+vector or matrix, counterfactual <EM>initial</EM> values of
+covariates with category-specific parameters.  Include multiple rows
+to simulate different counterfactual scenarios</td></tr>
+<tr valign="top"><td><code>xpost</code></td>
+<td>
+vector or matrix, counterfactual <EM>final</EM> values of
+covariates with category-specific parameters.  Include multiple rows
+to simulate different counterfactual scenarios</td></tr>
+<tr valign="top"><td><code>zpre</code></td>
+<td>
+3d array, counterfactual <EM>initial</EM> values of
+covariates specific to the response category.  Include one row for each counterfactual
+scenario, one column for each parameter, and one "sheet" for each
+category (do not omit any reference categories here)</td></tr>
+<tr valign="top"><td><code>zpost</code></td>
+<td>
+3d array, counterfactual <EM>final</EM> values of covariates specific to the
+response category.  Include one row for each counterfactual
+scenario, one column for each parameter, and one "sheet" for each
+category (do not omit any reference categories here)</td></tr>
+</table>
+
+<h3>Details</h3>
+
+<p>
+Given simulated parameters from an estimated multinomial logit model,
+and counterfactual values of the covariates, calculate either the
+conditional expected value of the response, or the conditional first
+difference, and confidence intervals around that point estimate.
+</p>
+<p>
+If the function you used to estimate the model does not provide
+simulated parameter values, you can draw often them yourself, e.g., using
+functions such as <code><a onclick="findlink('stats', 'vcov.html')" style="text-decoration: underline; color: blue; cursor: hand">vcov</a></code> and <code>mvrnorm</code> in the
+<code>MASS</code> package, as shown below.
+</p>
+<p>
+You must provide either observation-specific (<code>x</code>) or
+category-specific (<code>z</code>) covariates, or both, and the appropriate
+parameters (<code>b</code>, <code>g</code>, or both, respectively).  Include any
+observation-and-category-specific covariates in <code>z</code>.
+</p>
+<p>
+zelig, in the package Zelig, offers similar features for a wide array of
+models and with automated handling of the simulation process.  These
+functions are offered as a simple alternative for users with
+simulations already in hand.
+</p>
+
+
+<h3>Value</h3>
+
+<p>
+Returns a list with three components
+</p>
+<table summary="R argblock">
+<tr valign="top"><td><code>pe</code></td>
+<td>
+matrix, the point estimate(s) of the requested quantity of
+interest; rows are scenarios, and columns are categories</td></tr>
+<tr valign="top"><td><code>lower</code></td>
+<td>
+array, the requested lower bounds around the quantity of
+interest; rows are scenarios, columns are intervals, and the third
+dimension is the category of the response</td></tr>
+<tr valign="top"><td><code>upper</code></td>
+<td>
+array, the requested upper bounds around the quantity of
+interest; rows are scenarios, columns are intervals, and the third
+dimension is the category of the response</td></tr>
+</table>
+
+<h3>Author(s)</h3>
+
+<p>
+Christopher Adolph &lt;<a href="mailto:cadolph@u.washington.edu">cadolph@u.washington.edu</a>&gt;
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code><a href="logitsimev.html">logitsimev</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+# Multinomial Logistic Regression of alligator food
+# See tile package function lineplot for graphical option of this example
+
+data(gator)
+require(MASS)
+require(nnet)
+
+# Estimate MNL using the nnet library
+mlogit.result &lt;- multinom(food ~ size + female, Hess=TRUE)
+pe &lt;- mlogit.result$wts[c(6,7,8,10,11,12)]
+                                      # point estimates
+vc &lt;- solve(mlogit.result$Hess)       # var-cov matrix
+
+# Alternative code for simulations above which calculates CIs to pass on
+# to lineplot &amp; tile (also could try Zelig)
+sims &lt;- 10000
+simbetas &lt;- mvrnorm(sims,pe,vc)       # draw parameters, using MASS::mvrnorm
+simb &lt;- array(NA, dim = c(sims,3,2))  # re-arrange simulates to array format
+simb[,,1] &lt;- simbetas[,1:3]           #   for MNL simulation
+simb[,,2] &lt;- simbetas[,4:6]
+sizerange &lt;- seq(1,4,by=0.1)          # range of counterfactual sizes
+femalerange &lt;- c(0,1)                 # range of counterfactual sexes
+
+# Create full factorial set of counterfactuals
+xhyp &lt;- setfactorial(size = sizerange, female = femalerange)
+                                      
+# Simulate expected probabilities
+mlogit.qoi1 &lt;- mlogitsimev(xhyp,simb,ci=0.67)
+
+print(mlogit.qoi1)
+</pre>
+
+<script Language="JScript">
+function findlink(pkg, fn) {
+var Y, link;
+Y = location.href.lastIndexOf("\\") + 1;
+link = location.href.substring(0, Y);
+link = link + "../../" + pkg + "/chtml/" + pkg + ".chm::/" + fn;
+location.href = link;
+}
+</script>
+
+
+<hr><div align="center">[Package <em>simcf</em> version 0.1 <a href="00Index.html">Index]</a></div>
+
+</body></html>

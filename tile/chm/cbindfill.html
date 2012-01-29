@@ -1,0 +1,92 @@
+<html><head><title>Combine uneven vectors or matrices</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="Rchm.css">
+</head>
+<body>
+
+<table width="100%"><tr><td>cbindfill(tile)</td><td align="right">R Documentation</td></tr></table><object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+<param name="keyword" value="R:   cbindfill">
+<param name="keyword" value="R:   rbindfill">
+<param name="keyword" value=" Combine uneven vectors or matrices">
+</object>
+
+
+<h2>Combine uneven vectors or matrices</h2>
+
+
+<h3>Description</h3>
+
+<p>
+Take a sequence of vector or matrix arguments and combine by columns
+or rows, respectively, regardless of their length
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+cbindfill(...)
+rbindfill(...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>...</code></td>
+<td>
+vectors or matrices to be combined </td></tr>
+</table>
+
+<h3>Details</h3>
+
+<p>
+<code>cbindfill</code> and <code>rbindfill</code> combine a set of vectors of
+matrices into a single matrix by columns or rows, respectively.  Unlike
+<code><a onclick="findlink('base', 'cbind.html')" style="text-decoration: underline; color: blue; cursor: hand">cbind</a></code> or <code><a onclick="findlink('base', 'cbind.html')" style="text-decoration: underline; color: blue; cursor: hand">rbind</a></code>, the inputs need not have the same number
+of rows or columns.  Instead, the output matrix of <code>cbindfill</code>
+(<code>rbindfill</code>) has the number of rows (columns) as the longest input.
+Shorter inputs are filled out with NAs, not recycled.
+</p>
+
+
+<h3>Value</h3>
+
+<p>
+A matrix combining the ... arguments column-wise or row-wise.</p>
+
+<h3>Author(s)</h3>
+
+<p>
+Christopher Adolph &lt;<a href="mailto:cadolph@u.washington.edu">cadolph@u.washington.edu</a>&gt;
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code><a onclick="findlink('base', 'cbind.html')" style="text-decoration: underline; color: blue; cursor: hand">cbind</a></code>, <code><a onclick="findlink('base', 'cbind.html')" style="text-decoration: underline; color: blue; cursor: hand">rbind</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+cbindfill(1:5, 1:8, 1:7)
+rbindfill(1:5, 1:8, 1:7)
+</pre>
+
+<script Language="JScript">
+function findlink(pkg, fn) {
+var Y, link;
+Y = location.href.lastIndexOf("\\") + 1;
+link = location.href.substring(0, Y);
+link = link + "../../" + pkg + "/chtml/" + pkg + ".chm::/" + fn;
+location.href = link;
+}
+</script>
+
+
+<hr><div align="center">[Package <em>tile</em> version 0.2 <a href="00Index.html">Index]</a></div>
+
+</body></html>

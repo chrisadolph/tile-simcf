@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HEAD></HEAD><HTML><BODY>
+<UL>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Package simcf:  Contents">
+<param name="Local" value="00Index.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Package simcf:  R objects">
+</OBJECT>
+<UL>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="appendmatrix">
+<param name="Local" value="simcfInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="logitsimev">
+<param name="Local" value="logitsimev.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="logitsimfd">
+<param name="Local" value="logitsimev.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="mlogitsimev">
+<param name="Local" value="mlogitsimev.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="mlogitsimfd">
+<param name="Local" value="mlogitsimev.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="probitsimev">
+<param name="Local" value="probitsimev.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="probitsimfd">
+<param name="Local" value="probitsimev.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="setfactorial">
+<param name="Local" value="setfactorial.html">
+</OBJECT>
+</UL>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Package simcf:  Titles">
+</OBJECT>
+<UL>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Create a set of counterfactuals using a factorial design">
+<param name="Local" value="setfactorial.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Internal Functions in the simcf Package">
+<param name="Local" value="simcfInternals.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Simulate quantities of interest and confidence intervals for   binary logit">
+<param name="Local" value="logitsimev.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Simulate quantities of interest and confidence intervals for   binary probit">
+<param name="Local" value="probitsimev.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Simulate quantities of interest and confidence intervals for   multinomial logit">
+<param name="Local" value="mlogitsimev.html">
+</OBJECT>
+</UL>
+</UL>
+</BODY></HTML>

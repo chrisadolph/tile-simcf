@@ -1,0 +1,85 @@
+<html><head><title>(Re-)draw a tile graphical object</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="Rchm.css">
+</head>
+<body>
+
+<table width="100%"><tr><td>tileDraw(tile)</td><td align="right">R Documentation</td></tr></table><object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+<param name="keyword" value="R:   tileDraw">
+<param name="keyword" value=" (Re-)draw a tile graphical object">
+</object>
+
+
+<h2>(Re-)draw a tile graphical object</h2>
+
+
+<h3>Description</h3>
+
+<p>
+This internal function draws a tile graphical object to the current
+device.  It is mainly of use of an internal function; most users should
+simply use <code><a href="tile.html">tile</a></code> to create and save tile graphics to a file.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+tileDraw(grob, defaultlayer=10)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>grob</code></td>
+<td>
+A tile or grid graphical object; e.g., the object in the
+slot grob in the value returned by <code><a href="tile.html">tile</a></code></td></tr>
+<tr valign="top"><td><code>defaultlayer</code></td>
+<td>
+The layer to draw any sub-elements of
+<code>grob</code>.  Layers with higher numbers are drawn first, then lower
+numbers are drawn on top.</td></tr>
+</table>
+
+<h3>Details</h3>
+
+<p>
+This internal function is provided for completeness, and is not necessary to
+create tile graphics with detailed annotations, which can be done
+through careful construction of a single call to <code><a href="tile.html">tile</a></code>.
+</p>
+<p>
+However, if users wish to add to or modify an existing tile grob, they
+may do so by directly editing the grob returned by tile, then sending it
+to this function to place it on the current device.  Care should be
+taken to set up the current device to have appropriate height, width,
+and pointsize.
+</p>
+
+
+<h3>Value</h3>
+
+<p>
+<code>tileDraw</code> is mainly called for the side-effect of drawing a tile
+grob.  It invisibly returns the grob after drawing.</p>
+
+<h3>Author(s)</h3>
+
+<p>
+Christopher Adolph &lt;<a href="mailto:cadolph@u.washington.edu">cadolph@u.washington.edu</a>&gt;
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code><a href="tile.html">tile</a></code>
+</p>
+
+
+
+<hr><div align="center">[Package <em>tile</em> version 0.2 <a href="00Index.html">Index]</a></div>
+
+</body></html>

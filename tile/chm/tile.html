@@ -1,0 +1,317 @@
+<html><head><title>Plot a tiled graphical layout</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="Rchm.css">
+</head>
+<body>
+
+<table width="100%"><tr><td>tile(tile)</td><td align="right">R Documentation</td></tr></table><object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+<param name="keyword" value="R:   tile">
+<param name="keyword" value=" Plot a tiled graphical layout">
+</object>
+
+
+<h2>Plot a tiled graphical layout</h2>
+
+
+<h3>Description</h3>
+
+<p>
+A generic layout function for plotting tiled arrangements of graphic
+styles found in the tile package, including scatterplots, lineplots, dotplots and more
+specialized formats.  Includes fine control of titles, axes, axis
+transformation, and rugs for all plots.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+tile(..., RxC = NULL, output = list(), limits = NULL,
+xaxis = list(), yaxis = list(), topaxis = list(), rightaxis = list(),
+xaxistitle = list(), yaxistitle = list(), topaxistitle = list(), rightaxistitle = list(),
+plottitle = list(), maintitle = list(), undertitle = list(), rowtitle = list(), columntitle = list(),
+gridlines = list(), frame = FALSE, leeway = 0, width = list(), height = list(),
+defaults = list(), layoutonly = FALSE, verbose = FALSE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>...</code></td>
+<td>
+Any number of traces, as supplied by tile graphic
+functions such as <code><a href="lineplot.html">lineplot</a></code>, <code><a href="scatter.html">scatter</a></code>,
+<code><a href="ropeladder.html">ropeladder</a></code>, <code><a href="nightplot.html">nightplot</a></code>, <code><a href="riceplot.html">riceplot</a></code>, <code><a href="linesTile.html">linesTile</a></code>, <code><a href="pointsTile.html">pointsTile</a></code>,
+<code><a href="textTile.html">textTile</a></code>, <code><a href="polylinesTile.html">polylinesTile</a></code>, or <code><a href="polygonTile.html">polygonTile</a></code></td></tr>
+<tr valign="top"><td><code>RxC</code></td>
+<td>
+A 2-vector giving the number of rows and columns of the
+tiling of plots. Default is to place all plots in a single row </td></tr>
+<tr valign="top"><td><code>output</code></td>
+<td>
+A list controlling the output device:
+<ul>
+<dt>outfile</dt><dd><B>required</B>:  Name of the file where the
+graphic is to be saved; an appropriate extension will be applied automatically</dd>
+<dt>wide</dt><dd><B>required</B>:  Width of the output device, in inches</dd>
+<dt>pointsize</dt><dd>Default pointsize for the device; default is 12</dd>
+<dt>family</dt><dd>Font family for the device; default is <code>Helvetica</code></dd>
+<dt>type</dt><dd>Device type; either <code>pdf</code> (default),
+<code>postscript</code>, or <code>wmf</code></dd>
+</ul></td></tr>
+<tr valign="top"><td><code>limits</code></td>
+<td>
+A vector (or matrix) of limits to the plotting region,
+similar to <code>usr</code> for base graphics, but generalized to the four
+axis set-up of <code>tile</code>.  The usual case is an 8-vector,
+<code>(xmin, xmax, ymin, ymax, topmin, topmax, rightmin, rightmax)</code>.  If no
+plots have right axes, this could be a 6-vector; if none have right
+or top axes, it could be a 4-vector, and so on.  If an element of
+<code>limits</code> is <code>NA</code>, then that limit is automatically
+computed based on the data plotted.  If no limits are provided, all
+limits are computed.  To set different limits for each plot, provide
+a matrix with one row of limits for each plot.</td></tr>
+<tr valign="top"><td><code>xaxis</code></td>
+<td>
+A list; controls the plotting and format of the x-axes.
+WHEN IS THIS DRAWN?:
+<ul>
+<dt>at</dt><dd>Vector or matrix of locations to draw ticks (if a
+matrix, one row for each plot; NAs are ignored).  Default is to have
+tile select at automatically</dd>
+<dt>labels</dt><dd>Vector or matrix of labels to apply at tick
+locations (if a matrix, one row for each plot).  Default is to use <code>at</code></dd>
+<dt>tick.length</dt><dd>Length of ticks; default is -0.5</dd>
+<dt>label.loc</dt><dd>Location of tick labels relative to axis baseline;
+default is 1.25</dd>
+<dt>ticks</dt><dd>Show tick marks; default is TRUE</dd>
+<dt>ntics</dt><dd>If ticks are automatic, how many to draw?  Default is
+5</dd>
+<dt>major</dt><dd>Plot the main axis line? Default is TRUE</dd>
+<dt>col</dt><dd>Color for all axis elements; default is <code>black</code></dd>
+<dt>lwd</dt><dd>Line width of axis elements; default is 0.5</dd>
+<dt>cex</dt><dd>1</dd>
+<dt>fontsize</dt><dd>cfs</dd>
+<dt>add</dt><dd>Should this axis be draw?  May be a vector, with
+values for each plot.  Default is for tile to automatically
+determine whether to draw this axis</dd>
+<dt>log</dt><dd>Logical or numeric; should this axis be
+logged?  FALSE (default), TRUE, or a positive number (to choose a
+scale other than the natural log)</dd>
+<dt>rug</dt><dd>A list; adds and formats a rug (1-d
+plot) for this axis:
+<ul>
+<dt>data</dt><dd>NULL</dd>
+<dt>col</dt><dd>???</dd>
+<dt>lwd</dt><dd>0.25</dd>
+<dt>pch</dt><dd>0.5</dd>
+<dt>type</dt><dd>Character string; the type of rug to draw:
+<code>lines</code> for thin lines marking each datapoint (default);
+<code>density</code> for a smoothed histogram; <code>dots</code> for a histogram
+made of dots for each datapoint; <code>jitter</code> for a strip filled with
+jittered dots for each datapoint</dd>
+<dt>kernel</dt><dd>gaussian</dd>
+</ul>
+</dd>
+</ul>
+</td></tr>
+<tr valign="top"><td><code>yaxis</code></td>
+<td>
+A list; controls the plotting and format of the y-axes;
+see <code>xaxis</code> for parameters</td></tr>
+<tr valign="top"><td><code>topaxis</code></td>
+<td>
+A list; controls the plotting and format of the top-axes;
+see <code>xaxis</code> for parameters</td></tr>
+<tr valign="top"><td><code>rightaxis</code></td>
+<td>
+A list; controls the plotting and format of the right-axes;
+see <code>xaxis</code> for parameters</td></tr>
+<tr valign="top"><td><code>xaxistitle</code></td>
+<td>
+A list; places titles for the x-axes and controls
+their format:
+<ul>
+<dt></dt><dd></dd>
+</ul>
+</td></tr>
+<tr valign="top"><td><code>yaxistitle</code></td>
+<td>
+A list; places titles for the y-axes and controls
+their format; see <code>xaxistitle</code> for parameters</td></tr>
+<tr valign="top"><td><code>topaxistitle</code></td>
+<td>
+A list; places titles for the top-axes and controls
+their format; see <code>xaxistitle</code> for parameters</td></tr>
+<tr valign="top"><td><code>rightaxistitle</code></td>
+<td>
+A list; places titles for the right-axes and controls
+their format; see <code>xaxistitle</code> for parameters</td></tr>
+<tr valign="top"><td><code>plottitle</code></td>
+<td>
+A list; places titles above each plot and
+controls their format.  All parameters may be scalar or vector (if
+different results are desired for each title):
+<ul>
+<dt>labels</dt><dd>NULL</dd>
+<dt>cex</dt><dd>1</dd>
+<dt>col</dt><dd>black</dd>
+<dt>fontsize</dt><dd>12</dd>
+<dt>fontface</dt><dd>plain</dd>
+<dt>rot</dt><dd>default varies by type of axis</dd>
+<dt>x</dt><dd>0.5</dd>
+<dt>y</dt><dd>0.5</dd>
+<dt>type</dt><dd>NULL</dd>
+<dt>add</dt><dd>FALSE</dd>
+</ul>
+</td></tr>
+<tr valign="top"><td><code>maintitle</code></td>
+<td>
+A list; places a single title above the entire graphic and
+control its format. See <code>plottitle</code> for parameters</td></tr>
+<tr valign="top"><td><code>undertitle</code></td>
+<td>
+A list; places titles below each plot and
+controls their format. See <code>plottitle</code> for parameters</td></tr>
+<tr valign="top"><td><code>rowtitle</code></td>
+<td>
+A list; places titles to the left of each row of
+plots and controls their format. See <code>plottitle</code> for parameters</td></tr>
+<tr valign="top"><td><code>columntitle</code></td>
+<td>
+A list; places titles above each column of plots and
+controls their format. See <code>plottitle</code> for parameters</td></tr>
+<tr valign="top"><td><code>gridlines</code></td>
+<td>
+A list controlling the printing of gridlines in the
+plotting regions.  Each input may be a scalar (to set the parameter
+globally for all plots) or a vector (to set the parameter plot by plot):
+<ul>   
+<dt>type</dt><dd>*A string containing the first letters of each axis
+which should have gridlines attached to its ticks; e.g., "xy" for
+gridlines on the x and y axes or "t" for gridlines on the top
+axis.  Default is no gridlines</dd>
+<dt>lwd</dt><dd>*Width of gridlines.  Default is 0.15</dd>
+<dt>col</dt><dd>*Color of gridlines.  Default is <code>gray50</code></dd>
+<dt>lty</dt><dd>*Line type of gridlines.  Default is <code>solid</code></dd>
+</ul></td></tr>
+<tr valign="top"><td><code>frame</code></td>
+<td>
+Logical; draw a frame around plots (use a vector to set
+for specific plots).  Default is FALSE</td></tr>
+<tr valign="top"><td><code>leeway</code></td>
+<td>
+When finding plot region limits automatically, add a
+little leeway beyond data limits.  Default is 0 </td></tr>
+<tr valign="top"><td><code>width</code></td>
+<td>
+A list of default widths of various plot elements</td></tr>
+<tr valign="top"><td><code>height</code></td>
+<td>
+A list of default heights of various plot elements</td></tr>
+<tr valign="top"><td><code>defaults</code></td>
+<td>
+List object with default settings for title heights
+and widths, and other tile parameters </td></tr>
+<tr valign="top"><td><code>layoutonly</code></td>
+<td>
+Logical; draw only axes, titles, and frames
+(default is <code>FALSE</code>) </td></tr>
+<tr valign="top"><td><code>verbose</code></td>
+<td>
+Logical; display progress report for error checking
+(default is <code>FALSE</code>) </td></tr>
+</table>
+
+<h3>Details</h3>
+
+<p>
+Explain concept&mdash;many of the rec of info vis in one package, with
+extensive facilities for both EDA <EM>and</EM> summarizing inference
+from regression-like models
+</p>
+<p>
+The tile package operates in two stages.  The user first creates one
+or more traces to be plotted.  A trace is a single set of data to be
+added to the plot, and may be as simple as a text label or a series of
+line segments, or as complex as a set of points combined with a best
+fit line and that fit line's various confidence intervals printed as
+shaded regions.  All the parameters affecting the construction and
+appearance of the trace are set using one of the many functions in the
+tile package.  These include several functions for creating
+primitives &lt;add table here&gt;
+</p>
+<p>
+And several functions for constructing complex traces for model or
+data exploration &lt;add table here&gt;
+</p>
+<p>
+After creating all the traces you wish to plot, XXX
+</p>
+<p>
+Explain traces&mdash;and note that next thing to read is file for style of
+interest, including examples (which may involve not only learning how
+to create traces, but how to generate the data to add to the trace)
+</p>
+<p>
+Explain role of tile:  drawing everything outside the plotting area,
+and controlling the transformation of the plotting area, axes and
+rugs, titles
+</p>
+<p>
+Explain draw-at-once philosophy, including layers and output to file,
+and grid based graphics
+</p>
+<p>
+Explain axes, including transformation, attachment, and automatic limits
+</p>
+<p>
+Explain rugs, and warn some styles may not make sense with logged axes
+</p>
+<p>
+Explain titles
+</p>
+<p>
+Explain widths and heights
+</p>
+<p>
+Explain annotation across plots
+</p>
+<p>
+Note possibility of extension, and contact
+</p>
+
+
+<h3>Value</h3>
+
+<p>
+<code>tile</code> is mainly called for the side-effect of saving a graphic to
+the requested device.  However, it does return a list containing all
+the user inputs, default settings, and numerous internal values.  This
+list contains a copy of the entire plot in the slot <code>grob</code>; to
+draw this graphical object to the current device, give the grob as
+input to <code><a href="tileDraw.html">tileDraw</a></code>.</p>
+
+<h3>Author(s)</h3>
+
+<p>
+Christopher Adolph &lt;<a href="mailto:cadolph@u.washington.edu">cadolph@u.washington.edu</a>&gt;
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code><a href="lineplot.html">lineplot</a></code>, <code><a href="scatter.html">scatter</a></code>,
+<code><a href="ropeladder.html">ropeladder</a></code>, <code><a href="nightplot.html">nightplot</a></code>,
+<code><a href="riceplot.html">riceplot</a></code>, <code><a href="linesTile.html">linesTile</a></code>,
+<code><a href="pointsTile.html">pointsTile</a></code>, <code><a href="textTile.html">textTile</a></code>,
+<code><a href="polylinesTile.html">polylinesTile</a></code>, <code><a href="polygonTile.html">polygonTile</a></code>
+</p>
+
+
+
+<hr><div align="center">[Package <em>tile</em> version 0.2 <a href="00Index.html">Index]</a></div>
+
+</body></html>

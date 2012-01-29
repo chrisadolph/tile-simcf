@@ -1,0 +1,134 @@
+<html><head><title>Internal Functions in the Tile Package</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="Rchm.css">
+</head>
+<body>
+
+<table width="100%"><tr><td>tile-internal(tile)</td><td align="right">R Documentation</td></tr></table><object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+<param name="keyword" value="R:   adjlinebreaks">
+<param name="keyword" value="R:   convertRtoY">
+<param name="keyword" value="R:   convertTtoX">
+<param name="keyword" value="R:   delif">
+<param name="keyword" value="R:   fillout.axis">
+<param name="keyword" value="R:   fillout.axistitle">
+<param name="keyword" value="R:   fillout.list">
+<param name="keyword" value="R:   fillout.matrix">
+<param name="keyword" value="R:   fillout">
+<param name="keyword" value="R:   fillout.title">
+<param name="keyword" value="R:   filloutunits">
+<param name="keyword" value="R:   getplotnums">
+<param name="keyword" value="R:   getplottraces">
+<param name="keyword" value="R:   getplottracesall">
+<param name="keyword" value="R:   gridlines">
+<param name="keyword" value="R:   insertrow">
+<param name="keyword" value="R:   lighten">
+<param name="keyword" value="R:   lineplotTilePlot">
+<param name="keyword" value="R:   lineplotTilePrep">
+<param name="keyword" value="R:   lineplotTileTraceDefaults">
+<param name="keyword" value="R:   lineplotTileTraceFillout">
+<param name="keyword" value="R:   linesTilePlot">
+<param name="keyword" value="R:   linesTilePrep">
+<param name="keyword" value="R:   linesTileTraceDefaults">
+<param name="keyword" value="R:   linesTileTraceFillout">
+<param name="keyword" value="R:   maxUnit">
+<param name="keyword" value="R:   mergelist">
+<param name="keyword" value="R:   nightplotTilePlot">
+<param name="keyword" value="R:   nightplotTilePrep">
+<param name="keyword" value="R:   nightplotTileTraceDefaults">
+<param name="keyword" value="R:   nightplotTileTraceFillout">
+<param name="keyword" value="R:   pointsTilePlot">
+<param name="keyword" value="R:   pointsTilePrep">
+<param name="keyword" value="R:   pointsTileTraceDefaults">
+<param name="keyword" value="R:   pointsTileTraceFillout">
+<param name="keyword" value="R:   polygonTilePlot">
+<param name="keyword" value="R:   polygonTilePrep">
+<param name="keyword" value="R:   polygonTileTraceDefaults">
+<param name="keyword" value="R:   polygonTileTraceFillout">
+<param name="keyword" value="R:   polylinesTileTraceDefaults">
+<param name="keyword" value="R:   polylinesTileTraceFillout">
+<param name="keyword" value="R:   polylineTilePlot">
+<param name="keyword" value="R:   polylineTilePrep">
+<param name="keyword" value="R:   posquad">
+<param name="keyword" value="R:   pretty.axis">
+<param name="keyword" value="R:   pretty.logaxis">
+<param name="keyword" value="R:   rgbscale">
+<param name="keyword" value="R:   riceplotTilePlot">
+<param name="keyword" value="R:   riceplotTilePrep">
+<param name="keyword" value="R:   riceplotTileTraceDefaults">
+<param name="keyword" value="R:   riceplotTileTraceFillout">
+<param name="keyword" value="R:   ropeladderTileAxisTitle">
+<param name="keyword" value="R:   ropeladderTileHarmonize">
+<param name="keyword" value="R:   ropeladderTilePlot">
+<param name="keyword" value="R:   ropeladderTilePrep">
+<param name="keyword" value="R:   ropeladderTileTraceDefaults">
+<param name="keyword" value="R:   ropeladderTileTraceFillout">
+<param name="keyword" value="R:   roundnums">
+<param name="keyword" value="R:   scatterTilePlot">
+<param name="keyword" value="R:   scatterTilePrep">
+<param name="keyword" value="R:   scatterTileTraceDefaults">
+<param name="keyword" value="R:   scatterTileTraceFillout">
+<param name="keyword" value="R:   selif">
+<param name="keyword" value="R:   sortmc">
+<param name="keyword" value="R:   stacked">
+<param name="keyword" value="R:   switch.variables">
+<param name="keyword" value="R:   textTilePlot">
+<param name="keyword" value="R:   textTilePrep">
+<param name="keyword" value="R:   textTileTraceDefaults">
+<param name="keyword" value="R:   textTileTraceFillout">
+<param name="keyword" value="R:   tileAxis">
+<param name="keyword" value="R:   tileAxistitle">
+<param name="keyword" value="R:   tileAxistitleprep">
+<param name="keyword" value="R:   tileTitle">
+<param name="keyword" value="R:   tileCartouche">
+<param name="keyword" value="R:   tiledimensions">
+<param name="keyword" value="R:   tiledimensionsIter">
+<param name="keyword" value="R:   tileDrawChildren">
+<param name="keyword" value="R:   tileDrawGrob">
+<param name="keyword" value="R:   tilefilloutinputs">
+<param name="keyword" value="R:   tilefindplotarea">
+<param name="keyword" value="R:   tilefitlinear">
+<param name="keyword" value="R:   tilefitloess">
+<param name="keyword" value="R:   tilefitmmest">
+<param name="keyword" value="R:   tilefitrobust">
+<param name="keyword" value="R:   tilefitwls">
+<param name="keyword" value="R:   tileGetBlocks">
+<param name="keyword" value="R:   tilegrobNest">
+<param name="keyword" value="R:   tileHarmonizeAxes">
+<param name="keyword" value="R:   tileInitWH">
+<param name="keyword" value="R:   tileMakePlot">
+<param name="keyword" value="R:   tileopendevice">
+<param name="keyword" value="R:   tileProcessTraces">
+<param name="keyword" value="R:   tileRug">
+<param name="keyword" value="R:   tilesetdefaults">
+<param name="keyword" value="R:   tileSetgpar">
+<param name="keyword" value="R:   tileSetLayer">
+<param name="keyword" value="R:   tilesimulates">
+<param name="keyword" value="R:   tileSplitBlocks">
+<param name="keyword" value="R:   tileWhatIf">
+<param name="keyword" value="R:   titlebox">
+<param name="keyword" value="R:   updateRxC">
+<param name="keyword" value=" Internal Functions in the Tile Package">
+</object>
+
+
+<h2>Internal Functions in the Tile Package</h2>
+
+
+<h3>Description</h3>
+
+<p>
+Internal functions in the tile package.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>
+Christopher Adolph &lt;<a href="mailto:cadolph@u.washington.edu">cadolph@u.washington.edu</a>&gt;
+</p>
+
+
+
+<hr><div align="center">[Package <em>tile</em> version 0.2 <a href="00Index.html">Index]</a></div>
+
+</body></html>

@@ -1,0 +1,28 @@
+[OPTIONS]
+Auto Index=Yes
+Contents file=tile.toc
+Compatibility=1.1 or later
+Compiled file=tile.chm
+Default topic=00Index.html
+Display compile progress=No
+Full-text search=Yes
+Full text search stop list file=..\..\..\gnuwin32\help\R.stp
+Title=R Help for package tile
+
+
+[FILES]
+00Index.html
+cbindfill.html
+lineplot.html
+linesTile.html
+nightplot.html
+pointsTile.html
+polygonTile.html
+polylinesTile.html
+riceplot.html
+ropeladder.html
+scatter.html
+textTile.html
+tile.html
+tileDraw.html
+tileInternals.html
