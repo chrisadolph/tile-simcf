@@ -9,6 +9,7 @@ tileSetgpar <- function(ct,
                         lineheight=NULL,
                         font=NULL,
                         fontfamily=NULL,
+                        fontface=NULL,
                         alpha=NULL,
                         lineend=NULL,
                         linejoin=NULL,
@@ -29,10 +30,10 @@ tileSetgpar <- function(ct,
         fontsize <- ct$fontsize[index]
     if (is.null(lineheight))
         lineheight <- ct$lineheight[index]
-    if (is.null(font))
-        font <- ct$font[index]
     if (is.null(fontfamily))
         fontfamily <- ct$fontfamily[index]
+    if (is.null(fontface))
+        fontface <- ct$fontface[index]
     if (is.null(alpha))
         alpha <- ct$alpha[index]
     if (is.null(lineend))
@@ -51,8 +52,8 @@ tileSetgpar <- function(ct,
                cex=cex,
                fontsize=fontsize,
                lineheight=lineheight,
-               font=font,
-               fontfamily=fontfamily,                                     
+               fontface=fontface,
+               fontfamily=fontfamily,
                alpha=alpha,
                lineend=lineend,
                linejoin=linejoin,
