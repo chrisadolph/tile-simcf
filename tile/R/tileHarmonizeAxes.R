@@ -120,8 +120,8 @@ tileHarmonizeAxes <- function(tc) {
         
     }
     
-   # print(tc$limits)
-   # stop()
+    #print(tc$limits)
+    #stop()
     
     # Harmonize Axes:  Loop over plots
     for (i in 1:tc$nplots) {
@@ -335,8 +335,9 @@ tileHarmonizeAxes <- function(tc) {
         # Use special harmonize functions as needed
         ugraph <- unique(allgraph)
         for (igraph in 1:length(ugraph)) {
-            if (exists(paste(ugraph[igraph],"TileHarmonize",sep=""), mode="function"))
-                tc <- eval(call(paste(ugraph[igraph],"TileHarmonize",sep=""),tc,i))
+            thg <- paste(ugraph[igraph], "TileHarmonize", sep="")
+            if (exists(thg, mode="function"))
+                tc <- eval(call(thg, tc, i))
         }
     }
         
@@ -351,7 +352,7 @@ tileHarmonizeAxes <- function(tc) {
         #layoutnums[i,]
         
         # Get this row plot heights; set max height to max of these
-        tc$height$plotmax[plotnums] <- max(tc$height$plot[plotnums*tc$useplot[plotnums]])
+        tc$height$plotmax[plotnums] <- suppressWarnings(max(tc$height$plot[plotnums[tc$useplot[plotnums]]]))
     }
 
     for (i in 1:tc$RxC[2]) {
@@ -360,8 +361,27 @@ tileHarmonizeAxes <- function(tc) {
         plotnums <- getplotnums("column",i,tc)
     
         # Get this column plot widths; set max width to max of these
-        tc$width$plotmax[plotnums] <- max(tc$width$plot[plotnums*tc$useplot[plotnums]])
+        tc$width$plotmax[plotnums] <- suppressWarnings(max(tc$width$plot[plotnums[tc$useplot[plotnums]]]))
     }
+
+    replaceInfWithDefault <- function(a, default) {
+      for (i in 1:length(a)) {
+        if ((a[i]==Inf)||(a[i]==-Inf)) a[i] <- default[i]
+      }
+      a
+    }
+
+    # Not needed
+    replaceInfWithMean <- function(a, default=1) {
+      A <- a[(a<Inf)&(a>-Inf)]
+      if (length(A)==0) A <- default
+      a[(a==Inf)|(a==-Inf)] <- mean(A)
+      a
+    }
+
+    # Default below should become user settable throught width in tile?
+    tc$height$plotmax <- replaceInfWithDefault(tc$height$plotmax, default=tc$height$plot)
+    tc$width$plotmax <- replaceInfWithDefault(tc$width$plotmax, default=tc$width$plot)
 
     # Return tile control
     tc

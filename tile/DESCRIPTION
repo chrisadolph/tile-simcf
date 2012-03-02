@@ -1,8 +1,8 @@
 Package: tile
 Title: Plot multiple graphical displays in a tiled layout with
        automated or customizable titles, axes, and annotations
-Version: 0.4.6
-Date: 2011-11-26
+Version: 0.4.7
+Date: 2012-03-01
 Author: Christopher Adolph
 Description: A generic layout function, tile, and a set of 
        graphicals displays plotable within a tiled layout,
