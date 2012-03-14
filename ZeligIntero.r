@@ -14,7 +14,7 @@ library(survey)
 
 #In principle, the way the Zelig manual is set up, first differences will often be calculated one at a time
 #That is, there will be lots of different objects containing different simulations of first differences
-#Zelig Tile should handle both this and when they are all simluated at one. I need HELP with this. I believe 
+#Zelig Tile should handle both this and when they are all simluated at once. I need HELP with this. I believe 
 #I need the ... at the beginning because this is key to the functioning of tile but I thought i would ask
 #for help up pront
 
