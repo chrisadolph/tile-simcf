@@ -19,7 +19,7 @@ library(survey)
 #for help up pront
 
 #can be used with or without simulates -- Needs to provide different functionality in the two cases
-#can be used with one confidence interval or many unlike summary.zelig
+#can be used with one confidence interval or many
 
 #Should work with auto.ropeladder for first differences?
 
