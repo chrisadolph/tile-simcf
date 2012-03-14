@@ -59,6 +59,150 @@ print(scenarios$x)
 # Complex example
 
 
+# Multinomial Logistic Regression of alligator food;
+# Tiled lineplots using factorial design of counterfactuals,
+# with extrapolation outside the convex hull flagged
+#
+# For an alternative method, using cfMake and cfChange instead of cfFactorial,
+# see help(lineplot) in the tile package
+
+data(gator)
+require(MASS)
+require(nnet)
+require(tile)
+require(WhatIf)
+
+# Estimate MNL using the nnet library
+mlogit.result <- multinom(food ~ size + female, Hess=TRUE)
+pe <- mlogit.result$wts[c(6,7,8,10,11,12)]
+                                      # point estimates
+vc <- solve(mlogit.result$Hess)       # var-cov matrix
+
+# Simulate parameters from predictive distributions
+sims <- 10000
+simbetas <- mvrnorm(sims,pe,vc)       # draw parameters, using MASS::mvrnorm
+simb <- array(NA, dim = c(sims,3,2))  # re-arrange simulates to array format
+simb[,,1] <- simbetas[,1:3]           #   for MNL simulation
+simb[,,2] <- simbetas[,4:6]
+
+# Create full factorial set of counterfactuals
+sizerange <- seq(1,4,by=0.1)          # range of counterfactual sizes
+femalerange <- c(0,1)                 # range of counterfactual sexes
+xhyp <- cfFactorial(size = sizerange, female = femalerange)
+                                      
+# Simulate expected probabilities
+mlogit.qoi1 <- mlogitsimev(xhyp,simb,ci=0.67)
+
+# Create one trace for each predicted category of the response, and each sex
+trace1a <- lineplot(x=xhyp$x$size[xhyp$x$female==0],
+                   y=mlogit.qoi1$pe[xhyp$x$female==0,1],
+                   lower=mlogit.qoi1$lower[xhyp$x$female==0,1,],
+                   upper=mlogit.qoi1$upper[xhyp$x$female==0,1,],
+                   ci=list(mark="shaded"),
+                   extrapolate=list(data=cbind(size,female),
+                                    cfact=xhyp$x[xhyp$x$female==0,],
+                                    omit.extrapolated=FALSE),
+                   col="blue",
+                   plot=1
+                   )
+
+trace2a <- lineplot(x=xhyp$x$size[xhyp$x$female==0],
+                   y=mlogit.qoi1$pe[xhyp$x$female==0,2],
+                   lower=mlogit.qoi1$lower[xhyp$x$female==0,2,],
+                   upper=mlogit.qoi1$upper[xhyp$x$female==0,2,],
+                   ci=list(mark="shaded"),
+                   extrapolate=list(data=cbind(size,female),
+                                    cfact=xhyp$x[xhyp$x$female==0,],
+                                    omit.extrapolated=FALSE),
+                   col="red",
+                   plot=1
+                   )
+
+trace3a <- lineplot(x=xhyp$x$size[xhyp$x$female==0],
+                   y=mlogit.qoi1$pe[xhyp$x$female==0,3],
+                   lower=mlogit.qoi1$lower[xhyp$x$female==0,3,],
+                   upper=mlogit.qoi1$upper[xhyp$x$female==0,3,],
+                   ci=list(mark="shaded"),
+                   extrapolate=list(data=cbind(size,female),
+                                    cfact=xhyp$x[xhyp$x$female==0,],
+                                    omit.extrapolated=FALSE),
+                   col="green",
+                   plot=1
+                   )
+
+trace4a <- lineplot(x=xhyp$x$size[xhyp$x$female==1],
+                   y=mlogit.qoi1$pe[xhyp$x$female==1,1],
+                   lower=mlogit.qoi1$lower[xhyp$x$female==1,1,],
+                   upper=mlogit.qoi1$upper[xhyp$x$female==1,1,],
+                   ci=list(mark="shaded"),
+                   extrapolate=list(data=cbind(size,female),
+                                    cfact=xhyp$x[xhyp$x$female==1,],
+                                    omit.extrapolated=FALSE),
+                   col="blue",
+                   plot=2
+                   )
+
+trace5a <- lineplot(x=xhyp$x$size[xhyp$x$female==1],
+                   y=mlogit.qoi1$pe[xhyp$x$female==1,2],
+                   lower=mlogit.qoi1$lower[xhyp$x$female==1,2,],
+                   upper=mlogit.qoi1$upper[xhyp$x$female==1,2,],
+                   ci=list(mark="shaded"),
+                   extrapolate=list(data=cbind(size,female),
+                                    cfact=xhyp$x[xhyp$x$female==1,],
+                                    omit.extrapolated=FALSE),
+                   col="red",
+                   plot=2
+                   )
+
+trace6a <- lineplot(x=xhyp$x$size[xhyp$x$female==1],
+                   y=mlogit.qoi1$pe[xhyp$x$female==1,3],
+                   lower=mlogit.qoi1$lower[xhyp$x$female==1,3,],
+                   upper=mlogit.qoi1$upper[xhyp$x$female==1,3,],
+                   ci=list(mark="shaded"),
+                   extrapolate=list(data=cbind(size,female),
+                                    cfact=xhyp$x[xhyp$x$female==1,],
+                                    omit.extrapolated=FALSE),
+                   col="green",
+                   plot=2
+                   )
+
+linelabels <- textTile(labels=c("Invertebrates",
+                                 "Fish",
+                                 "Other"),
+                         x=  c(1.75,      3,         3),
+                         y=  c(0.95,     0.95,      0.375),
+                         col=c("blue", "green", "red"),
+                         cex = 0.75,
+                         plot=c(1,2)
+                         )
+
+at.x <- c(1,2,3,4)
+at.y <- c(0,0.2,0.4,0.6,0.8,1)
+
+# Plot traces using tile
+tile(trace1,
+     trace2,
+     trace3,
+     trace4,
+     trace5,
+     trace6,
+     linelabels,
+     RxC = c(1,2),
+     limits = c(1,4,0,1),
+     #output = list(outfile="gator2cf", width=5),
+     xaxis = list(at=at.x),
+     yaxis = list(at=at.y),
+     xaxistitle = list(labels="Size of alligator"),
+     yaxistitle = list(type="first",labels="Pr(Food preference)"),
+     undertitle = list(labels=c("Male","Female")),
+     maintitle = list(labels="Food choice by alligator size and sex", x=0.57),
+     width = list(yaxistitle=3),
+     height = list(maintitle=5, undertitle=3),
+     gridlines = list(type="xy"),
+     frame=TRUE
+     )
+
+
 }
 \keyword{design}
 \keyword{manip}

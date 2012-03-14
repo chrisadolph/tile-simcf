@@ -275,54 +275,62 @@ tc <- tile(trace1,
            frame = TRUE
            )
 
-# Example 2.1:  Multinomial Logistic Regression of alligator food;
-# Tiled lineplots using *manually simulated counterfactuals*, with
-# extrapolation outside the convex hull flagged
+# Example 2:  Multinomial Logistic Regression of alligator food;
+# Multinomial Logistic Regression of alligator food;
+# Tiled lineplots using simulated counterfactuals,
+# with extrapolation outside the convex hull flagged
 #
-# See Ex. 2.2 for an automated way to handle simulations 
+# See help(cfFactorial) in simcf library for a different approach
 
 data(gator)
-require(MASS)
+require(simcf)
+require(WhatIf)
 require(nnet)
+require(MASS)
+
+# Turn preloaded data to dataframe
+gator <- cbind(food,size,female)
+gator <- as.data.frame(gator)
 
 # Estimate MNL using the nnet library
-mlogit.result <- multinom(food ~ size + female, Hess=TRUE)
+model <- food ~ size + female
+mlogit.result <- multinom(model, Hess=TRUE)
 pe <- mlogit.result$wts[c(6,7,8,10,11,12)]
                                       # point estimates
 vc <- solve(mlogit.result$Hess)       # var-cov matrix
 
-# Simulate counterfactual results, varying size and sex
+## Simulate counterfactual results, varying size and sex
+
+# Set up simulated parameters in a 3 D array:  sims x variable x category of DV
 sims <- 10000
 simbetas <- mvrnorm(sims,pe,vc)       # draw parameters, using MASS::mvrnorm
+simbetasA <- array(NA, dim=c(sims, 3, 2))  # Create a 3D array to store simbetas
+simbetasA[,,1] <- simbetas[,1:3]
+simbetasA[,,2] <- simbetas[,4:6]
+
+# Create counterfactuals
 sizerange <- seq(1,4,by=0.1)          # range of counterfactual sizes
-femalerange <- c(0,1)                 # range of counterfactual sexes
-simycat1 <- simycat2 <- simycat3 <- cfactsize <- cfactfemale <- NULL
-for (isex in 1:length(femalerange)) { # loop over sex scenarios
-    for (isize in 1:length(sizerange)) { # loop over size scenarios
+maleCF <- femaleCF <- cfMake(model, data=gator, nscen=length(sizerange))
+for (i in 1:length(sizerange)) {
+  maleCF <- cfChange(maleCF, "size", x=sizerange[i], scen=i)
+  maleCF <- cfChange(maleCF, "female", x=0, scen=i)
 
-        # Set up a hypothetical X vector for this scenario
-        hypx <- rbind(1, sizerange[isize], femalerange[isex])
-
-        # Calculate simulated MNL denominators for this scenario
-        simdenom <- (1 + exp(simbetas[,1:3]\%*\%hypx) + exp(simbetas[,4:6]\%*\%hypx))
-
-        # Add simulated probabilities for each category to storage vectors
-        simycat1 <- c( simycat1, exp(simbetas[,1:3]\%*\%hypx)/simdenom )        
-        simycat2 <- c( simycat2, exp(simbetas[,4:6]\%*\%hypx)/simdenom )
-        simycat3 <- c( simycat3, 1/simdenom )
-
-        # Save hypothetical X's to storage vectors:
-        # must match simulated probabilities element for element
-        cfactsize <- c(cfactsize, rep(sizerange[isize],sims) )
-        cfactfemale <- c(cfactfemale, rep(femalerange[isex],sims) )
-    }
+  femaleCF <- cfChange(femaleCF, "size", x=sizerange[i], scen=i)
+  femaleCF <- cfChange(femaleCF, "female", x=1, scen=i)
 }
 
+# Simulate counterfactual scenarios
+maleSim <- mlogitsimev(maleCF, simbetasA, ci=0.67)
+femaleSim <- mlogitsimev(femaleCF, simbetasA, ci=0.67)
+
+## Make plots using tile
+
 # Create one trace for each predicted category of the response, and each sex
-trace1 <- lineplot(x=cfactsize[cfactfemale==0],
-                   y=simycat1[cfactfemale==0],
-                   simulates="y",
-                   ci=list(mark="shaded",levels=0.67),
+trace1 <- lineplot(x=sizerange,
+                   y=maleSim$pe[,1],
+                   lower=maleSim$lower[,1,1],
+                   upper=maleSim$upper[,1,1],
+                   ci=list(mark="shaded"),
                    extrapolate=list(data=cbind(size,female),
                                     cfact=cbind(sizerange,rep(0,length(sizerange))),
                                     omit.extrapolated=FALSE),
@@ -330,10 +338,11 @@ trace1 <- lineplot(x=cfactsize[cfactfemale==0],
                    plot=1
                    )
 
-trace2 <- lineplot(x=cfactsize[cfactfemale==0],
-                   y=simycat2[cfactfemale==0],
-                   simulates="y",
-                   ci=list(mark="shaded",levels=0.67),
+trace2 <- lineplot(x=sizerange,
+                   y=maleSim$pe[,2],
+                   lower=maleSim$lower[,2,1],
+                   upper=maleSim$upper[,2,1],
+                   ci=list(mark="shaded"),
                    extrapolate=list(data=cbind(size,female),
                                     cfact=cbind(sizerange,rep(0,length(sizerange))),
                                     omit.extrapolated=FALSE),
@@ -341,10 +350,11 @@ trace2 <- lineplot(x=cfactsize[cfactfemale==0],
                    plot=1
                    )
 
-trace3 <- lineplot(x=cfactsize[cfactfemale==0],
-                   y=simycat3[cfactfemale==0],
-                   simulates="y",
-                   ci=list(mark="shaded",levels=0.67),
+trace3 <- lineplot(x=sizerange,
+                   y=maleSim$pe[,3],
+                   lower=maleSim$lower[,3,1],
+                   upper=maleSim$upper[,3,1],
+                   ci=list(mark="shaded"),
                    extrapolate=list(data=cbind(size,female),
                                     cfact=cbind(sizerange,rep(0,length(sizerange))),
                                     omit.extrapolated=FALSE),
@@ -352,10 +362,11 @@ trace3 <- lineplot(x=cfactsize[cfactfemale==0],
                    plot=1
                    )
 
-trace4 <- lineplot(x=cfactsize[cfactfemale==1],
-                   y=simycat1[cfactfemale==1],
-                   simulates="y",
-                   ci=list(mark="shaded",levels=0.67),
+trace4 <- lineplot(x=sizerange,
+                   y=femaleSim$pe[,1],
+                   lower=femaleSim$lower[,1,1],
+                   upper=femaleSim$upper[,1,1],
+                   ci=list(mark="shaded"),
                    extrapolate=list(data=cbind(size,female),
                                     cfact=cbind(sizerange,rep(1,length(sizerange))),
                                     omit.extrapolated=FALSE),
@@ -363,10 +374,11 @@ trace4 <- lineplot(x=cfactsize[cfactfemale==1],
                    plot=2
                    )
 
-trace5 <- lineplot(x=cfactsize[cfactfemale==1],
-                   y=simycat2[cfactfemale==1],
-                   simulates="y",
-                   ci=list(mark="shaded",levels=0.67),
+trace5 <- lineplot(x=sizerange,
+                   y=femaleSim$pe[,2],
+                   lower=femaleSim$lower[,2,1],
+                   upper=femaleSim$upper[,2,1],
+                   ci=list(mark="shaded"),
                    extrapolate=list(data=cbind(size,female),
                                     cfact=cbind(sizerange,rep(1,length(sizerange))),
                                     omit.extrapolated=FALSE),
@@ -374,10 +386,11 @@ trace5 <- lineplot(x=cfactsize[cfactfemale==1],
                    plot=2
                    )
 
-trace6 <- lineplot(x=cfactsize[cfactfemale==1],
-                   y=simycat3[cfactfemale==1],
-                   simulates="y",
-                   ci=list(mark="shaded",levels=0.67),
+trace6 <- lineplot(x=sizerange,
+                   y=femaleSim$pe[,3],
+                   lower=femaleSim$lower[,3,1],
+                   upper=femaleSim$upper[,3,1],
+                   ci=list(mark="shaded"),
                    extrapolate=list(data=cbind(size,female),
                                     cfact=cbind(sizerange,rep(1,length(sizerange))),
                                     omit.extrapolated=FALSE),
@@ -399,166 +412,27 @@ at.x <- c(1,2,3,4)
 at.y <- c(0,0.2,0.4,0.6,0.8,1)
 
 # Plot traces using tile
-tc <- tile(trace1,
-           trace2,
-           trace3,
-           trace4,
-           trace5,
-           trace6,
-           linelabels,
-           RxC = c(1,2),
-           limits = c(1,4,0,1),
-           #output = list(outfile="lineplotExample2"),
-           xaxis = list(at=at.x),
-           yaxis = list(at=at.y),
-           xaxistitle = list(labels="Size of alligator"),
-           yaxistitle = list(type="first",labels="Pr(Food preference)"),
-           undertitle = list(labels=c("Male","Female")),
-           maintitle = list(labels="Food choice by alligator size and sex"),
-           #gridlines = list(type="xy"),
-           frame=TRUE
-           )
-
-
-
-# Example 2.2:  Multinomial Logistic Regression of alligator food;
-# Tiled lineplots using *preprocessed simulations*, with
-# extrapolation outside the convex hull flagged
-#
-# (Alternative method for constructing Ex 2.1; output is identical)
-
-data(gator)
-require(MASS)
-require(nnet)
-require(simcf)
-
-# Estimate MNL using the nnet library
-mlogit.result <- multinom(food ~ size + female, Hess=TRUE)
-pe <- mlogit.result$wts[c(6,7,8,10,11,12)]
-                                      # point estimates
-vc <- solve(mlogit.result$Hess)       # var-cov matrix
-
-# Simulate parameters from predictive distributions
-sims <- 10000
-simbetas <- mvrnorm(sims,pe,vc)       # draw parameters, using MASS::mvrnorm
-simb <- array(NA, dim = c(sims,3,2))  # re-arrange simulates to array format
-simb[,,1] <- simbetas[,1:3]           #   for MNL simulation
-simb[,,2] <- simbetas[,4:6]
-
-# Create full factorial set of counterfactuals
-sizerange <- seq(1,4,by=0.1)          # range of counterfactual sizes
-femalerange <- c(0,1)                 # range of counterfactual sexes
-xhyp <- cfFactorial(size = sizerange, female = femalerange)
-                                      
-# Simulate expected probabilities
-mlogit.qoi1 <- mlogitsimev(xhyp,simb,ci=0.67)
-
-# Create one trace for each predicted category of the response, and each sex
-trace1a <- lineplot(x=xhyp$x$size[xhyp$x$female==0],
-                   y=mlogit.qoi1$pe[xhyp$x$female==0,1],
-                   lower=mlogit.qoi1$lower[xhyp$x$female==0,1,],
-                   upper=mlogit.qoi1$upper[xhyp$x$female==0,1,],
-                   ci=list(mark="shaded"),
-                   extrapolate=list(data=cbind(size,female),
-                                    cfact=xhyp$x[xhyp$x$female==0,],
-                                    omit.extrapolated=FALSE),
-                   col="blue",
-                   plot=1
-                   )
-
-trace2a <- lineplot(x=xhyp$x$size[xhyp$x$female==0],
-                   y=mlogit.qoi1$pe[xhyp$x$female==0,2],
-                   lower=mlogit.qoi1$lower[xhyp$x$female==0,2,],
-                   upper=mlogit.qoi1$upper[xhyp$x$female==0,2,],
-                   ci=list(mark="shaded"),
-                   extrapolate=list(data=cbind(size,female),
-                                    cfact=xhyp$x[xhyp$x$female==0,],
-                                    omit.extrapolated=FALSE),
-                   col="red",
-                   plot=1
-                   )
-
-trace3a <- lineplot(x=xhyp$x$size[xhyp$x$female==0],
-                   y=mlogit.qoi1$pe[xhyp$x$female==0,3],
-                   lower=mlogit.qoi1$lower[xhyp$x$female==0,3,],
-                   upper=mlogit.qoi1$upper[xhyp$x$female==0,3,],
-                   ci=list(mark="shaded"),
-                   extrapolate=list(data=cbind(size,female),
-                                    cfact=xhyp$x[xhyp$x$female==0,],
-                                    omit.extrapolated=FALSE),
-                   col="green",
-                   plot=1
-                   )
-
-trace4a <- lineplot(x=xhyp$x$size[xhyp$x$female==1],
-                   y=mlogit.qoi1$pe[xhyp$x$female==1,1],
-                   lower=mlogit.qoi1$lower[xhyp$x$female==1,1,],
-                   upper=mlogit.qoi1$upper[xhyp$x$female==1,1,],
-                   ci=list(mark="shaded"),
-                   extrapolate=list(data=cbind(size,female),
-                                    cfact=xhyp$x[xhyp$x$female==1,],
-                                    omit.extrapolated=FALSE),
-                   col="blue",
-                   plot=2
-                   )
-
-trace5a <- lineplot(x=xhyp$x$size[xhyp$x$female==1],
-                   y=mlogit.qoi1$pe[xhyp$x$female==1,2],
-                   lower=mlogit.qoi1$lower[xhyp$x$female==1,2,],
-                   upper=mlogit.qoi1$upper[xhyp$x$female==1,2,],
-                   ci=list(mark="shaded"),
-                   extrapolate=list(data=cbind(size,female),
-                                    cfact=xhyp$x[xhyp$x$female==1,],
-                                    omit.extrapolated=FALSE),
-                   col="red",
-                   plot=2
-                   )
-
-trace6a <- lineplot(x=xhyp$x$size[xhyp$x$female==1],
-                   y=mlogit.qoi1$pe[xhyp$x$female==1,3],
-                   lower=mlogit.qoi1$lower[xhyp$x$female==1,3,],
-                   upper=mlogit.qoi1$upper[xhyp$x$female==1,3,],
-                   ci=list(mark="shaded"),
-                   extrapolate=list(data=cbind(size,female),
-                                    cfact=xhyp$x[xhyp$x$female==1,],
-                                    omit.extrapolated=FALSE),
-                   col="green",
-                   plot=2
-                   )
-
-linelabels <- textTile(labels=c("Invertebrates",
-                                 "Fish",
-                                 "Other"),
-                         x=  c(1.75,      3,         3),
-                         y=  c(0.95,     0.95,      0.375),
-                         col=c("blue", "green", "red"),
-                         cex = 0.75,
-                         plot=c(1,2)
-                         )
-
-at.x <- c(1,2,3,4)
-at.y <- c(0,0.2,0.4,0.6,0.8,1)
-
-# Plot traces using tile
-tc <- tile(trace1a,
-           trace2a,
-           trace3a,
-           trace4a,
-           trace5a,
-           trace6a,
-           linelabels,
-           RxC = c(1,2),
-           limits = c(1,4,0,1),
-           #output = list(file="lineplotExample2alt"),
-           xaxis = list(at=at.x),
-           yaxis = list(at=at.y),
-           xaxistitle = list(labels="Size of alligator"),
-           yaxistitle = list(type="first",labels="Pr(Food preference)"),
-           undertitle = list(labels=c("Male","Female")),
-           maintitle = list(labels="Food choice by alligator size and sex"),
-           gridlines = list(type="xy"),
-           frame=TRUE
-           )
+tile(trace1,
+     trace2,
+     trace3,
+     trace4,
+     trace5,
+     trace6,
+     linelabels,
+     RxC = c(1,2),
+     limits = c(1,4,0,1),
+     #output = list(outfile="gator2cf", width=5),
+     xaxis = list(at=at.x),
+     yaxis = list(at=at.y),
+     xaxistitle = list(labels="Size of alligator"),
+     yaxistitle = list(type="first",labels="Pr(Food preference)"),
+     undertitle = list(labels=c("Male","Female")),
+     maintitle = list(labels="Food choice by alligator size and sex", x=0.57),
+     width = list(yaxistitle=3),
+     height = list(maintitle=5, undertitle=3),
+     gridlines = list(type="xy"),
+     frame=TRUE
+     )
 }
 \keyword{dplot}
 \keyword{list}

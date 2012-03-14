@@ -105,8 +105,6 @@ parameter values can be applied to different elements of the trace:
   \item{\code{lineheight}}{Height of a line as a multple of the size of
     text; default is 1.2.}
   
-  \item{\code{font}}{Font face (alias for fontface); default is 1.}
-
   \item{\code{fontfamily}}{The font family; default is "".}
 
   \item{\code{fontface}}{The font face (\code{bold}, \code{italic}, etc.);

@@ -1295,10 +1295,14 @@ mlogitsimev <- function(x,b,ci=0.95,constant=1,z=NULL,g=NULL,predict=FALSE,sims=
         res$pe <- rbind(res$pe,apply(simy,2,mean))
         length.simy <- nrow(simy)
         low <- up <- NULL
-                
+
         for (k in 1:length(ci)) {
-            res$lower[iscen,,k] <- rbind( low, quantile(simy,probs=(1-ci[k])/2) )                                       
-            res$upper[iscen,,k] <- rbind( up, quantile(simy, probs=(1-(1-ci[k])/2) ))
+          for (icat in 1:(dim(b)[3]+1)) {
+            res$lower[iscen, icat, k] <- rbind(low, quantile(simy[,icat], 
+                probs = (1 - ci[k])/2))
+            res$upper[iscen, icat, k] <- rbind(up, quantile(simy[,icat], 
+                probs = (1 - (1 - ci[k])/2)))
+          }
         }
 
         # Simulate predicted values if requested
@@ -1311,8 +1315,12 @@ mlogitsimev <- function(x,b,ci=0.95,constant=1,z=NULL,g=NULL,predict=FALSE,sims=
 
           low <- up <- NULL
           for (k in 1:length(ci)) {
-            res$plower[iscen,,k] <- rbind( low, quantile(pv,probs=(1-ci[k])/2) )
-            res$pupper[iscen,,k] <- rbind( up, quantile(pv, probs=(1-(1-ci[k])/2) ))
+            for (icat in 1:(dim(b)[3]+1)) {
+              res$plower[iscen, icat, k] <- rbind(low, quantile(pv[,icat], 
+                                                                probs = (1 - ci[k])/2))
+              res$pupper[iscen, icat, k] <- rbind(up, quantile(pv[,icat], 
+                                                               probs = (1 - (1 - ci[k])/2)))
+            }
           }
         }    
       }
@@ -1452,8 +1460,12 @@ mlogitsimfd <- function(x,b,ci=0.95,constant=1,xpre=NULL,
         low <- up <- NULL
                 
         for (k in 1:length(ci)) {
-          res$lower[iscen,,k] <- rbind( low, quantile(simy,probs=(1-ci[k])/2))                                       
-          res$upper[iscen,,k] <- rbind( up, quantile(simy, probs=(1-(1-ci[k])/2) ))
+          for (icat in 1:(dim(b)[3]+1)) {
+            res$lower[iscen, icat, k] <- rbind(low, quantile(simy[,icat], 
+                probs = (1 - ci[k])/2))
+            res$upper[iscen, icat, k] <- rbind(up, quantile(simy[,icat], 
+                probs = (1 - (1 - ci[k])/2)))
+          }
         }
     }
     res
@@ -1592,8 +1604,12 @@ mlogitsimrr <- function(x,b,ci=0.95,constant=1,xpre=NULL,
         low <- up <- NULL
                 
         for (k in 1:length(ci)) {
-          res$lower[iscen,,k] <- rbind( low, quantile(simy,probs=(1-ci[k])/2) )                                        
-          res$upper[iscen,,k] <- rbind( up, quantile(simy, probs=(1-(1-ci[k])/2) ))
+          for (icat in 1:(dim(b)[3]+1)) {
+            res$lower[iscen, icat, k] <- rbind(low, quantile(simy[,icat], 
+                probs = (1 - ci[k])/2))
+            res$upper[iscen, icat, k] <- rbind(up, quantile(simy[,icat], 
+                probs = (1 - (1 - ci[k])/2)))
+          }
         }
     }
     res
