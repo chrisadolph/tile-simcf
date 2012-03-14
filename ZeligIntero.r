@@ -30,40 +30,49 @@ zeligTile <- function(sims, conf.int = .95, names = NULL, type = "fd", simulates
 	#if they are extract means and confidence intervals when simulates aren't desired
 	#otherwise return simulates
 	#We can also return more than means if we think that is useful 
-	if (type == "fd" && simulates == FALSE){
-		means <- apply(sims$qi$fd, 2, mean)
+	if (simulates == FALSE){
+		means <- apply(sims$qi[[type]], 2, mean)
+		#res <- c(res, do.call(stats[i], list(x)))
 		print(means)
 		print(class(sims))
-		cis <-  calcCI(sims$qi$fd, conf.int = conf.int)
+		cis <-  calcCI(sims$qi[[type]], conf.int = conf.int)
 	}
 	
 	#what else do I return here
 	res <- (cbind(means, cis))
 	return(res)
-		}
+}
+
+boundsCI <- function(conf.int){
+	  cip <- c((1-conf.int)/2, 1-(1-conf.int)/2)
+	return(cip)
+}
 
 
 calcCI <- function(data, conf.int){
-	cols <- ncol(data)
-	rows <- nrow(data)
-	cis <- length(conf.int)
-	simCI <- as.data.frame(matrix(data = NA, nrow = cols, ncol = (cis*2)))
-	for (n in 1:cols){	
-		rp1 <- 1
-		print(rp1)
-		for (i in 1:cis) {
-			print(paste("conf.int",i))
-			lwr <- (1 - conf.int[i])/2
-			colnames(simCI)[rp1] <- paste(100*lwr,"%", sep = "")
-			upr <- conf.int[i] + lwr
-			colnames(simCI)[rp1+1] <- paste(100*upr,"%", sep = "")
-			simCI[n, rp1 ] <- 	 sort(data[  ,n])[round(lwr*rows)]
-			simCI[n, (rp1 +1)] <- sort(data[  ,n])[round(upr*rows)]
-			rp1 <- rp1+2
-		}
-	}
+	probs <- sort(do.call("boundsCI", list(conf.int)))
+	simCI <- t(apply(data, MARGIN = 2, FUN = quantile, probs = probs))
 	return(simCI)	
 }
+
+
+#this is the Zelig code that is called by summary.zelig
+summarize.default <- function(x, rows = NULL, cip, stats, subset = NULL) {
+  res <- NULL
+  if (is.numeric(x)) {
+    for (i in 1:length(stats))
+      res <- c(res, do.call(stats[i], list(x)))
+    res <- c(res, quantile(x, cip, na.rm=TRUE))
+    names(res) <- c(stats, paste(cip*100, "%", sep = ""))
+  }
+  else if (is.character(x)) {
+    res <- c(table(x) / length(x))
+  }
+  res
+}
+
+#quantities of interest is a list itself and each part of it can be extractedF
+sMulti$qi[["fd"]])
 
 #test
 
