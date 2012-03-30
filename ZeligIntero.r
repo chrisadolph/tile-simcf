@@ -9,8 +9,6 @@ library(survey)
 #that calculates the confidence intervals and returns the desired statistics from Zelig
 #ZeligTile should to this in a more transparent way, since almost no one will ever use summary.zelig
 #to change the defaults
-#currently there is a slight difference between what CalcCI returns and what summary.zelig returns. 
-#I need to hunt this down. 
 
 #In principle, the way the Zelig manual is set up, first differences will often be calculated one at a time
 #That is, there will be lots of different objects containing different simulations of first differences
@@ -24,37 +22,43 @@ library(survey)
 #Should work with auto.ropeladder for first differences?
 
 
-zeligTile <- function(sims, conf.int = .95, names = NULL, type = "fd", simulates = FALSE){
-		
-	#determine all simulations are of class zelig
-	#if they are extract means and confidence intervals when simulates aren't desired
-	#otherwise return simulates
-	#We can also return more than means if we think that is useful 
-	if (simulates == FALSE){
-		means <- apply(sims$qi[[type]], 2, mean)
-		#res <- c(res, do.call(stats[i], list(x)))
-		print(means)
-		print(class(sims))
-		cis <-  calcCI(sims$qi[[type]], conf.int = conf.int)
-	}
-	
-	#what else do I return here
-	res <- (cbind(means, cis))
-	return(res)
-}
-
 boundsCI <- function(conf.int){
 	  cip <- c((1-conf.int)/2, 1-(1-conf.int)/2)
 	return(cip)
 }
 
-
+#need to work for arrays
 calcCI <- function(data, conf.int){
 	probs <- sort(do.call("boundsCI", list(conf.int)))
 	simCI <- t(apply(data, MARGIN = 2, FUN = quantile, probs = probs))
-	return(simCI)	
+	lower <- simCI[ , 1:(ncol(simCI)/2)]
+	upper <- simCI[ , ((ncol(simCI)/2)+1):(ncol(simCI))]
+	res <- list(lower=lower, upper=upper)
+	return(res)	
 }
 
+zeligTile <- function(sims, conf.int = .95, names = NULL, type = "ev", simulates = FALSE){
+		
+	#determine all simulations are of class zelig
+	#if they are extract means and confidence intervals when simulates aren't desired
+	#otherwise return simulates
+	#We can also return more than means if we think that is useful 
+	
+	if (any(class(sims) != "zelig") || is.null(sims)) stop("You must give zeligTile a object of class zelig")
+	else {
+		if (simulates == FALSE){
+			pe <- apply(sims$qi[[type]], 2, mean)
+			#res <- c(res, do.call(stats[i], list(x)))
+			#print(means)
+			#print(class(sims))
+			cis <-  calcCI(sims$qi[[type]], conf.int = conf.int)
+		}
+	#what else do I return here/How do I deal with names 
+	#would it be useful to be able to store the value sequence here
+	res <- list(pe=pe, lower = cis[["lower"]], upper = cis[["upper"]])
+	return(res)
+	}	
+}
 
 #this is the Zelig code that is called by summary.zelig
 summarize.default <- function(x, rows = NULL, cip, stats, subset = NULL) {
@@ -93,12 +97,25 @@ s.out1 <- sim(z.out1, x = x.low, x1 = x.high)
 s.out2 <- sim(z.out1, x = x.low1, x1 = x.high1)
 
 sMulti <- sim(z.out1, x = xmultiLow, x1 = xmultiHigh)
+xlineTile <- setx(z.out1, api99=383:890)
+apiLineTile <- sim(z.out1, x = xlineTile)
 
 
-#test restuls
+data(sanction)
+sanction$ncost <- factor(sanction$ncost, ordered = TRUE, levels = c("net gain", "little effect", "modest loss", "major loss"))
+z.out <- zelig(ncost ~ mil + coop, model = "ologit", data = sanction)
+x.out <- setx(z.out, coop =1:4)
+s.out <- sim(z.out, x = x.out)
+
+#test resutls
 calcCI(sMulti$qi$fd, .95)
-zeligTile(sMulti, conf.int = c(.9, .95, .99))
+test <- zeligTile(sMulti, conf.int = c(.9, .95, .99))
 zeligTile(s.out1, conf.int = c(.9, .95, .99))
+zeligTile(apiLineTile)
+
+trace1 <- 
+
+
 
 
 #zeligtoLineplot
