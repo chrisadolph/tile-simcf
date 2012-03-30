@@ -14,7 +14,7 @@ library(survey)
 #That is, there will be lots of different objects containing different simulations of first differences
 #Zelig Tile should handle both this and when they are all simluated at once. I need HELP with this. I believe 
 #I need the ... at the beginning because this is key to the functioning of tile but I thought i would ask
-#for help up pront
+#for help up front
 
 #can be used with or without simulates -- Needs to provide different functionality in the two cases
 #can be used with one confidence interval or many unlike summary.zelig
