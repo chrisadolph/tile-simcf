@@ -1,7 +1,7 @@
 Package: simcf
 Title: Counterfactuals and confidence intervals for estimated models 
-Version: 0.2.8
-Date: 2012-01-23
+Version: 0.2.9
+Date: 2012-03-01
 Author: Christopher Adolph
 Description:  Calculate counterfactual expected values and first 
               differences for a variety of statistical models 

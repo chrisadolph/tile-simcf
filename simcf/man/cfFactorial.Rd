@@ -94,7 +94,7 @@ xhyp <- cfFactorial(size = sizerange, female = femalerange)
 mlogit.qoi1 <- mlogitsimev(xhyp,simb,ci=0.67)
 
 # Create one trace for each predicted category of the response, and each sex
-trace1a <- lineplot(x=xhyp$x$size[xhyp$x$female==0],
+trace1 <- lineplot(x=xhyp$x$size[xhyp$x$female==0],
                    y=mlogit.qoi1$pe[xhyp$x$female==0,1],
                    lower=mlogit.qoi1$lower[xhyp$x$female==0,1,],
                    upper=mlogit.qoi1$upper[xhyp$x$female==0,1,],
@@ -106,7 +106,7 @@ trace1a <- lineplot(x=xhyp$x$size[xhyp$x$female==0],
                    plot=1
                    )
 
-trace2a <- lineplot(x=xhyp$x$size[xhyp$x$female==0],
+trace2 <- lineplot(x=xhyp$x$size[xhyp$x$female==0],
                    y=mlogit.qoi1$pe[xhyp$x$female==0,2],
                    lower=mlogit.qoi1$lower[xhyp$x$female==0,2,],
                    upper=mlogit.qoi1$upper[xhyp$x$female==0,2,],
@@ -118,7 +118,7 @@ trace2a <- lineplot(x=xhyp$x$size[xhyp$x$female==0],
                    plot=1
                    )
 
-trace3a <- lineplot(x=xhyp$x$size[xhyp$x$female==0],
+trace3 <- lineplot(x=xhyp$x$size[xhyp$x$female==0],
                    y=mlogit.qoi1$pe[xhyp$x$female==0,3],
                    lower=mlogit.qoi1$lower[xhyp$x$female==0,3,],
                    upper=mlogit.qoi1$upper[xhyp$x$female==0,3,],
@@ -130,7 +130,7 @@ trace3a <- lineplot(x=xhyp$x$size[xhyp$x$female==0],
                    plot=1
                    )
 
-trace4a <- lineplot(x=xhyp$x$size[xhyp$x$female==1],
+trace4 <- lineplot(x=xhyp$x$size[xhyp$x$female==1],
                    y=mlogit.qoi1$pe[xhyp$x$female==1,1],
                    lower=mlogit.qoi1$lower[xhyp$x$female==1,1,],
                    upper=mlogit.qoi1$upper[xhyp$x$female==1,1,],
@@ -142,7 +142,7 @@ trace4a <- lineplot(x=xhyp$x$size[xhyp$x$female==1],
                    plot=2
                    )
 
-trace5a <- lineplot(x=xhyp$x$size[xhyp$x$female==1],
+trace5 <- lineplot(x=xhyp$x$size[xhyp$x$female==1],
                    y=mlogit.qoi1$pe[xhyp$x$female==1,2],
                    lower=mlogit.qoi1$lower[xhyp$x$female==1,2,],
                    upper=mlogit.qoi1$upper[xhyp$x$female==1,2,],
@@ -154,7 +154,7 @@ trace5a <- lineplot(x=xhyp$x$size[xhyp$x$female==1],
                    plot=2
                    )
 
-trace6a <- lineplot(x=xhyp$x$size[xhyp$x$female==1],
+trace6 <- lineplot(x=xhyp$x$size[xhyp$x$female==1],
                    y=mlogit.qoi1$pe[xhyp$x$female==1,3],
                    lower=mlogit.qoi1$lower[xhyp$x$female==1,3,],
                    upper=mlogit.qoi1$upper[xhyp$x$female==1,3,],

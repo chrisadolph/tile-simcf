@@ -79,14 +79,13 @@ function(ttype,tc=list(),...) {
 
         if (tc$titleboxes) 
           currgList <- titlebox(currvpTree,currgList)
-        
   
         # Add text labels to plotting object       
         tc$special[[tctrl]]$labels <- as.matrix(tc$special[[tctrl]][[tc$iplot]]$labels)
         maxwidth <- maxheight <- 0
         if (length(tc$special[[tctrl]][[tc$iplot]]$labels)>0) {
             for (i in 1:length(tc$special[[tctrl]][[tc$iplot]]$labels)) {
-                if (!is.na(tc$special[[tctrl]][[tc$iplot]]$labels[i])) {        
+                if (!is.na(tc$special[[tctrl]][[tc$iplot]]$labels[i])) {
                     if (ttype=="xaxis") {
                         currx <- unit(tc$special[[tctrl]][[tc$iplot]]$x[i],"npc")
                         curry <- unit(0.5,"npc")
@@ -113,16 +112,22 @@ function(ttype,tc=list(),...) {
                                           y=curry,
                                           rot=rot,
                                           gp=gpar(#cex=tc$special[[tctrl]][[tc$iplot]]$cex[i],
-                                            col="black",#tc$special[[tctrl]][[tc$iplot]]$col[i],
+                                            col="black",#tc$special[[tctrl]][[tc$iplot]]$col[i],  # or labcol ?
                                             fontface=tc$special[[tctrl]][[tc$iplot]]$fontface[i]#,
                                                 #fontsize=
                                             ),
                                           name=paste("title",i,sep=""),
                                           vp=currvpTree
                                           )
+
                     currgList <- gList(currgList,
                                        titleGrob
                                        )
+
+                    if (i==1) {
+                      tallestGrob <- widestGrob <- titleGrob
+                    }
+                    
                     newwidth <- convertWidth(grobWidth(titleGrob), 
                                              "npc", valueOnly = TRUE)
                     if (newwidth > maxwidth) {
@@ -138,12 +143,10 @@ function(ttype,tc=list(),...) {
                     } 
                   }
               }
-
         
         # measure widths
                 ttypenpc <- paste(ttype,"title.npc",sep="")
                 ttypeunits <- paste(ttype,"title.strunit",sep="")
-
       
                 #if ((rot==0)||(rot==180)) {
                   tc$height[[ttypenpc]][currdim] <- max(tc$height[[ttypenpc]][currdim],
@@ -161,7 +164,6 @@ function(ttype,tc=list(),...) {
                                                        convertWidth(grobWidth(widestGrob), "npc",valueOnly=TRUE),
                                                        #newwidthnpc,
                                                        na.rm=TRUE)  # Width
-
 
                 upViewport(0)
                 
@@ -189,7 +191,6 @@ function(ttype,tc=list(),...) {
                 
               }
       }
-  
     
     tc$currgList <- currgList
     tc

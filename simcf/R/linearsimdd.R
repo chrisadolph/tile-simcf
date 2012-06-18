@@ -145,4 +145,3 @@ linearsimdd <- function (x, xd, b, ci = 0.95, constant = 1, xpre = NULL, xdpre=N
     res$upper <- drop(res$upper)
     res
 }
-<environment: namespace:simcf>

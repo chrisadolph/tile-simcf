@@ -289,9 +289,13 @@
       axis.grob <- editGrob(axis.grob,
                             gPath("major"),
                             x=unit(c(0,1),"npc"))
-    } else {
-      
-      if (!is.null(tc$gridlines$type)) {
+    }
+
+    
+    if ((atype=="yaxis")||(atype=="rightaxis")) {
+      if (!is.null(tc$gridlines$type)&&length(grep(substring(atype,1,1),tc$gridlines$type[tc$iplot]))) {
+              
+      #if (!is.null(tc$gridlines$type)) {
         add.gridlines <- TRUE
         axis.grob <- editGrob(axis.grob,
                               gPath("ticks"),
