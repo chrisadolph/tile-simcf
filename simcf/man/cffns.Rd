@@ -15,7 +15,7 @@ cfChange(xscen, covname, x, xpre=NULL, scen=1)
 cfName(xscen, name, scen=1)
 }
 \arguments{
-  \item{formula}{forumla object, the model estimated.  Compatible with \code{logBound()} and \code{logitBound()}.}
+  \item{formula}{formula object, the model estimated.  Compatible with \code{logBound()} and \code{logitBound()}.}
   \item{data}{matrix or dataframe, the actual data used to estimate the
     original model}
   \item{nscen}{scalar, number of counterfactual scenarios to initialize}

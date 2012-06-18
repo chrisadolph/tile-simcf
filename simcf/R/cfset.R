@@ -120,27 +120,32 @@ cfFactorial <- function(...,formula=NULL,data=NULL,names=NULL,hull=FALSE,f="mean
 }
 
 cfMake <- function(formula=NULL,data,nscen=1,names=NULL,hull=FALSE,f="mean",...) {
-    if (!is.null(formula)) {
+	
+	if (is.null(formula)) {
+		warning("No formula was given. All variables in data set used to create scenario")
+	}
+	
+	if(!is.data.frame(data) || nrow(na.omit(data))==0) {
+		stop("Data provided must be data.frame object with at least one row of data")
+	}
+	
+	if (!is.null(formula)) {
         #resploc <- attr(terms(formula),"response")
         #data <- data[,all.vars(formula)[-resploc]]
         data <- data[,all.vars(formula)]
     }
-    data <- na.omit(data)
+	data <- na.omit(data)
     xmean <- apply(data,2,f,...)
     xscen <- list(x=NULL,xpre=NULL)
-    xscen$x <- as.data.frame(matrix(data=xmean,nrow=nscen,ncol=ncol(data),byrow=TRUE))
-    xscen$xpre <- xscen$x
-    colnames(xscen$x) <- names(data)
-    colnames(xscen$xpre) <- names(data)
-    if (!is.null(names)) {
-        row.names(xscen$x) <- names
-        row.names(xscen$xpre) <- names
-    }
-    if (!is.null(formula)) {
+    xscen$x <- xscen$xpre <- as.data.frame(matrix(data=xmean,nrow=nscen,ncol=ncol(data),byrow=TRUE))
+    colnames(xscen$x) <- colnames(xscen$xpre) <- names(data)
 
+    if (!is.null(names)) {
+        row.names(xscen$x) <- row.names(xscen$xpre) <- names
+	}
+    if (!is.null(formula)) {
       # Get terms attribute
       tl <- attributes(terms(formula))$term.labels
-      
       # Loop over terms
       for (i in 1:length(tl)) {
         tlCur <- tl[i]
@@ -148,8 +153,8 @@ cfMake <- function(formula=NULL,data,nscen=1,names=NULL,hull=FALSE,f="mean",...)
         # Check for logitBound transformations
         if (substr(tlCur,1,11)=="logitBound(") {
           # if found, check number of terms needed.
-          varname <- substr(tlCur,start=12,stop=nchar(tlCur)-1)
-          subform <- as.formula(paste("~",varname,"-1"))
+          varname <- substr(tlCur,start=12,stop=nchar(tlCur)-1) #extracts variable name
+          subform <- as.formula(paste("~",varname,"-1")) #
           toLT <- as.vector(model.matrix(subform,data=data))
           testLT <- as.matrix(logitBound(toLT))
         
