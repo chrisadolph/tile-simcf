@@ -120,20 +120,48 @@ cfFactorial <- function(...,formula=NULL,data=NULL,names=NULL,hull=FALSE,f="mean
 }
 
 cfMake <- function(formula=NULL,data,nscen=1,names=NULL,hull=FALSE,f="mean",...) {
+#There are three scenarios for model
+#1 one formula, one data frame
+#2 many formulas, one data frame
+#3 many formulas, equal number of data frames
+#if there are multiple formulas, they all need to be passed to the model part of the scenario
+#but if there is one data set and multiple formulas, those parts of the model need to be extracted and combined to create one set of counterfactuals
+#and then then the scenario is made up of all of those parts. This leads to three scenarios for how to deal with models
 	
+	#one formula, one data frame -- currently needs at least one forcumal
+	if(any(class(formula) == "formula") && is.data.frame(data)){
+		data <- data[ ,all.vars(formula)]
+		xscen <- initScen(data, nscen, names, f, ...)
+		xscen$model <- fixModel(formula, data)
+	}
+	
+	#more than one formula, one data frame
+	if (is.list(formula) && is.data.frame(data)) {
+		combVars <- unique(unlist(lapply(formula, all.vars))) #get all variables in all formulas
+		xscen <- initScen(data[ ,combVars], nscen, names, f, ...) #initiate scenario with all formulas
+		xscen$model <- sapply(formula, fixModel, data = data) #attach formulas to object
+	}
+	
+	#hierarchical - many data frames, many scenarios and assumes datasets are in line with formula 
+	#we could allow the intiation of variable numbers of scenarios as well
+	if (is.list(formula) && is.list(data) && length(formula)==length(data)) {
+		#unimplemented
+	}
+	return(xscen)
+}
+
+#unimplemted -- this will check for warnings in all of the models
+checkScen <- function(){	
 	if (is.null(formula)) {
 		warning("No formula was given. All variables in data set used to create scenario")
 	}
-	
+
 	if(!is.data.frame(data) || nrow(na.omit(data))==0) {
 		stop("Data provided must be data.frame object with at least one row of data")
 	}
-	
-	if (!is.null(formula)) {
-        #resploc <- attr(terms(formula),"response")
-        #data <- data[,all.vars(formula)[-resploc]]
-        data <- data[,all.vars(formula)]
-    }
+}
+
+initScen <- function(data, nscen, names, f,...){
 	data <- na.omit(data)
     xmean <- apply(data,2,f,...)
     xscen <- list(x=NULL,xpre=NULL)
@@ -143,13 +171,16 @@ cfMake <- function(formula=NULL,data,nscen=1,names=NULL,hull=FALSE,f="mean",...)
     if (!is.null(names)) {
         row.names(xscen$x) <- row.names(xscen$xpre) <- names
 	}
+	return(xscen)
+}	
+	
+fixModel <- function(formula, data){
     if (!is.null(formula)) {
       # Get terms attribute
       tl <- attributes(terms(formula))$term.labels
       # Loop over terms
       for (i in 1:length(tl)) {
         tlCur <- tl[i]
-      
         # Check for logitBound transformations
         if (substr(tlCur,1,11)=="logitBound(") {
           # if found, check number of terms needed.
@@ -192,35 +223,39 @@ cfMake <- function(formula=NULL,data,nscen=1,names=NULL,hull=FALSE,f="mean",...)
         }
       }
       
-      xscen$model <- formula
+      #xscen$model <- formula	  
     }
-    class(xscen) <- c("list","counterfactual")
+	return(formula)
+}
 
-    # Check for extrapolation
-    if (hull&&(!is.null(formula))&&(!is.null(data))) {
-        require(WhatIf)
-        wi <- whatif(formula=formula, data=data, cfact=xscen$x)        
-        xscen$extrapolatex <- !wi$in.hull
-        wi <- whatif(formula=formula, data=data, cfact=xscen$xpre)
-        xscen$extrapolatexpre <- !wi$in.hull
-        xscen$extrapolatefd <- xscen$extrapolatex|xscen$extrapolatexpre
-        xscen$data <- data
-        if (any(c(xscen$extrapolatex,xscen$extrapolatexpre,xscen$extrapolatefd)==FALSE)) {
-            warning("Some counterfactuals involve extrapolation outside the convex hull")
-            if (any(xscen$extrapolatex==FALSE)) {
-                print(c("x scenarios:  ",row.names(x)[xscen$extrapolatex]))
-            }
-            if (any(xscen$extrapolatexpre==FALSE)) {
-                print(c("xpre scenarios:  ",row.names(xpre)[xscen$extrapolatexpre]))
-            }
-            if (any(xscen$extrapolatefd==FALSE)) {
-                print(c("first diff scenarios:  ",row.names(x)[xscen$extrapolatefd]))
-            }
-        }
-    }
 
-    xscen
-  }
+###what to do with this?
+    # 
+    # # Check for extrapolation
+    # if (hull&&(!is.null(formula))&&(!is.null(data))) {
+    #     require(WhatIf)
+    #     wi <- whatif(formula=formula, data=data, cfact=xscen$x)        
+    #     xscen$extrapolatex <- !wi$in.hull
+    #     wi <- whatif(formula=formula, data=data, cfact=xscen$xpre)
+    #     xscen$extrapolatexpre <- !wi$in.hull
+    #     xscen$extrapolatefd <- xscen$extrapolatex|xscen$extrapolatexpre
+    #     xscen$data <- data
+    #     if (any(c(xscen$extrapolatex,xscen$extrapolatexpre,xscen$extrapolatefd)==FALSE)) {
+    #         warning("Some counterfactuals involve extrapolation outside the convex hull")
+    #         if (any(xscen$extrapolatex==FALSE)) {
+    #             print(c("x scenarios:  ",row.names(x)[xscen$extrapolatex]))
+    #         }
+    #         if (any(xscen$extrapolatexpre==FALSE)) {
+    #             print(c("xpre scenarios:  ",row.names(xpre)[xscen$extrapolatexpre]))
+    #         }
+    #         if (any(xscen$extrapolatefd==FALSE)) {
+    #             print(c("first diff scenarios:  ",row.names(x)[xscen$extrapolatefd]))
+    #         }
+    #     }
+    # }
+    # 
+    #   
+    #   
 
 cfChange <- function(xscen,covname,x=NULL,xpre=NULL,scen=1) {
     if (!is.null(x))
