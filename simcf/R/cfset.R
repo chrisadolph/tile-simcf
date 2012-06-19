@@ -128,7 +128,7 @@ cfMake <- function(formula=NULL,data,nscen=1,names=NULL,hull=FALSE,f="mean",...)
 #but if there is one data set and multiple formulas, those parts of the model need to be extracted and combined to create one set of counterfactuals
 #and then then the scenario is made up of all of those parts. This leads to three scenarios for how to deal with models
 	
-	#one formula, one data frame -- currently needs at least one forcumal
+	#one formula, one data frame -- currently needs at least one formula
 	if(any(class(formula) == "formula") && is.data.frame(data)){
 		data <- data[ ,all.vars(formula)]
 		xscen <- initScen(data, nscen, names, f, ...)
@@ -143,7 +143,7 @@ cfMake <- function(formula=NULL,data,nscen=1,names=NULL,hull=FALSE,f="mean",...)
 	}
 	
 	#hierarchical - many data frames, many scenarios and assumes datasets are in line with formula 
-	#we could allow the intiation of variable numbers of scenarios as well
+	#we could allow the initiation of variable numbers of scenarios as well
 	if (is.list(formula) && is.list(data) && length(formula)==length(data)) {
 		#unimplemented
 	}
