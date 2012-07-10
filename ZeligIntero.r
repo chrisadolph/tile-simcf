@@ -28,6 +28,9 @@ boundsCI <- function(conf.int){
 }
 
 #need to work for arrays
+# iterate over all the columns of all the matrices
+# it <- iapply(a, c(2, 3))
+# as.list(it)
 calcCI <- function(data, conf.int){
 	probs <- sort(do.call("boundsCI", list(conf.int)))
 	simCI <- t(apply(data, MARGIN = 2, FUN = quantile, probs = probs))
@@ -37,14 +40,24 @@ calcCI <- function(data, conf.int){
 	return(res)	
 }
 
-zeligTile <- function(sims, conf.int = .95, names = NULL, type = "ev", simulates = FALSE){
+extractModel <- function(obj) {
+		modelType <- obj$zelig.call[["model"]]
+		modelType
+}
+
+zeligTile <- function(..., conf.int = .95, names = NULL, type = "ev", simulates = FALSE){
 		
 	#determine all simulations are of class zelig
 	#if they are extract means and confidence intervals when simulates aren't desired
 	#otherwise return simulates
 	#We can also return more than means if we think that is useful 
-	
-	if (any(class(sims) != "zelig") || is.null(sims)) stop("You must give zeligTile a object of class zelig")
+	sims <- list(...)
+	simsClass <- unlist(lapply(sims, FUN = class))
+	#to extract the model from which the counterfactual was created. we need zelig.call which gives the call
+	#zelig.call is of class call, which contains the "model" so $model will give you the model, hence we can extract
+	modTypes <- sapply("extractModel", sims)
+
+	if (any(class(simsClass) != "zelig") || is.null(sims)) stop("You must give zeligTile only objects of class zelig")
 	else {
 		if (simulates == FALSE){
 			pe <- apply(sims$qi[[type]], 2, mean)
@@ -54,7 +67,7 @@ zeligTile <- function(sims, conf.int = .95, names = NULL, type = "ev", simulates
 			cis <-  calcCI(sims$qi[[type]], conf.int = conf.int)
 		}
 	#what else do I return here/How do I deal with names 
-	#would it be useful to be able to store the value sequence here
+	#would it be useful to be able to store the xhyp here (hold off for now)
 	res <- list(pe=pe, lower = cis[["lower"]], upper = cis[["upper"]])
 	return(res)
 	}	
@@ -90,11 +103,29 @@ x.low1 <- setx(z.out1, api99 = quantile(apistrat$api99, 0.1))
 x.high1 <- setx(z.out1, api99 = quantile(apistrat$api99, 0.9))
 
 xmultiLow <- setx(z.out1, api99 = c(quantile(apistrat$api99, 0.2), quantile(apistrat$api99, 0.1)))
+
+#this works much differently than simcf, as it creates a data frame from the values of the variables specified and cannot
+#create scenarios ex ante.  Hence to manipulate more than one variable
+#you have to create two separate objects or rbind the two data frames together, or provide two vectors of the same length with
+#the different values. Also, strangely, it appears setx only creates the number of scenarios that are present in your
+#data set. WHY? IS THERE A REASON FOR THIS?
+#hence, the ... in the begining of our zeligTile function is even more important
+
+yesNo <- c(rep("Yes", length(383:890)), rep("No", length(383:890)))
+apiInp <- rep(383:890, 2) #all values from min to max (some may be outside convex hull)
+
+xmultiLow1 <- setx(z.out1, yr.rnd = "No", api99 = 383:890) # doesn't work -- because maxes out at 200 but otherwise would work
+xmultiLow2 <- setx(z.out1, yr.rnd = c("Yes", "No")) # works
+xmultiLow3 <- setx(z.out1, yr.rnd = c("Yes", "No"), api99 = 383:890) ##doesnt work beecause vectors are not of the same length
+xmultiLow4 <- setx(z.out1, yr.rnd = yesNo, api99 = apiInp) ##doesn't work because maxes out at 200 nrow(apistrat) but otherwise would work
+
+
 xmultiHigh <- setx(z.out1, api99 = c(quantile(apistrat$api99, 0.8), quantile(apistrat$api99, 0.9)))
 sMulti <- sim(z.out1, x = xmultiLow, x1 = xmultiHigh)
 
 s.out1 <- sim(z.out1, x = x.low, x1 = x.high)
 s.out2 <- sim(z.out1, x = x.low1, x1 = x.high1)
+multObjTest <- list(s.out1, s.out2)
 
 sMulti <- sim(z.out1, x = xmultiLow, x1 = xmultiHigh)
 xlineTile <- setx(z.out1, api99=383:890)
