@@ -129,35 +129,58 @@ cfMake <- function(formula=NULL,data,nscen=1,names=NULL,hull=FALSE,f="mean",...)
 #and then then the scenario is made up of all of those parts. This leads to three scenarios for how to deal with models
 	
 	#one formula, one data frame -- currently needs at least one formula
-	if(any(class(formula) == "formula") && is.data.frame(data)){
+	if((any(class(formula) == "formula") || is.null(formula)) && is.data.frame(data)){
+		checkScenF(formula)
 		data <- data[ ,all.vars(formula)]
+		checkScenD(data)
 		xscen <- initScen(data, nscen, names, f, ...)
 		xscen$model <- fixModel(formula, data)
 	}
 	
 	#more than one formula, one data frame
 	if (is.list(formula) && is.data.frame(data)) {
+		sapply(formula, checkScenF)
 		combVars <- unique(unlist(lapply(formula, all.vars))) #get all variables in all formulas
+		checkScenD(data = data[ ,combVars]) #error checking
 		xscen <- initScen(data[ ,combVars], nscen, names, f, ...) #initiate scenario with all formulas
 		xscen$model <- sapply(formula, fixModel, data = data) #attach formulas to object
 	}
 	
 	#hierarchical - many data frames, many scenarios and assumes datasets are in line with formula 
 	#we could allow the initiation of variable numbers of scenarios as well
-	if (is.list(formula) && is.list(data) && length(formula)==length(data)) {
-		#unimplemented
+	#we need to decide if we want the name of the data set attached if present
+	#names would have to be a list of different scenarios and hence a list
+	if (is.list(formula) && !is.data.frame(data) && is.list(data)) {
+		
+		if (length(formula)!=length(data)){
+			stop("The number of formula in a list must equal the number of data.frames for hierarchical models")
+		}
+	
+		#if(names == NULL) names <- rep(NULL, length((formula)))
+		xscen <- list(x=list(),xpre=list())
+		for (levs in 1:length(formula)) {
+			sapply(formula, checkScenF)
+			sapply(data, checkScenD)
+			dataTemp <- data[[levs]][, all.vars(formula[[levs]])]
+			xScenTemp <- initScen(dataTemp, nscen, names, f,...)
+			xscen$x[[levs]] <- xScenTemp$x
+			xscen$xpre[[levs]] <- xScenTemp$xpre
+			xscen$model <- sapply(formula, fixModel, data = data) #attach formulas to object
+		}
 	}
 	return(xscen)
 }
 
 #unimplemted -- this will check for warnings in all of the models
-checkScen <- function(){	
+checkScenF <- function(formula){	
 	if (is.null(formula)) {
-		warning("No formula was given. All variables in data set used to create scenario")
+		warning("A NULL was given for a formula provided.")
 	}
+}
 
-	if(!is.data.frame(data) || nrow(na.omit(data))==0) {
-		stop("Data provided must be data.frame object with at least one row of data")
+checkScenD <- function(data){
+	if(nrow(extractdata(data, na.rm=TRUE)) ==0) {
+		stop("Data provided must be data.frame object with at least one row of data not omitted")
 	}
 }
 
@@ -256,9 +279,15 @@ fixModel <- function(formula, data){
     # 
     #   
     #   
-
+#Nothing special needs to be do for cfChange in a multiformula model
+#We do need to do something when there are hierarchical models
+#There are two approachs. One is to use an if statement to do something differe
+#Another is to tag the types of simulators and then use that to split
+#i.e. -- xscen$type = "multi-level"
 cfChange <- function(xscen,covname,x=NULL,xpre=NULL,scen=1) {
-    if (!is.null(x))
+    	
+	
+	if (!is.null(x))
         xscen$x[scen,covname] <- x
     if (!is.null(xpre))
         xscen$xpre[scen,covname] <- xpre
@@ -287,6 +316,7 @@ cfChange <- function(xscen,covname,x=NULL,xpre=NULL,scen=1) {
     xscen
   }
 
+#same is true here
 cfName <- function(xscen,name,scen=1) {
     if (!is.null(xscen$x))
         row.names(xscen$x)[scen] <- name
