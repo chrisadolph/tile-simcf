@@ -5,14 +5,16 @@
 # ================
 library(simcf)
 
-cfpe <- function(cf, scen=NULL, cat=NULL, period=NULL eq=NULL) {
-	if (cf$cfMake.call[["eqtype"]]) %in% c("simple")) {
-		if (is.vector(cf[["pe"]]) cf[["pe"]] <- as.matrix(cf[["pe"]]) #dim doesn't work on vectors. Should make this a matrix please
-		peDim <- dim(cf[["pe"]])
-		if(is.null(scen))  assign("scen", paste(1, ":", 3))
-		pe.out <-   apply(function(i) i[scen, cat])
-	}
-	
+cfpe <- function(cf, scen=NULL, cat=NULL, period=NULL, eq=NULL) {
+    #if (cf$cfMake.call[["eqtype"]]) %in% c("simple")) {
+        if (is.vector(cf[["pe"]])) cf[["pe"]] <- as.matrix(cf[["pe"]])
+        #dim doesn't work on vectors. Should make this a matrix please
+        peDim <- dim(cf[["pe"]])
+        if(is.null(scen))  assign("scen", seq(1, peDim[1]))
+        if(is.null(cat))  assign("cat", seq(1, peDim[2]))
+        pe.out <- cf[["pe"]][scen, cat] #we can go an recalculate from original simulates or not
+    #}  
+    return(pe.out)
 }
 
 # 
@@ -22,7 +24,3 @@ cfpe <- function(cf, scen=NULL, cat=NULL, period=NULL eq=NULL) {
 # 
 # These extractor functions can be used by end users, but also by tile traces when they encounter a cf object.
 
-
- po1.qoi[["pe"]] <- as.matrix(po1.qoi[["pe"]])
-dim(po1.qoi[["pe"]])
-dim(yhyp.plr[["pe"]])

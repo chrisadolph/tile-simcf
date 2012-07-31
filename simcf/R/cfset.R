@@ -1,3 +1,24 @@
+simpleForm <- function(formula, data, nscen, names, f,...) {
+	checkScenF(formula)
+	data.out <- constDF(formula, data) #deal with null formulae
+	checkScenD(data.out)
+	xscen <- initScen(data.out, nscen, names, f, ...)
+	xscen$model <- fixModel(formula, data.out)
+	return(xscen)
+}
+
+compoundForm <- function(formula, data, nscen, names, f,...) {
+	sapply(formula, checkScenF)
+	combVars <- unique(unlist(lapply(formula, all.vars))) #get all variables in all formulas
+	combVars <- as.formula(paste(combVars[1], " ~ ", paste(combVars[2:length(combVars)], collapse= "+")))
+	data.out <- constDF(combVars, data)
+	checkScenD(data.out) #error checking
+	xscen <- initScen(data.out, nscen, names, f, ...) #initiate scenario with all formulas
+	#there is some environment issue with model.matrix it works if I reboot R but there is some conflict
+	xscen$model <- sapply(formula, fixModel, data = data.out) #attach formulas to object
+	return(xscen)
+}
+
 cfMake <- function(formula=NULL,data,nscen=1,names=NULL,hull=FALSE,f="mean",...) {
 #There are three scenarios for model
 #1 one formula, one data frame
@@ -9,64 +30,65 @@ cfMake <- function(formula=NULL,data,nscen=1,names=NULL,hull=FALSE,f="mean",...)
 	cfMake.call <- match.call(expand.dots = TRUE)
 	
 	if((any(class(formula)=="formula") || is.null(formula)) && !is.data.frame(data)) {
-		stop("You must provide one and only one data.frame object for non-hierachical models")
+		stop("You must provide one and only one data.frame object for non-hierarchical models")
 	}
-	
 	#one formula, one data frame 
 	if((any(class(formula)=="formula") || is.null(formula)) && is.data.frame(data)) {
-		checkScenF(formula)
-		data.out <- constDF(formula, data) #deal with null formulae
-		checkScenD(data.out)
-		xscen <- initScen(data.out, nscen, names, f, ...)
-		xscen$model <- fixModel(formula, data.out)
-		cfMake.call$model.type <- "simple"
+		xscen <- simpleForm(formula,data,names=names,nscen=nscen,f=f, ...)
+		# I think we should call it levels and make it one when it is one level
+		cfMake.call$levels <- 1 
+		cfMake.call$compound <- NULL
 	}
-	
 	#more than one formula, one data frame -- works with null formulae in list
 	if (is.list(formula) && is.data.frame(data)) {
-		sapply(formula, checkScenF)
-		combVars <- unique(unlist(lapply(formula, all.vars))) #get all variables in all formulas
-		combVars <- as.formula(paste(combVars[1], " ~ ", paste(combVars[2:length(combVars)], collapse= "+")))
-		data.out <- constDF(combVars, data)
-		checkScenD(data.out) #error checking
-		xscen <- initScen(data.out, nscen, names, f, ...) #initiate scenario with all formulas
-		#there is some environment issue with model.matrix it works if I reboot R but there is some conflict
-		xscen$model <- sapply(formula, fixModel, data = data.out) #attach formulas to object
-		cfMake.call$model.type <- "multiformula"
+		xscen <- compoundForm(formula,data,names=names,nscen=nscen, f=f, ...)
+		cfMake.call$levels <- 1
+		cfMake.call$compound <- 1
 	}
 	
 	#hierarchical - many data frames, many scenarios and assumes datasets are in line with formula 
+	#it also assumes that if you have compound formulas that they are nested in lists within the level they are called
 	#we could allow the initiation of variable numbers of scenarios as well
 	#we need to decide if we want the name of the data set attached if present
 	#names would have to be a list of different scenarios and hence a list
 	if (is.list(formula) && !is.data.frame(data) && is.list(data)) {
-		
 		if (length(formula)!=length(data)) {
-			stop("The number of formula in a list must equal the number of data.frames for hierarchical models")
+			stop("The number of elements in the formula list must equal the number of data.frames for hierarchical models")
 		}
 		if(is.null(names)) {
 			names <- lapply(data, function(i) rep(NULL, 1))
 		} else if (length(names)!=length(data)) {
-			stop("You must either leave names as NULL or specify a vector of names for each level in your model with the same number of names as there are scenarios in the level")
+			stop("You must either leave names as NULL or specify a vector of names for each level
+			 	in your model with the same number of names as there are scenarios in the level")
 		}
 		if(length(nscen)==1) {
 			nscen <- rep(nscen, length(data))
 		} else if (length(nscen)!=length(data)) {
 			stop(paste("You must either initiate the same number of scenarios for all levels of data or 
-			there should be a number of scenarios specified for each level of data. You have intiated", length(nscen), "different numbers for scenarios for", length(data), "data.frames"))
+				there should be a number of scenarios specified for each level of data. You have initiated",
+				 length(nscen), "different numbers for scenarios for", length(data), "data.frames"))
 		}
-
 		xscen <- list(x=list(),xpre=list())
+		compLevs <- NULL
 		for (levs in 1:length(formula)) {
-			sapply(formula, checkScenF)
-			sapply(data, checkScenD)
-			dataTemp <-  constDF(formula[[levs]], data[[levs]])   
-			xScenTemp <- initScen(dataTemp, nscen[levs], names[[levs]], f,...)
+			#deal with compound hierarchical models by calling the functions
+			#for simply and compound models separately
+			if(any(class(formula[[levs]]) == "formula") || is.null(formula[[levs]])) {
+				xScenTemp <- simpleForm(formula[[levs]], data[[levs]], nscen[levs], names[[levs]], f,...)	
+				}  else if (is.list(formula[[levs]])) {
+					xScenTemp <- compoundForm(formula[[levs]], data[[levs]], nscen[levs], names[[levs]], f,...)
+					compLevs <- c(compLevs, levs)
+				}
+			xscen$model[[levs]] <- xScenTemp$model
 			xscen$x[[levs]] <- xScenTemp$x
 			xscen$xpre[[levs]] <- xScenTemp$xpre
-			xscen$model <- sapply(formula, fixModel, data = data) #attach formulas to object
+		  #attach formulas to object
 		}
-		cfMake.call$model.type <- "multilevel"	
+		cfMake.call$levels <- as.numeric(length(data)) #have to specify as.numer and the as.call puts it in the right format
+		cfMake.call$compound <- if(!is.null(compLevs)) as.numeric(compLevs)
+	
+		
+
 	}
 	xscen$cfMake.call <- as.call(cfMake.call)
 	return(xscen)
@@ -85,7 +107,7 @@ checkScenF <- function(formula) {
 	if (is.null(formula)) {
 		warning("A NULL was given for a formula provided.")
 	} 	else if (!("formula" %in% class(formula))) {
-		stop(paste("An object that was neither NULL or of class formula was given as a formula. You gave an object of class", class(formula), sep = " "))
+		stop(paste("An object that was neither NULL or of class formula was given as a formula. You gave an object of class <", class(formula), ">", sep = " "))
 	}
 }
 
@@ -194,7 +216,7 @@ fixModel <- function(formula, data){
 #Another is to tag the types of simulators and then use that to split
 #i.e. -- xscen$type = "multi-level"
 cfChange <- function(xscen,covname,x=NULL,xpre=NULL,scen=1) {
-	if(xscen$cfMake.call[["model.type"]] %in% c("simple", "multiformula")) {
+	if(xscen$cfMake.call[["levels"]] == 1) {
 		if (!is.null(x)) xscen$x[scen,covname] <- x
     	if (!is.null(xpre)) xscen$xpre[scen,covname] <- xpre
     	if (!is.null(xscen$extrapolatex)) {
@@ -217,7 +239,7 @@ cfChange <- function(xscen,covname,x=NULL,xpre=NULL,scen=1) {
             	}
         	}
 		}
-	} else if (xscen$cfMake.call[["model.type"]] %in% c("multilevel")) {
+	} else if (xscen$cfMake.call[["levels"]] > 1) {
 		locs <- sapply(xscen$x, function(i) covname %in% names(i))
 		mtches <- locs[locs == TRUE]
 		if(length(mtches)>1) {
@@ -231,7 +253,7 @@ cfChange <- function(xscen,covname,x=NULL,xpre=NULL,scen=1) {
     		#what does extraplating outside of the convex hull in multilevel models look like?
 		}
 	} else {
-		stop("Somehow the model.type is incorrect or not specified")
+		stop("Somehow the eqtype is incorrect or not specified")
 	}
 	return(xscen)
 }
@@ -240,10 +262,10 @@ cfChange <- function(xscen,covname,x=NULL,xpre=NULL,scen=1) {
 #the user should specify the data set where they want to name the scenario
 #the user could combine different names of different scenarios at the different levels
 cfName <- function(xscen,name,scen=1, df = 1) {
-	if(xscen$cfMake.call[["model.type"]] %in% c("simple", "multiformula")) {
+	if(xscen$cfMake.call[["levels"]] == 1) {
     	if (!is.null(xscen$x)) row.names(xscen$x)[scen] <- name
     	if (!is.null(xscen$xpre)) row.names(xscen$xpre)[scen] <- name
-	} else if (xscen$cfMake.call[["model.type"]] %in% c("multilevel")) {
+	} else if(xscen$cfMake.call[["levels"]] > 1){
 		if (!is.null(xscen$x[[df]])) row.names(xscen$x[[df]])[scen] <- name
 		if (!is.null(xscen$xpre[[df]])) row.names(xscen$xpre[[df]])[scen] <- name
 	}
