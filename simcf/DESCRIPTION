@@ -17,4 +17,5 @@ Imports:
   tile,
   verification
 Suggests: MASS,
-  nnet
+  nnet,
+  Zelig

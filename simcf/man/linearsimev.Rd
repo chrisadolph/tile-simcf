@@ -79,7 +79,7 @@ parameter values, you can draw often them yourself, e.g., using functions
 such as \code{\link{vcov}} and \code{\link{mvrnorm}} in the \pkg{MASS}
 package, as shown below.
 
-\code{\link{zelig}}, in the package \pkg{Zelig}, offers similar features for
+\code{\link[Zelig]{zelig}}, in the package \pkg{Zelig}, offers similar features for
 a wide array of models and with automated handling of the simulation
 process.  These functions are offered as a simple alternative for users with
 simulations already in hand.
