@@ -297,13 +297,13 @@ cfFactorial <- function(...,formula=NULL,data=NULL,names=NULL,hull=FALSE,f="mean
         if (any(c(xscen$extrapolatex,xscen$extrapolatexpre,xscen$extrapolatefd)==FALSE)) {
             warning("Some counterfactuals involve extrapolation outside the convex hull")
             if (any(xscen$extrapolatex==FALSE)) {
-                print(c("x scenarios:  ",row.names(x)[xscen$extrapolatex]))
+                print(c("x scenarios:  ",row.names(xscen$x)[xscen$extrapolatex]))
             }
             if (any(xscen$extrapolatexpre==FALSE)) {
-                print(c("xpre scenarios:  ",row.names(xpre)[xscen$extrapolatexpre]))
+                print(c("xpre scenarios:  ",row.names(xscen$xpre)[xscen$extrapolatexpre]))
             }
             if (any(xscen$extrapolatefd==FALSE)) {
-                print(c("first diff scenarios:  ",row.names(x)[xscen$extrapolatefd]))
+                print(c("first diff scenarios:  ",row.names(xscen$x)[xscen$extrapolatefd]))
             }
         }
     }
@@ -588,13 +588,13 @@ cfMake <- function(formula=NULL,data,nscen=1,names=NULL,hull=FALSE,f="mean",...)
         if (any(c(xscen$extrapolatex,xscen$extrapolatexpre,xscen$extrapolatefd)==FALSE)) {
             warning("Some counterfactuals involve extrapolation outside the convex hull")
             if (any(xscen$extrapolatex==FALSE)) {
-                print(c("x scenarios:  ",row.names(x)[xscen$extrapolatex]))
+                print(c("x scenarios:  ",row.names(xscen$x)[xscen$extrapolatex]))
             }
             if (any(xscen$extrapolatexpre==FALSE)) {
-                print(c("xpre scenarios:  ",row.names(xpre)[xscen$extrapolatexpre]))
+                print(c("xpre scenarios:  ",row.names(xscen$xpre)[xscen$extrapolatexpre]))
             }
             if (any(xscen$extrapolatefd==FALSE)) {
-                print(c("first diff scenarios:  ",row.names(x)[xscen$extrapolatefd]))
+                print(c("first diff scenarios:  ",row.names(xscen$x)[xscen$extrapolatefd]))
             }
         }
     }
@@ -618,13 +618,13 @@ cfChange <- function(xscen,covname,x=NULL,xpre=NULL,scen=1) {
         if (any(c(xscen$extrapolatex,xscen$extrapolatexpre,xscen$extrapolatefd)==FALSE)) {
             warning("Some counterfactuals involve extrapolation outside the convex hull")
             if (any(xscen$extrapolatex==FALSE)) {
-                print(c("x scenarios:  ",row.names(x)[xscen$extrapolatex]))
+                print(c("x scenarios:  ",row.names(xscen$x)[xscen$extrapolatex]))
             }
             if (any(xscen$extrapolatexpre==FALSE)) {
-                print(c("xpre scenarios:  ",row.names(xpre)[xscen$extrapolatexpre]))
+                print(c("xpre scenarios:  ",row.names(xscen$xpre)[xscen$extrapolatexpre]))
             }
             if (any(xscen$extrapolatefd==FALSE)) {
-                print(c("first diff scenarios:  ",row.names(x)[xscen$extrapolatefd]))
+                print(c("first diff scenarios:  ",row.names(xscen$x)[xscen$extrapolatefd]))
             }
         }
 
