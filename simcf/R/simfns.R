@@ -1758,7 +1758,7 @@ mlogitsimev <- function(x,b,ci=0.95,constant=1,z=NULL,g=NULL,predict=FALSE,sims=
         if (predict) {
           pv <- NULL
           for (ipred in 1:dim(b)[1]) {
-            pv <- c(pv,resample(1:dim(simy)[2], size=sims, prob=simy[ipred,],replace=TRUE))
+            pv <- c(pv,sample(1:dim(simy)[2], size=sims, prob=simy[ipred,],replace=TRUE))
           }
           res$pv <- rbind(res$pv,pv)
 
