@@ -94,7 +94,6 @@ cfFactorial <- function(...,formula=NULL,data=NULL,names=NULL,hull=FALSE,f="mean
 
     # Check for extrapolation
     if (hull&&(!is.null(formula))&&(!is.null(data))) {
-        require(WhatIf)
         wi <- whatif(formula=formula, data=data, cfact=xscen$x)
         xscen$extrapolatex <- !wi$in.hull
         wi <- whatif(formula=formula, data=data, cfact=xscen$xpre)
@@ -193,7 +192,6 @@ cfMake <- function(formula=NULL,data,nscen=1,names=NULL,hull=FALSE,f="mean",...)
 
     # Check for extrapolation
     if (hull&&(!is.null(formula))&&(!is.null(data))) {
-        require(WhatIf)
         wi <- whatif(formula=formula, data=data, cfact=xscen$x)        
         xscen$extrapolatex <- !wi$in.hull
         wi <- whatif(formula=formula, data=data, cfact=xscen$xpre)
@@ -223,7 +221,6 @@ cfChange <- function(xscen,covname,x=NULL,xpre=NULL,scen=1) {
     if (!is.null(xpre))
         xscen$xpre[scen,covname] <- xpre
     if (!is.null(xscen$extrapolatex)) {
-        require(WhatIf)
         wi <- whatif(formula=xscen$model, data=xscen$data, cfact=xscen$x)
         xscen$extrapolatex <- !wi$in.hull
         wi <- whatif(formula=xscen$model, data=xscen$data, cfact=xscen$xpre)

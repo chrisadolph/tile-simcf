@@ -14,8 +14,6 @@ pcp.glm <- function(res, y, type="model") { # other types:  null, improve
 }
 
 pcp.oprobit <- function(x, y, b, constant=1, ncat=3, type="model") { # other types:  null, improve
-
-  require(simcf)
   b <- matrix(b,nrow=100,ncol=length(b),byrow=TRUE)
   simy <- oprobitsimev(x, b, constant=constant, cat=ncat)
 
@@ -46,7 +44,6 @@ pcp.oprobit <- function(x, y, b, constant=1, ncat=3, type="model") { # other typ
 
 
 concord.glm <- function(res, y, type="model") { # other types:  null, improve
-  require(verification)
   if (type=="model") {
     yhat <- predict(res,type="response")
     concord <- roc.area(y, yhat)$A
@@ -67,8 +64,6 @@ concord.glm <- function(res, y, type="model") { # other types:  null, improve
 
 
 concord.oprobit <- function(x, y, b, constant=1, ncat=3, type="model") { # other types:  null, improve
-  require(simcf)
-  require(verification)
   b <- matrix(b,nrow=100,ncol=length(b),byrow=TRUE)
   simy <- oprobitsimev(x, b, constant=constant, cat=ncat)
   cats <- sort(unique(y))
