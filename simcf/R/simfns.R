@@ -1,4 +1,3 @@
-
 # Other sim functions to add:
 
 #  TVC Cox PH                            lp/rp
@@ -19,6 +18,78 @@ appendmatrix <- function(x,values,after=ncol(x)) {
 }
 
 # Simulate expected probabilities for linear models
+
+
+
+
+#' Simulate quantities of interest and confidence intervals for linear models
+#' 
+#' Simulate and summarize uncertainty of conditional expected values, first
+#' differences and relative risks from estimated linear regression models
+#' 
+#' Given simulated parameters from an estimated linear model, and
+#' counterfactual values of the covariates, these functions calculate either
+#' the conditional expected value of the response (\code{linearsimev}), the
+#' conditional first difference (\code{linearsimfd}), or the relative risk
+#' (\code{linearsimrr}), and confidence intervals around that point estimate
+#' (optionally, predictive intervals as well, taking into account the
+#' fundametal uncertainty in the response captured by sigma2).
+#' 
+#' Use \code{cfMake} to initialize a \code{counterfactual} object containing
+#' \code{x} and \code{xpre}, or input them directly.
+#' 
+#' If the function you used to estimate the model does not provide simulated
+#' parameter values, you can draw often them yourself, e.g., using functions
+#' such as \code{\link{vcov}} and \code{\link{mvrnorm}} in the \pkg{MASS}
+#' package, as shown below.
+#' 
+#' \code{\link{zelig}}, in the package \pkg{Zelig}, offers similar features for
+#' a wide array of models and with automated handling of the simulation
+#' process.  These functions are offered as a simple alternative for users with
+#' simulations already in hand.
+#' 
+#' @aliases linearsimev linearsimfd linearsimrr
+#' @param x list, a counterfactual object created by \code{cfMake}, or a vector
+#' or matrix of counterfactual values of the covariates, including multiple
+#' rows to simulate different counterfactual scenarios, and one column for each
+#' covariate
+#' @param b matrix, simulated parameters, one row per draw from the estimated
+#' model, and one column per parameter, including any constants
+#' @param ci vector, the requested intervals of the simulated quantity of
+#' interest to be reported
+#' @param constant scalar, the column of \code{b} containing the model
+#' constant, or \code{NA} for no constant
+#' @param sigma2 scalar or vector, either the estimated sigma2 from the linear
+#' regression, or a vector of simulated sigma2's drawn from the model
+#' posterior.  Only required if predicted values are desired.
+#' @param sims scalar, the number of draws taken from the predictive
+#' distribution of the response.  Only used if sigma2 is provided.  Default is
+#' 10 draws.
+#' @param save logical, whether to save the simulated expected values (and
+#' predicted values, if any), in addition to the point estimates and requested
+#' intervals.  Default is FALSE.
+#' @param xpre vector or matrix, counterfactual initial values of the
+#' covariates.  Rows must match \code{x}.  Not needed when \code{x} is a
+#' \code{counterfactual} object.
+#' @return Returns a list with at least three components, and as many as seven:
+#' \item{pe}{vector, the point estimate(s) of the requested quantity of
+#' interest} \item{lower}{vector or matrix, the requested lower confidence
+#' bounds around the quantity of interest; rows are scenarios, columns are
+#' intervals} \item{upper}{vector or matrix, the requested upper confidence
+#' bounds around the quantity of interest; rows are scenarios, columns are
+#' intervals} \item{plower}{vector or matrix, the requested lower predictive
+#' bounds around the quantity of interest; rows are scenarios, columns are
+#' intervals (requires sigma2 be an input)} \item{pupper}{vector or matrix, the
+#' requested upper predictive bounds around the quantity of interest; rows are
+#' scenarios, columns are intervals (requires sigma2 be an input)}
+#' \item{ev}{vector or matrix, the simulated expected values; rows are
+#' scenarios, columns are simulations (only given if save is TRUE)}
+#' \item{pv}{vector or matrix, the simulated predicted values; rows are
+#' scenarios, columns are simulations (only given if sigma2 is provided and
+#' save is TRUE)}
+#' @author Christopher Adolph <\email{cadolph@@u.washington.edu}>
+#' @seealso \code{\link{cfMake}}, \code{\link{cfChange}}, \code{\link{cfName}}
+#' @keywords models
 linearsimev <- function(x,b,ci=0.95,constant=1,sigma2=NULL,sims=10,save=FALSE,nscen=1) {
   if (is.null(x)) {
     if (is.na(constant))
@@ -248,6 +319,56 @@ linearsimrr <- function(x,b,ci=0.95,constant=1,xpre=NULL) {
 
 
 # Simulate expected probabilities for logit
+
+
+
+
+#' Simulate quantities of interest and confidence intervals for binary logit
+#' 
+#' Simulate and summarize uncertainty of conditional expected values, first
+#' differences and relative risks from estimated binary logit models
+#' 
+#' Given simulated parameters from an estimated logit model, and counterfactual
+#' values of the covariates, these functions calculate either the conditional
+#' expected value of the response (\code{logitsimev}), the conditional first
+#' difference (\code{logitsimfd}), or the relative risk (\code{logitsimrr}),
+#' and confidence intervals around that point estimate.  Use \code{cfMake} to
+#' initialize a \code{counterfactual} object containing \code{x} and
+#' \code{xpre}, or input them directly.
+#' 
+#' If the function you used to estimate the model does not provide simulated
+#' parameter values, you can draw often them yourself, e.g., using functions
+#' such as \code{\link{vcov}} and \code{mvrnorm} in the \code{MASS} package, as
+#' shown below.
+#' 
+#' zelig, in the package Zelig, offers similar features for a wide array of
+#' models and with automated handling of the simulation process.  These
+#' functions are offered as a simple alternative for users with simulations
+#' already in hand.
+#' 
+#' @aliases logitsimev logitsimfd logitsimrr
+#' @param x list, a counterfactual object created by \code{cfMake}, or a vector
+#' or matrix of counterfactual values of the covariates, including multiple
+#' rows to simulate different counterfactual scenarios, and one column for each
+#' covariate
+#' @param b matrix, simulated parameters, one row per draw from the estimated
+#' model, and one column per parameter, including any constants
+#' @param ci vector, the requested intervals of the simulated quantity of
+#' interest to be reported
+#' @param constant scalar, the column of \code{b} containing the model
+#' constant, or \code{NA} for no constant
+#' @param xpre vector or matrix, counterfactual initial values of the
+#' covariates.  Rows must match \code{x}.  Not needed when \code{x} is a
+#' \code{counterfactual} object.
+#' @return Returns a list with three components \item{pe}{vector, the point
+#' estimate(s) of the requested quantity of interest} \item{lower}{matrix, the
+#' requested lower bounds around the quantity of interest; rows are scenarios,
+#' columns are intervals} \item{upper}{matrix, the requested upper bounds
+#' around the quantity of interest; rows are scenarios, columns are intervals}
+#' @author Christopher Adolph <\email{cadolph@@u.washington.edu}>
+#' @seealso \code{\link{probitsimev}}, \code{\link{mlogitsimev}},
+#' \code{\link{cfMake}}, \code{\link{cfChange}}, \code{\link{cfName}}
+#' @keywords models
 logitsimev <- function(x,b,ci=0.95,constant=1) {
     if (any(class(x)=="counterfactual")&&!is.null(x$model)) {
         x <- model.matrix(x$model,x$x)
@@ -439,6 +560,56 @@ logitsimrr <- function(x,b,ci=0.95,constant=1,xpre=NULL) {
 
 
 # Simulate expected probabilities for probit
+
+
+
+
+#' Simulate quantities of interest and confidence intervals for binary probit
+#' 
+#' Simulate and summarize uncertainty of conditional expected values, first
+#' differences and relative risks from estimated binary probit models
+#' 
+#' Given simulated parameters from an estimated probit model, and
+#' counterfactual values of the covariates, these functions calculate either
+#' the conditional expected value of the response (\code{probitsimev}), the
+#' conditional first difference (\code{probitsimfd}), or the relative risk
+#' (\code{probitsimrr}), and confidence intervals around that point estimate.
+#' Use \code{cfMake} to initialize a \code{counterfactual} object containing
+#' \code{x} and \code{xpre}, or input them directly.
+#' 
+#' If the function you used to estimate the model does not provide simulated
+#' parameter values, you can draw often them yourself, e.g., using functions
+#' such as \code{\link{vcov}} and \code{mvrnorm} in the \code{MASS} package, as
+#' shown below.
+#' 
+#' zelig, in the package Zelig, offers similar features for a wide array of
+#' models and with automated handling of the simulation process.  These
+#' functions are offered as a simple alternative for users with simulations
+#' already in hand.
+#' 
+#' @aliases probitsimev probitsimfd probitsimrr
+#' @param x list, a counterfactual object created by \code{cfMake}, or a vector
+#' or matrix of counterfactual values of the covariates, including multiple
+#' rows to simulate different counterfactual scenarios, and one column for each
+#' covariate
+#' @param b matrix, simulated parameters, one row per draw from the estimated
+#' model, and one column per parameter, including any constants
+#' @param ci vector, the requested intervals of the simulated quantity of
+#' interest to be reported
+#' @param constant scalar, the column of \code{b} containing the model
+#' constant, or \code{NA} for no constant
+#' @param xpre vector or matrix, counterfactual initial values of the
+#' covariates.  Rows must match \code{x}.  Not needed when \code{x} is a
+#' \code{counterfactual} object.
+#' @return Returns a list with three components \item{pe}{vector, the point
+#' estimate(s) of the requested quantity of interest} \item{lower}{matrix, the
+#' requested lower bounds around the quantity of interest; rows are scenarios,
+#' columns are intervals} \item{upper}{matrix, the requested upper bounds
+#' around the quantity of interest; rows are scenarios, columns are intervals}
+#' @author Christopher Adolph <\email{cadolph@@u.washington.edu}>
+#' @seealso \code{\link{logitsimev}}, \code{\link{mlogitsimev}},
+#' \code{\link{cfMake}}, \code{\link{cfChange}}, \code{\link{cfName}}
+#' @keywords models
 probitsimev <- function(x,b,ci=0.95,constant=1) {
     if (any(class(x)=="counterfactual")&&!is.null(x$model)) {
         x <- model.matrix(x$model,x$x)
@@ -658,6 +829,108 @@ llk.oprobit <- function(param, x, y) {
 
 
 # Simulate expected probabilities for ordered probit
+
+
+
+
+#' Simulate quantities of interest and confidence intervals for ordered probit
+#' 
+#' Simulate and summarize uncertainty of conditional expected values, first
+#' differences and relative risks from estimated ordered probit models
+#' 
+#' Given simulated parameters from an estimated ordered probit model, and
+#' counterfactual values of the covariates, these functions calculate either
+#' the conditional expected value of the response (\code{oprobitsimev}), the
+#' conditional first difference (\code{oprobitsimfd}), or the relative risk
+#' (\code{oprobitsimrr}), and confidence intervals around these point
+#' estimates.
+#' 
+#' Use \code{cfMake} to initialize a \code{counterfactual} object containing
+#' \code{x} and \code{xpre}, or input them directly.
+#' 
+#' If the function you used to estimate the model does not provide simulated
+#' parameter values, you can draw often them yourself, e.g., using functions
+#' such as \code{\link{vcov}} and \code{mvrnorm} in the \code{MASS} package, as
+#' shown below.
+#' 
+#' zelig, in the package Zelig, offers similar features for a wide array of
+#' models and with automated handling of the simulation process.  These
+#' functions are offered as a simple alternative for users with simulations
+#' already in hand.
+#' 
+#' @aliases oprobitsimev oprobitsimfd oprobitsimrr
+#' @param x list, a counterfactual object created by \code{cfMake}, or a vector
+#' or matrix of counterfactual values of the covariates, including multiple
+#' rows to simulate different counterfactual scenarios, and one column for each
+#' covariate
+#' @param b matrix, simulated parameters, one row per draw from the estimated
+#' model, and one column per parameter, including any constants.  The last
+#' \code{cat} - 2 columns should be the cutpoints.
+#' @param ci vector, the requested intervals of the simulated quantity of
+#' interest to be reported
+#' @param constant scalar, the column of \code{b} containing the model
+#' constant, or \code{NA} for no constant.  If the estimation was done in
+#' polr() from the MASS library, you must set constant to NA.
+#' @param cat scalar, the number of categories in the response variable; must
+#' be at least 3 and an integer
+#' @param xpre vector or matrix, counterfactual initial values of the
+#' covariates.  Rows must match \code{x}.  Not needed when \code{x} is a
+#' \code{counterfactual} object.
+#' @return Returns a list with three components \item{pe}{matrix, the point
+#' estimates of the requested quantity of interest; rows are scenarios, and
+#' columns are categories} \item{lower}{array, the requested lower bounds
+#' around the quantity of interest; rows are scenarios, columns are the
+#' category of the response, and the third dimension is the confidence
+#' interval} \item{upper}{array, the requested upper bounds around the quantity
+#' of interest; rows are scenarios, columns are the category of the response,
+#' and the third dimension is the confidence interval}
+#' @author Christopher Adolph <\email{cadolph@@u.washington.edu}>
+#' @seealso \code{\link{logitsimev}}, \code{\link{mlogitsimev}},
+#' \code{\link{cfMake}}, \code{\link{cfChange}}, \code{\link{cfName}}
+#' @keywords models
+#' @examples
+#' 
+#' require(MASS)
+#' 
+#' # Using housing data from MASS; convert to optim usable form
+#' data(housing)
+#' housingExpanded <- housing[rep(1:nrow(housing), housing$Freq),]
+#' rownames(housingExpanded) <- 1:nrow(housingExpanded)
+#' housingExpanded$Sat <- as.numeric(housingExpanded$Sat)
+#' housingExpanded$Infl <- as.numeric(housingExpanded$Infl)
+#' housingExpanded$Cont <- as.numeric(housingExpanded$Cont)
+#' y <- housingExpanded$Sat
+#' x <- cbind(housingExpanded$Infl, housingExpanded$Cont)
+#' model <- Sat ~ Infl + Cont
+#' 
+#' # Estimate a p-category ordered probit using optim and llk.oprobit (from simcf library)
+#' # This version of ordered probit has a constant and p-2 estimated cutpoints
+#' ncut <- length(unique(housingExpanded$Sat)) - 2
+#' ls.result <- lm(model, data=housingExpanded) # LS based starting values
+#' stval <- c(ls.result$coefficients, 1:ncut)          # and 1, 2, ... for cutpoints
+#' house.optim <- optim(stval, llk.oprobit, method="BFGS", y=y, x=x, hessian=TRUE)
+#' 
+#' # Construct counterfactual scenarios:  All combinations of Infl and Cont
+#' xhyp <- cfFactorial(Infl = unique(housingExpanded$Infl), 
+#'                     Cont = unique(housingExpanded$Cont))
+#' 
+#' # Simulate E(Sat) for each counterfactual
+#' sims <- 10000
+#' simbetas.optim <- mvrnorm(sims, house.optim$par, solve(house.optim$hessian) )
+#' yhyp.optim <- oprobitsimev(xhyp, simbetas.optim, constant=1, cat=3)
+#' print(yhyp.optim)
+#' 
+#' # Estimate a p-category ordered probit using polr (from MASS library)
+#' # This version of ordered probit has no constant and p-1 estimated cutpoints
+#' house.plr <- polr(as.factor(y) ~ x, method="probit")
+#' house.plr$par <- c(house.plr$coefficients, house.plr$zeta)
+#' simbetas.plr <- mvrnorm(sims, house.plr$par, vcov(house.plr) )
+#' 
+#' # Simulate E(Sat) for each counterfactual, polr version
+#' #   Must set constant = NA to predict from polr
+#' yhyp.plr <- oprobitsimev(xhyp, simbetas.plr, constant=NA, cat=3)
+#' print(yhyp.plr)
+#' 
 oprobitsimev <- function(x,b,ci=0.95,constant=1,cat=3) {
   if (cat<3) { stop("cat must be at least 3 for ordered probit") }
     if (any(class(x)=="counterfactual")&&!is.null(x$model)) {
@@ -1012,6 +1285,61 @@ oprobitsimrr <- function(x,b,ci=0.95,constant=1,cat=3,xpre=NULL) {
 
 
 # Simulate expected count for a log-linear model
+
+
+
+
+#' Simulate quantities of interest and confidence intervals for loglinear
+#' models
+#' 
+#' Simulate and summarize uncertainty of conditional expected counts, first
+#' differences and relative rates from estimated loglinear models, such as the
+#' Poisson or Negative Binomial
+#' 
+#' Given simulated parameters from an estimated loglinear model, and
+#' counterfactual values of the covariates, these functions calculate either
+#' the conditional expected count (\code{loglinsimev}), the conditional first
+#' difference (\code{loglinsimfd}), or the conditional relative rate of events
+#' (\code{loglinsimrr}) and confidence intervals around these point estimate.
+#' 
+#' If the function you used to estimate the model does not provide simulated
+#' parameter values, you can draw often them yourself, e.g., using functions
+#' such as \code{\link{vcov}} and \code{mvrnorm} in the \code{MASS} package, as
+#' shown below.
+#' 
+#' zelig, in the package Zelig, offers similar features for a wide array of
+#' models and with automated handling of the simulation process.  These
+#' functions are offered as a simple alternative for users with simulations
+#' already in hand.
+#' 
+#' @aliases loglinsimev loglinsimfd loglinsimrr
+#' @param x vector, matrix, or list, counterfactual values of the covariates.
+#' Include multiple rows to simulate different counterfactual scenarios.  If a
+#' list, may contain \code{x} and \code{xpre} as dataframes, a formula object
+#' to apply to them, and names for each scenario given as the row names for
+#' component \code{x}
+#' @param b matrix, simulated parameters, one row per draw from the estimated
+#' model, and one column per parameter, including any constants
+#' @param ci vector, the requested intervals of the simulated quantity of
+#' interest to be reported
+#' @param constant scalar, the column of \code{b} containing the model
+#' constant, or NA for no constant
+#' @param period scalar or vector, the length of the period over which the
+#' count is simulated
+#' @param labels string vector, names of each scenario (overrides any names in
+#' \code{x})
+#' @param xpre vector or matrix, counterfactual final values of the covariates.
+#' Include multiple rows to simulate different counterfactual scenarios; rows
+#' must match \code{x}.  Not needed is \code{x} is a list containing
+#' \code{xpre}
+#' @return Returns a list with four components \item{pe}{vector, the point
+#' estimate(s) of the requested quantity of interest} \item{lower}{matrix, the
+#' requested lower bounds around the quantity of interest; rows are scenarios,
+#' columns are intervals} \item{upper}{matrix, the requested upper bounds
+#' around the quantity of interest; rows are scenarios, columns are intervals}
+#' \item{labels}{string vector, the names of each scenario (optional)}
+#' @author Christopher Adolph <\email{cadolph@@u.washington.edu}>
+#' @keywords models
 loglinsimev <- function(x,b,ci=0.95,constant=1,period=1) {
   if (any(class(x)=="counterfactual")&&!is.null(x$model)) {
     x <- model.matrix(x$model,x$x)
@@ -1209,6 +1537,109 @@ loglinsimrr <- function(x,b,ci=0.95,constant=1,xpre=NULL,period=1,labels=NULL) {
 
 
 # Simulate expected probabilities for multinomial logit
+
+
+
+
+#' Simulate quantities of interest and confidence intervals for multinomial
+#' logit
+#' 
+#' Simulate and summarize uncertainty of conditional expected values, first
+#' differences and relative risks from estimated multinomial logit models
+#' 
+#' Given simulated parameters from an estimated multinomial logit model, and
+#' counterfactual values of the covariates, calculate either the conditional
+#' expected value of the response (\code{mlogitsimev}), the conditional first
+#' difference (\code{mlogitsimfd}), or the relative risk (\code{mlogitsimrr}),
+#' and confidence intervals around that point estimate.
+#' 
+#' If the function you used to estimate the model does not provide simulated
+#' parameter values, you can draw often them yourself, e.g., using functions
+#' such as \code{\link{vcov}} and \code{mvrnorm} in the \code{MASS} package, as
+#' shown below.
+#' 
+#' You must provide either observation-specific (\code{x}) or category-specific
+#' (\code{z}) covariates, or both, and the appropriate parameters (\code{b},
+#' \code{g}, or both, respectively).  Include any
+#' observation-and-category-specific covariates in \code{z}.
+#' 
+#' zelig, in the package Zelig, offers similar features for a wide array of
+#' models and with automated handling of the simulation process.  These
+#' functions are offered as a simple alternative for users with simulations
+#' already in hand.
+#' 
+#' @aliases mlogitsimev mlogitsimfd mlogitsimrr
+#' @param x vector or matrix, counterfactual values of covariates with
+#' category-specific parameters.  Include multiple rows to simulate different
+#' counterfactual scenarios
+#' @param b 3d array, simulated parameters, one row per draw from the estimated
+#' model, one column per parameter, including any constants, and one "sheet"
+#' for all categories except the reference category.
+#' @param ci vector, the requested intervals of the simulated quantity of
+#' interest to be reported
+#' @param constant scalar, the column of \code{b} containing the model
+#' constant, or NA for no constant
+#' @param z 3d array, counterfactual values of covariates specific to the
+#' response category.  Include one row for each counterfactual scenario, one
+#' column for each parameter, and one "sheet" for each category (do not omit
+#' any reference categories here)
+#' @param g 3d array, simulated parameters, one row per draw from the estimated
+#' model, one column per parameter, and one "sheet" for all categories (do not
+#' omit any reference categories here)
+#' @param xpre vector or matrix, counterfactual \emph{initial} values of
+#' covariates with category-specific parameters.  Include multiple rows to
+#' simulate different counterfactual scenarios
+#' @param zpre 3d array, counterfactual \emph{initial} values of covariates
+#' specific to the response category.  Include one row for each counterfactual
+#' scenario, one column for each parameter, and one "sheet" for each category
+#' (do not omit any reference categories here)
+#' @param zpost 3d array, counterfactual \emph{final} values of covariates
+#' specific to the response category.  Include one row for each counterfactual
+#' scenario, one column for each parameter, and one "sheet" for each category
+#' (do not omit any reference categories here)
+#' @return Returns a list with three components \item{pe}{matrix, the point
+#' estimates of the requested quantity of interest; rows are scenarios, and
+#' columns are categories} \item{lower}{array, the requested lower bounds
+#' around the quantity of interest; rows are scenarios, columns are the
+#' category of the response, and the third dimension is the confidence
+#' interval} \item{upper}{array, the requested upper bounds around the quantity
+#' of interest; rows are scenarios, columns are the category of the response,
+#' and the third dimension is the confidence interval}
+#' @author Christopher Adolph <\email{cadolph@@u.washington.edu}>
+#' @seealso \code{\link{logitsimev}}
+#' @keywords models
+#' @examples
+#' 
+#' # Multinomial Logistic Regression of alligator food
+#' # See tile package function lineplot for graphical presentation of this example
+#' 
+#' # Load data and libraries
+#' data(gator)
+#' require(MASS)
+#' require(nnet)
+#' 
+#' # Estimate MNL using the nnet library
+#' mlogit.result <- multinom(food ~ size + female, Hess=TRUE)
+#' pe <- mlogit.result$wts[c(6,7,8,10,11,12)]
+#'                                       # point estimates
+#' vc <- solve(mlogit.result$Hess)       # var-cov matrix
+#' 
+#' # Simulate parameters from predictive distributions
+#' sims <- 10000
+#' simbetas <- mvrnorm(sims,pe,vc)       # draw parameters, using MASS::mvrnorm
+#' simb <- array(NA, dim = c(sims,3,2))  # re-arrange simulates to array format
+#' simb[,,1] <- simbetas[,1:3]           #   for MNL simulation
+#' simb[,,2] <- simbetas[,4:6]
+#' 
+#' # Create full factorial set of counterfactuals
+#' sizerange <- seq(1,4,by=0.1)          # range of counterfactual sizes
+#' femalerange <- c(0,1)                 # range of counterfactual sexes
+#' xhyp <- cffactorial(size = sizerange, female = femalerange)
+#'                                       
+#' # Simulate expected probabilities
+#' mlogit.qoi1 <- mlogitsimev(xhyp,simb,ci=0.67)
+#' print(mlogit.qoi1)
+#' 
 mlogitsimev <- function(x,b,ci=0.95,constant=1,z=NULL,g=NULL,predict=FALSE,sims=10) {
     if (!is.array(b)) {
         stop("b must be an array")
@@ -1689,6 +2120,90 @@ hetnormsimev <- function(x,b,z,g,ci=0.95,constant=1,varconstant=1, predict=TRUE,
 
 
 # Simulate predicted values from heteroskedastic normal
+
+
+
+
+#' Simulate quantities of interest and predictive intervals for heteroskedastic
+#' linear models
+#' 
+#' Simulate and summarize uncertainty of conditional predicted values from
+#' estimated heteroskedastic linear models
+#' 
+#' 
+#' In linear regression, the response variable is normally distributed with
+#' variable mean but fixed variance across all observations.  In contrast, the
+#' linear heteroskedastic model considers a normally distributed response
+#' variable whose mean and variance both vary across observations:
+#' 
+#' \deqn{y_i \sim f_\mathrm{Normal}(\mu_i, \sigma_i^2)}{y_i ~ Normal(mu_i,
+#' sigma_i^2)}
+#' 
+#' The model contains a mean systematic component,
+#' 
+#' \deqn{\mu_i = x_ib}{mu_i = x_i * b}
+#' 
+#' and a variance systematic component,
+#' 
+#' \deqn{\sigma_i^2 = \mathrm{exp}(z_ig)}{sigma_i^2 = exp(z_i * g)}
+#' 
+#' The heteroskedastic normal model allows covariates to explain both changes
+#' in the mean and changes in the variance of the response variable, and can be
+#' estimated by maximum likelihood.
+#' 
+#' The functions documented above assume that the user has estimated such a
+#' model, and wishes to calculate predicted values of the response for
+#' hypothetical values of x and z.
+#' 
+#' \code{hetnormsimpv} takes simulated parameters b and g from an estimated
+#' linear heteroskedastic model, and counterfactual values of the covariates
+#' for the mean and variance systemtic components (x and z), and calculates the
+#' conditional predicted value of the response, including uncertainty intervals
+#' around that estimate.
+#' 
+#' You may use \code{cfMake} to initialize \code{counterfactual} objects for
+#' \code{x} and \code{z}, or input them directly as matrices.
+#' 
+#' If the function you used to estimate the model does not provide simulated
+#' parameter values, you can often draw them yourself, e.g., using functions
+#' such as \code{\link{vcov}} and \code{\link{mvrnorm}} in the \pkg{MASS}
+#' package, as shown below.
+#' 
+#' \code{\link{zelig}}, in the package \pkg{Zelig}, offers similar features for
+#' a wide array of models and with automated handling of the simulation
+#' process.  These functions are offered as a simple alternative for users with
+#' simulations already in hand.
+#' 
+#' @param x list, a counterfactual object created by \code{cfMake}, or a vector
+#' or matrix of counterfactual values of the covariates, including multiple
+#' rows to simulate different counterfactual scenarios, and one column for each
+#' covariate of the mean systematic component
+#' @param b matrix, simulated parameters for the mean systematic component, one
+#' row per draw from the estimated model, and one column per parameter,
+#' including any constants
+#' @param z list, a counterfactual object created by \code{cfMake}, or a vector
+#' or matrix of counterfactual values of the covariates, including multiple
+#' rows to simulate different counterfactual scenarios, and one column for each
+#' covariate of the variance systematic component
+#' @param g matrix, simulated parameters for the variance systematic component,
+#' one row per draw from the estimated model, and one column per parameter,
+#' including any constants
+#' @param ci vector, the requested intervals of the simulated quantity of
+#' interest to be reported
+#' @param constant scalar, the column of \code{b} containing the constant for
+#' the mean systematic component, or \code{NA} for no constant
+#' @param varconstant scalar, the column of \code{b} containing the constant
+#' for the variance systematic component, or \code{NA} for no constant
+#' @return Returns a list with components: \item{pe}{vector, the point
+#' estimate(s) of the requested quantity of interest} \item{lower}{vector or
+#' matrix, the requested lower confidence bounds around the quantity of
+#' interest; rows are scenarios, columns are intervals} \item{upper}{vector or
+#' matrix, the requested upper confidence bounds around the quantity of
+#' interest; rows are scenarios, columns are intervals}
+#' @author Christopher Adolph <\email{cadolph@@u.washington.edu}>
+#' @seealso \code{\link{cfMake}}, \code{\link{cfChange}}, \code{\link{cfName}},
+#' \code{\link{linearsimev}}
+#' @keywords models
 hetnormsimpv <- function(x,b,z,g,ci=0.95,constant=1,varconstant=1) {
     if (any(class(x)=="counterfactual")&&!is.null(x$model)) {
         x <- model.matrix(x$model,x$x)
@@ -1759,6 +2274,86 @@ hetnormsimpv <- function(x,b,z,g,ci=0.95,constant=1,varconstant=1) {
 
 
 # Simulate lagged dependent variable models out to t periods
+
+
+
+
+#' Simulate quantities of interest and confidence intervals for linear time
+#' series models including ARIMA or lagged dependent variable processes
+#' 
+#' Simulate and summarize uncertainty of iterated conditional expected values
+#' (ev), expected first differences (fd), expected relative risks (rr),
+#' predicted values (pv), predicted first differences (pd), and predicted
+#' relative risks (pr) from estimated ARIMA or lagged dependent variable time
+#' series linear models
+#' 
+#' Given simulated parameters from an estimated linear model with one or more
+#' lagged dependent variables, and counterfactual values of the covariates,
+#' these functions calculate either the conditional expected value of the
+#' response iterated over several periods, or the conditional difference or
+#' risk ratio over those periods, and confidence intervals around that point
+#' estimate.  Alternatively, the last function calculates predicted values,
+#' which include random noise and moving averages of that noise, also iterated
+#' over time and with prediction intervals.  This function is thus suitable for
+#' forming most desired quantities of interest from time series linear models
+#' with ARIMA or lagged dependent variable processes.
+#' 
+#' If the function you used to estimate the model does not provide simulated
+#' parameter values, you can draw often them yourself, e.g., using functions
+#' such as \code{\link{vcov}} and \code{mvrnorm} in the \code{MASS} package, as
+#' shown below.
+#' 
+#' zelig, in the package Zelig, offers similar features for a wide array of
+#' models and with automated handling of the simulation process.  These
+#' functions are offered as a simple alternative for users with simulations
+#' already in hand.
+#' 
+#' @aliases ldvsimev ldvsimfd ldvsimrr ldvsimpv ldvsimpd ldvsimpr
+#' @param x vector or matrix, counterfactual values of the covariates.  Include
+#' multiple rows to simulate different counterfactual scenarios
+#' @param b matrix, simulated parameters, one row per draw from the estimated
+#' model, and one column per parameter, including any constants
+#' @param ci vector, the requested intervals of the simulated quantity of
+#' interest to be reported
+#' @param constant scalar, the column of \code{b} containing the model
+#' constant, or NA for no constant
+#' @param xpre vector or matrix, counterfactual initial values of the
+#' covariates.  Include multiple rows to simulate different counterfactual
+#' scenarios; rows must match \code{x}; redundant and ignored if \code{x} is a
+#' \code{counterfactual object}
+#' @param phi scalar of point estimate, or matrix of simulated, AR or lagged DV
+#' parameters
+#' @param lagY scalar or vector, the prior levels of y or diff(y), most recent
+#' first; must match number of columns of \code{phi}
+#' @param rho scalar of point estimate, or matrix of simulated, MA parameters
+#' @param lagY scalar or vector, the prior levels of the error term, most
+#' recent first; must match number of columns of \code{rho}
+#' @param sigma scalar of point estimate, or matrix of simulated, white noise
+#' parameter or standard error of the regression
+#' @param transform string, transformation applied to the dependent variable in
+#' the original model; \code{log}, for the natural log, \code{diff}, for
+#' differencing; \code{difflog}, for differencing of a logged variable;
+#' \code{logit} for the logistic transformation; \code{difflogit} for the
+#' differencing of a logit transformed variable; and \code{none} for no
+#' transformation (default)
+#' @param initialY vector, for differenced models, the original level of the
+#' response
+#' @param cumulate logical, whether to additionally report cumulative values of
+#' the quantity of interest (default is not to report).
+#' @param discount scalar, the compounding discount rate to apply to future
+#' periods in calculating cumulative quantities of interest; default is 0 for
+#' no discounting.  Set as a proportion, so that 0.05 would be a 5 percent
+#' discount rate.
+#' @return Returns a list with at least four and as many as eight components:
+#' \item{pe}{vector, the point estimate(s) of the requested quantity of
+#' interest} \item{lower}{matrix, the requested lower bounds around the
+#' quantity of interest; rows are scenarios, columns are intervals}
+#' \item{upper}{matrix, the requested upper bounds around the quantity of
+#' interest; rows are scenarios, columns are intervals} \item{se}{}
+#' \item{pe.cumulative}{} \item{lower.cumulative}{} \item{upper.cumulative}{}
+#' \item{se.cumulative}{}
+#' @author Christopher Adolph <\email{cadolph@@uw.edu}>
+#' @keywords models
 ldvsimev <- function(x,                  # A counterfactual object, or the matrix of hypothetical x's,
                                          #    one for each period
                      b,                  # The matrix of simulated parameters

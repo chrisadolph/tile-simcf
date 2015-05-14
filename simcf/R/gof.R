@@ -1,6 +1,34 @@
-
 pcp.glm <- function(res, y, type="model") { # other types:  null, improve
   
+
+
+
+
+#' Prediction-based goodness of fit measures for categorical models
+#' 
+#' Compute percent correctly predicted and concordance indexes for logistic
+#' regression, ordered probit, and similar models.
+#' 
+#' To add.
+#' 
+#' @aliases pcp.glm pcp.oprobit concord.glm concord.oprobit
+#' @param res A glm object, e.g., as produced by \code{\link{glm}}.
+#' @param y A numeric vector containing the categorical response variable.  Not
+#' implemented for factors.
+#' @param type Character, whether the function should return the goodness of
+#' fit for the estimated \code{model}, the goodness of fit for a \code{null}
+#' model, or the percentage \code{improve}-ment from the latter to the former.
+#' @param x The matrix of covariates.
+#' @param b The vector of estimated parameters, with cutpoints at the end.
+#' There should be k-2 cutpoints for a model with k response categories.  Not
+#' currently compatible with \code{polr}.
+#' @param constant Numeric, the position of the element of \code{b} containing
+#' the constant term; set to \code{NA} for no constant.
+#' @param ncat Number of response categories.
+#' @return Returns either the percent correctly predicted, the concordance
+#' index, or the percent improvement in these goodness of fit measures.
+#' @author Christopher Adolph <\email{cadolph@@u.washington.edu}>
+#' @keywords htest
   pcp <- mean(round(predict(res,type="response"))==y)
   pcpNull <- max(mean(y), mean(1-y))
   pcpImprove <- (pcp-pcpNull)/(1-pcpNull)
