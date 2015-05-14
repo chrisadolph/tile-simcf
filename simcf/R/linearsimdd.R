@@ -1,5 +1,6 @@
 #adding inputs for scens to be differenced
 
+#' @export
 linearsimdd <- function (x, xd, b, ci = 0.95, constant = 1, xpre = NULL, xdpre=NULL) 
 {
     if (any(class(x) == "counterfactual") && !is.null(x$model)) {
