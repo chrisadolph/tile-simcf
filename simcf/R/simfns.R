@@ -179,8 +179,6 @@ linearsimev <- function(x,b,ci=0.95,constant=1,sigma2=NULL,sims=10,save=FALSE,ns
 }
 
 
-#' Simulate first difference of expected probabilities for linear models
-#' 
 #' @export
 linearsimfd <- function(x,b,ci=0.95,constant=1,xpre=NULL) {
   if (any(class(x)=="counterfactual")&&!is.null(x$model)) {
@@ -252,8 +250,6 @@ linearsimfd <- function(x,b,ci=0.95,constant=1,xpre=NULL) {
 
 
 
-#' Simulate relative risk of expected probabilities for linear models
-#'
 #' @export
 linearsimrr <- function(x,b,ci=0.95,constant=1,xpre=NULL) {
   if (any(class(x)=="counterfactual")&&!is.null(x$model)) {
@@ -425,8 +421,7 @@ logitsimev <- function(x,b,ci=0.95,constant=1) {
 }
 
 
-#' Simulate first difference of expected probabilities for logit
-#' 
+# Simulate first difference of expected probabilities for logit
 #' @export
 logitsimfd <- function(x,b,ci=0.95,constant=1,xpre=NULL) {
   if (any(class(x)=="counterfactual")&&!is.null(x$model)) {
@@ -498,8 +493,7 @@ logitsimfd <- function(x,b,ci=0.95,constant=1,xpre=NULL) {
 
 
 
-#' Simulate relative risk of expected probabilities for logit
-#' 
+# Simulate relative risk of expected probabilities for logit
 #' @export 
 logitsimrr <- function(x,b,ci=0.95,constant=1,xpre=NULL) {
   if (any(class(x)=="counterfactual")&&!is.null(x$model)) {
@@ -671,8 +665,7 @@ probitsimev <- function(x,b,ci=0.95,constant=1) {
 }
 
 
-#' Simulate first difference of expected probabilities for probit
-#'
+# Simulate first difference of expected probabilities for probit
 #' @export 
 probitsimfd <- function(x,b,ci=0.95,constant=1,xpre=NULL) {
     if (any(class(x)=="counterfactual")&&!is.null(x$model)) {
@@ -742,8 +735,7 @@ probitsimfd <- function(x,b,ci=0.95,constant=1,xpre=NULL) {
     res
   }
 
-#' Simulate relative risk of expected probabilities for probit
-#'
+# Simulate relative risk of expected probabilities for probit
 #' @export 
 probitsimrr <- function(x,b,ci=0.95,constant=1,xpre=NULL) {
     if (any(class(x)=="counterfactual")&&!is.null(x$model)) {
@@ -1044,8 +1036,7 @@ oprobitsimev <- function(x,b,ci=0.95,constant=1,cat=3) {
 }
 
 
-#' Simulate first differences for ordered probit
-#' 
+# Simulate first differences for ordered probit
 #' @export
 oprobitsimfd <- function(x,b,ci=0.95,constant=1,cat=3,xpre=NULL) {
   if (cat<3) { stop("cat must be at least 3 for ordered probit") }
@@ -1176,8 +1167,7 @@ oprobitsimfd <- function(x,b,ci=0.95,constant=1,cat=3,xpre=NULL) {
 }
 
 
-#' Simulate risk ratio for ordered probit
-#' 
+# Simulate risk ratio for ordered probit
 #' @export 
 oprobitsimrr <- function(x,b,ci=0.95,constant=1,cat=3,xpre=NULL) {
   if (cat<3) { stop("cat must be at least 3 for ordered probit") }
@@ -1412,8 +1402,7 @@ loglinsimev <- function(x,b,ci=0.95,constant=1,period=1) {
 }
 
 
-#' Simulate first difference of expected counts for a log-linear model
-#' 
+# Simulate first difference of expected counts for a log-linear model
 #' @export 
 loglinsimfd <- function(x,b,ci=0.95,constant=1,xpre=NULL,period=1,labels=NULL) {
     if (any(class(x)=="counterfactual")&&!is.null(x$model)) {
@@ -1488,8 +1477,7 @@ loglinsimfd <- function(x,b,ci=0.95,constant=1,xpre=NULL,period=1,labels=NULL) {
 }
 
 
-#' Simulate relative rate of expected counts for a log-linear model
-#'
+# Simulate relative rate of expected counts for a log-linear model
 #' @export 
 loglinsimrr <- function(x,b,ci=0.95,constant=1,xpre=NULL,period=1,labels=NULL) {
     if (any(class(x)=="counterfactual")&&!is.null(x$model)) {
@@ -1663,7 +1651,7 @@ loglinsimrr <- function(x,b,ci=0.95,constant=1,xpre=NULL,period=1,labels=NULL) {
 #' # Create full factorial set of counterfactuals
 #' sizerange <- seq(1,4,by=0.1)          # range of counterfactual sizes
 #' femalerange <- c(0,1)                 # range of counterfactual sexes
-#' xhyp <- cffactorial(size = sizerange, female = femalerange)
+#' xhyp <- cfFactorial(size = sizerange, female = femalerange)
 #'                                       
 #' # Simulate expected probabilities
 #' mlogit.qoi1 <- mlogitsimev(xhyp,simb,ci=0.67)
@@ -1788,8 +1776,7 @@ mlogitsimev <- function(x,b,ci=0.95,constant=1,z=NULL,g=NULL,predict=FALSE,sims=
     res
 }
 
-#' Simulate first differences for multinomial logit
-#' 
+# Simulate first differences for multinomial logit
 #' @export 
 mlogitsimfd <- function(x,b,ci=0.95,constant=1,xpre=NULL,
                         z=NULL,zpre=NULL,g=NULL) {
@@ -1935,8 +1922,7 @@ mlogitsimfd <- function(x,b,ci=0.95,constant=1,xpre=NULL,
     res
 }
 
-#' Simulate relative risks for multinomial logit
-#'
+# Simulate relative risks for multinomial logit
 #' @export
 mlogitsimrr <- function(x,b,ci=0.95,constant=1,xpre=NULL,
                         z=NULL,zpre=NULL,g=NULL) {
@@ -2575,8 +2561,6 @@ ldvsimev <- function(x,                  # A counterfactual object, or the matri
 }
 
 
-#' Simulate lagged dependent variable models out to t periods, first difference
-#'
 #' @export
 ldvsimfd <- function(x,                  # A counterfactual object, or the matrix of hypothetical x's
                                          #   one row per period to simulate
@@ -2768,8 +2752,6 @@ ldvsimfd <- function(x,                  # A counterfactual object, or the matri
 
 
 
-#' Simulate lagged dependent variable models out to t periods, ratio to xpre
-#'
 #' @export
 ldvsimrr <- function(x,                  # A counterfactual object, or the matrix of hypothetical x's
                                          #   one row per period to simulate
@@ -3003,8 +2985,6 @@ ldvsimrr <- function(x,                  # A counterfactual object, or the matri
 
 
 
-#' Simulate lagged dependent variable models out to t periods, predicted values
-#' 
 #' @export
 ldvsimpv <- function(x,                  # A counterfactual object, or the matrix of hypothetical x's,
                                          #    one for each period

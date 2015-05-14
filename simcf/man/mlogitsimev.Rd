@@ -109,7 +109,7 @@ simb[,,2] <- simbetas[,4:6]
 # Create full factorial set of counterfactuals
 sizerange <- seq(1,4,by=0.1)          # range of counterfactual sizes
 femalerange <- c(0,1)                 # range of counterfactual sexes
-xhyp <- cffactorial(size = sizerange, female = femalerange)
+xhyp <- cfFactorial(size = sizerange, female = femalerange)
 
 # Simulate expected probabilities
 mlogit.qoi1 <- mlogitsimev(xhyp,simb,ci=0.67)
