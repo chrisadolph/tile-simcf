@@ -63,14 +63,13 @@ appendmatrix <- function(x,values,after=ncol(x)) {
 #' regression, or a vector of simulated sigma2's drawn from the model
 #' posterior.  Only required if predicted values are desired.
 #' @param sims scalar, the number of draws taken from the predictive
-#' distribution of the response.  Only used if sigma2 is provided.  Default is
-#' 10 draws.
+#' distribution of the response.  Only used if sigma2 is provided.
 #' @param save logical, whether to save the simulated expected values (and
 #' predicted values, if any), in addition to the point estimates and requested
 #' intervals.  Default is FALSE.
-#' @param xpre vector or matrix, counterfactual initial values of the
-#' covariates.  Rows must match \code{x}.  Not needed when \code{x} is a
-#' \code{counterfactual} object.
+#' @param nscen ignored unless x is NULL; else number of periods to iterate
+#' differencing of a logit transformed variable; and \code{none} for no
+#' transformation (default)
 #' @return Returns a list with at least three components, and as many as seven:
 #' \item{pe}{vector, the point estimate(s) of the requested quantity of
 #' interest} \item{lower}{vector or matrix, the requested lower confidence
@@ -358,9 +357,6 @@ linearsimrr <- function(x,b,ci=0.95,constant=1,xpre=NULL) {
 #' interest to be reported
 #' @param constant scalar, the column of \code{b} containing the model
 #' constant, or \code{NA} for no constant
-#' @param xpre vector or matrix, counterfactual initial values of the
-#' covariates.  Rows must match \code{x}.  Not needed when \code{x} is a
-#' \code{counterfactual} object.
 #' @return Returns a list with three components \item{pe}{vector, the point
 #' estimate(s) of the requested quantity of interest} \item{lower}{matrix, the
 #' requested lower bounds around the quantity of interest; rows are scenarios,
@@ -591,7 +587,6 @@ logitsimrr <- function(x,b,ci=0.95,constant=1,xpre=NULL) {
 #' functions are offered as a simple alternative for users with simulations
 #' already in hand.
 #'
-#' @aliases probitsimev probitsimfd probitsimrr
 #' @param x list, a counterfactual object created by \code{cfMake}, or a vector
 #' or matrix of counterfactual values of the covariates, including multiple
 #' rows to simulate different counterfactual scenarios, and one column for each
@@ -601,7 +596,7 @@ logitsimrr <- function(x,b,ci=0.95,constant=1,xpre=NULL) {
 #' @param ci vector, the requested intervals of the simulated quantity of
 #' interest to be reported
 #' @param constant scalar, the column of \code{b} containing the model
-#' constant, or \code{NA} for no constant
+#' constant, or \code{NA} for no constant.
 #' @param xpre vector or matrix, counterfactual initial values of the
 #' covariates.  Rows must match \code{x}.  Not needed when \code{x} is a
 #' \code{counterfactual} object.
@@ -614,6 +609,8 @@ logitsimrr <- function(x,b,ci=0.95,constant=1,xpre=NULL) {
 #' @seealso \code{\link{logitsimev}}, \code{\link{mlogitsimev}},
 #' \code{\link{cfMake}}, \code{\link{cfChange}}, \code{\link{cfName}}
 #' @keywords models
+#' @rdname probitsimev
+#' @name probitsimev
 #' @export
 probitsimev <- function(x,b,ci=0.95,constant=1) {
     if (any(class(x)=="counterfactual")&&!is.null(x$model)) {
@@ -665,6 +662,7 @@ probitsimev <- function(x,b,ci=0.95,constant=1) {
 
 # Simulate first difference of expected probabilities for probit
 #' @export
+#' @rdname probitsimev
 probitsimfd <- function(x,b,ci=0.95,constant=1,xpre=NULL) {
     if (any(class(x)=="counterfactual")&&!is.null(x$model)) {
       xpre <- model.matrix(x$model,x$xpre)
@@ -734,6 +732,7 @@ probitsimfd <- function(x,b,ci=0.95,constant=1,xpre=NULL) {
   }
 
 # Simulate relative risk of expected probabilities for probit
+#' @rdname probitsimev
 #' @export
 probitsimrr <- function(x,b,ci=0.95,constant=1,xpre=NULL) {
     if (any(class(x)=="counterfactual")&&!is.null(x$model)) {
@@ -805,6 +804,9 @@ probitsimrr <- function(x,b,ci=0.95,constant=1,xpre=NULL) {
 
 #' Likelihood for ordered probit
 #'
+#' @param param Parameters of the ordered probit.
+#' @param x Matrix of the covariates.
+#' @param y Vector of the response values.
 #' @export
 llk.oprobit <- function(param, x, y) {
   # preliminaries
@@ -867,7 +869,6 @@ llk.oprobit <- function(param, x, y) {
 #' functions are offered as a simple alternative for users with simulations
 #' already in hand.
 #'
-#' @aliases oprobitsimev oprobitsimfd oprobitsimrr
 #' @param x list, a counterfactual object created by \code{cfMake}, or a vector
 #' or matrix of counterfactual values of the covariates, including multiple
 #' rows to simulate different counterfactual scenarios, and one column for each
@@ -941,6 +942,8 @@ llk.oprobit <- function(param, x, y) {
 #' print(yhyp.plr)
 #'
 #' @export
+#' @rdname oprobitsimev
+#' @name oprobitsimev
 oprobitsimev <- function(x,b,ci=0.95,constant=1,cat=3) {
   if (cat<3) { stop("cat must be at least 3 for ordered probit") }
     if (any(class(x)=="counterfactual")&&!is.null(x$model)) {
@@ -1034,8 +1037,8 @@ oprobitsimev <- function(x,b,ci=0.95,constant=1,cat=3) {
 }
 
 
-# Simulate first differences for ordered probit
 #' @export
+#' @rdname oprobitsimev
 oprobitsimfd <- function(x,b,ci=0.95,constant=1,cat=3,xpre=NULL) {
   if (cat<3) { stop("cat must be at least 3 for ordered probit") }
 
@@ -1165,8 +1168,8 @@ oprobitsimfd <- function(x,b,ci=0.95,constant=1,cat=3,xpre=NULL) {
 }
 
 
-# Simulate risk ratio for ordered probit
 #' @export
+#' @rdname oprobitsimev
 oprobitsimrr <- function(x,b,ci=0.95,constant=1,cat=3,xpre=NULL) {
   if (cat<3) { stop("cat must be at least 3 for ordered probit") }
 
@@ -1337,13 +1340,7 @@ oprobitsimrr <- function(x,b,ci=0.95,constant=1,cat=3,xpre=NULL) {
 #' @param constant scalar, the column of \code{b} containing the model
 #' constant, or NA for no constant
 #' @param period scalar or vector, the length of the period over which the
-#' count is simulated
-#' @param labels string vector, names of each scenario (overrides any names in
-#' \code{x})
-#' @param xpre vector or matrix, counterfactual final values of the covariates.
-#' Include multiple rows to simulate different counterfactual scenarios; rows
-#' must match \code{x}.  Not needed is \code{x} is a list containing
-#' \code{xpre}
+#' count is simulated.
 #' @return Returns a list with four components \item{pe}{vector, the point
 #' estimate(s) of the requested quantity of interest} \item{lower}{matrix, the
 #' requested lower bounds around the quantity of interest; rows are scenarios,
@@ -1583,7 +1580,8 @@ loglinsimrr <- function(x,b,ci=0.95,constant=1,xpre=NULL,period=1,labels=NULL) {
 #' functions are offered as a simple alternative for users with simulations
 #' already in hand.
 #'
-#' @aliases mlogitsimev mlogitsimfd mlogitsimrr
+#' @rdname mlogitsimev
+#' @name mlogitsimev
 #' @param x vector or matrix, counterfactual values of covariates with
 #' category-specific parameters.  Include multiple rows to simulate different
 #' counterfactual scenarios
@@ -1608,10 +1606,9 @@ loglinsimrr <- function(x,b,ci=0.95,constant=1,xpre=NULL,period=1,labels=NULL) {
 #' specific to the response category.  Include one row for each counterfactual
 #' scenario, one column for each parameter, and one "sheet" for each category
 #' (do not omit any reference categories here)
-#' @param zpost 3d array, counterfactual \emph{final} values of covariates
-#' specific to the response category.  Include one row for each counterfactual
-#' scenario, one column for each parameter, and one "sheet" for each category
-#' (do not omit any reference categories here)
+#' @param sims scalar, the number of draws taken from the predictive
+#' distribution of the response.  Only used if sigma2 is provided.
+#' @param predict logical. If \code{TRUE}, simulate predicted values if requested
 #' @return Returns a list with three components \item{pe}{matrix, the point
 #' estimates of the requested quantity of interest; rows are scenarios, and
 #' columns are categories} \item{lower}{array, the requested lower bounds
@@ -1629,12 +1626,12 @@ loglinsimrr <- function(x,b,ci=0.95,constant=1,xpre=NULL,period=1,labels=NULL) {
 #' # See tile package function lineplot for graphical presentation of this example
 #'
 #' # Load data and libraries
-#' data(gator)
-#' require(MASS)
-#' require(nnet)
+#' data("gator")
+#' require("MASS")
+#' require("nnet")
 #'
 #' # Estimate MNL using the nnet library
-#' mlogit.result <- multinom(food ~ size + female, Hess=TRUE)
+#' mlogit.result <- multinom(food ~ size + female, Hess=TRUE, data = gator)
 #' pe <- mlogit.result$wts[c(6,7,8,10,11,12)]
 #'                                       # point estimates
 #' vc <- solve(mlogit.result$Hess)       # var-cov matrix
@@ -1775,6 +1772,7 @@ mlogitsimev <- function(x,b,ci=0.95,constant=1,z=NULL,g=NULL,predict=FALSE,sims=
 }
 
 # Simulate first differences for multinomial logit
+#' @rdname mlogitsimev
 #' @export
 mlogitsimfd <- function(x,b,ci=0.95,constant=1,xpre=NULL,
                         z=NULL,zpre=NULL,g=NULL) {
@@ -1922,6 +1920,7 @@ mlogitsimfd <- function(x,b,ci=0.95,constant=1,xpre=NULL,
 
 # Simulate relative risks for multinomial logit
 #' @export
+#' @rdname mlogitsimev
 mlogitsimrr <- function(x,b,ci=0.95,constant=1,xpre=NULL,
                         z=NULL,zpre=NULL,g=NULL) {
 
@@ -2067,11 +2066,11 @@ mlogitsimrr <- function(x,b,ci=0.95,constant=1,xpre=NULL,
 }
 
 
-# FIX THIS BELOW XXX
 # Simulate expected values from heteroskedastic normal
 #
 #' @export
-hetnormsimev <- function(x,b,z,g,ci=0.95,constant=1,varconstant=1, predict=TRUE, sims=XXX) {
+#' @rdname hetnormsimpv
+hetnormsimev <- function(x,b,z,g,ci=0.95,constant=1,varconstant=1, predict=TRUE, sims=10) {
     if (any(class(x)=="counterfactual")&&!is.null(x$model)) {
         x <- model.matrix(x$model,x$x)
     } else {
@@ -2124,7 +2123,7 @@ hetnormsimev <- function(x,b,z,g,ci=0.95,constant=1,varconstant=1, predict=TRUE,
     for (i in 1:nrow(x)) {
         simmu <- b%*%x[i,]
         simsigma2 <- exp(g%*%z[i,])
-        simy <- sqrt(simsigma2)*rnorm(psims)+simmu
+        simy <- sqrt(simsigma2)*rnorm(sims)+simmu
         simy <- sort(simy)
         res$pe <- c(res$pe,mean(simy))
         length.simy <- length(simy)
@@ -2225,7 +2224,9 @@ hetnormsimev <- function(x,b,z,g,ci=0.95,constant=1,varconstant=1, predict=TRUE,
 #' \code{\link{linearsimev}}
 #' @keywords models
 #' @export
-hetnormsimpv <- function(x,b,z,g,ci=0.95,constant=1,varconstant=1) {
+#' @name hetnormsimpv
+#' @rdname hetnormsimpv
+hetnormsimpv <- function(x,b,z,g,ci=0.95,constant=1,varconstant=1,sims=10) {
     if (any(class(x)=="counterfactual")&&!is.null(x$model)) {
         x <- model.matrix(x$model,x$x)
     } else {
@@ -2329,7 +2330,6 @@ hetnormsimpv <- function(x,b,z,g,ci=0.95,constant=1,varconstant=1) {
 #' functions are offered as a simple alternative for users with simulations
 #' already in hand.
 #'
-#' @aliases ldvsimev ldvsimfd ldvsimrr ldvsimpv ldvsimpd ldvsimpr
 #' @param x vector or matrix, counterfactual values of the covariates.  Include
 #' multiple rows to simulate different counterfactual scenarios
 #' @param b matrix, simulated parameters, one row per draw from the estimated
@@ -2338,33 +2338,31 @@ hetnormsimpv <- function(x,b,z,g,ci=0.95,constant=1,varconstant=1) {
 #' interest to be reported
 #' @param constant scalar, the column of \code{b} containing the model
 #' constant, or NA for no constant
-#' @param xpre vector or matrix, counterfactual initial values of the
-#' covariates.  Include multiple rows to simulate different counterfactual
-#' scenarios; rows must match \code{x}; redundant and ignored if \code{x} is a
-#' \code{counterfactual object}
 #' @param phi scalar of point estimate, or matrix of simulated, AR or lagged DV
 #' parameters
 #' @param lagY scalar or vector, the prior levels of y or diff(y), most recent
 #' first; must match number of columns of \code{phi}
-#' @param rho scalar of point estimate, or matrix of simulated, MA parameters
-#' @param lagY scalar or vector, the prior levels of the error term, most
-#' recent first; must match number of columns of \code{rho}
-#' @param sigma scalar of point estimate, or matrix of simulated, white noise
-#' parameter or standard error of the regression
 #' @param transform string, transformation applied to the dependent variable in
 #' the original model; \code{log}, for the natural log, \code{diff}, for
 #' differencing; \code{difflog}, for differencing of a logged variable;
 #' \code{logit} for the logistic transformation; \code{difflogit} for the
+#' @param nscen ignored unless x is NULL; else number of periods to iterate
 #' differencing of a logit transformed variable; and \code{none} for no
 #' transformation (default)
 #' @param initialY vector, for differenced models, the original level of the
 #' response
 #' @param cumulate logical, whether to additionally report cumulative values of
 #' the quantity of interest (default is not to report).
+#' @param xpre vector or matrix, counterfactual initial values of the
+#' covariates.  Rows must match \code{x}.  Not needed when \code{x} is a
+#' \code{counterfactual} object.
 #' @param discount scalar, the compounding discount rate to apply to future
 #' periods in calculating cumulative quantities of interest; default is 0 for
 #' no discounting.  Set as a proportion, so that 0.05 would be a 5 percent
 #' discount rate.
+#' @param rho Matrix of MA parameters; ncol must match length lagEps.
+#' @param lagEps prior values of error term, most recent first; length much match ncol of rho
+#' @param sigma scalar; the std err of the regression
 #' @return Returns a list with at least four and as many as eight components:
 #' \item{pe}{vector, the point estimate(s) of the requested quantity of
 #' interest} \item{lower}{matrix, the requested lower bounds around the
@@ -2383,8 +2381,7 @@ ldvsimev <- function(x,                  # A counterfactual object, or the matri
                      constant=1,         # Column containing the constant
                                          # set to NA for no constant
                      phi=NULL,           # Matrix of lag parameters; ncol must match length lagY
-                     lagY=NULL,          # prior values of y or diff(y), most recent first;
-                                         # length must match ncol of phi
+                     lagY=NULL,          #
                      transform="none",   # "log" to undo log transformation
                                          # "diff" to convert differenced models to cumulative change
                                          #  from initial period
@@ -2395,7 +2392,7 @@ ldvsimev <- function(x,                  # A counterfactual object, or the matri
                                          #  including initial Y will calculate the new level of Y
                      cumulate=FALSE,     # Record cumulative QoIs as well?
                      discount=0,          # Discount rate to apply to cumulation
-                     nscen=1             # ignored unless x is NULL; else number of periods to iterate
+                     nscen=1             #
                      ) {
   if (is.null(x)) {
     if (is.na(constant))
@@ -2558,6 +2555,7 @@ ldvsimev <- function(x,                  # A counterfactual object, or the matri
 
 
 #' @export
+#' @rdname ldvsimev
 ldvsimfd <- function(x,                  # A counterfactual object, or the matrix of hypothetical x's
                                          #   one row per period to simulate
                      b,                  # The matrix of simulated betas
@@ -2749,6 +2747,7 @@ ldvsimfd <- function(x,                  # A counterfactual object, or the matri
 
 
 #' @export
+#' @rdname ldvsimev
 ldvsimrr <- function(x,                  # A counterfactual object, or the matrix of hypothetical x's
                                          #   one row per period to simulate
                      b,                  # The matrix of simulated betas
@@ -2982,6 +2981,7 @@ ldvsimrr <- function(x,                  # A counterfactual object, or the matri
 
 
 #' @export
+#' @rdname ldvsimev
 ldvsimpv <- function(x,                  # A counterfactual object, or the matrix of hypothetical x's,
                                          #    one for each period
                      b,                  # The matrix of simulated parameters

@@ -8,6 +8,10 @@ cfFactorial(..., formula = NULL, data = NULL, names = NULL,
   hull = FALSE, f = "mean")
 }
 \arguments{
+\item{...}{vectors of hypothetical values for each of several covariates.
+\bold{Must} be provided in \code{tag} = \code{value} format, where
+\code{tag} matches the name of the original (ie, factual) data}
+
 \item{formula}{forumla object, the model estimated}
 
 \item{data}{dataframe, the actual data used to estimate the original model.
@@ -23,10 +27,6 @@ the WhatIf package}
 
 \item{f}{function, applied to covariates not specified in \dots{} to
 complete the counterfactuals; default is to take the mean of each covariate}
-
-\item{\dots}{vectors of hypothetical values for each of several covariates.
-\bold{Must} be provided in \code{tag} = \code{value} format, where
-\code{tag} matches the name of the original (ie, factual) data}
 }
 \value{
 A list with at least some of the following components: \item{x}{A
@@ -68,14 +68,14 @@ print(scenarios$x)
 # For an alternative method, using cfMake and cfChange instead of cfFactorial,
 # see help(lineplot) in the tile package
 
-data(gator)
-require(MASS)
-require(nnet)
-require(tile)
-require(WhatIf)
+data("gator")
+require("MASS")
+require("nnet")
+require("tile")
+require("WhatIf")
 
 # Estimate MNL using the nnet library
-mlogit.result <- multinom(food ~ size + female, Hess=TRUE)
+mlogit.result <- multinom(food ~ size + female, Hess=TRUE, data = gator)
 pe <- mlogit.result$wts[c(6,7,8,10,11,12)]
                                       # point estimates
 vc <- solve(mlogit.result$Hess)       # var-cov matrix
@@ -101,7 +101,7 @@ trace1 <- lineplot(x=xhyp$x$size[xhyp$x$female==0],
                    lower=mlogit.qoi1$lower[xhyp$x$female==0,1,],
                    upper=mlogit.qoi1$upper[xhyp$x$female==0,1,],
                    ci=list(mark="shaded"),
-                   extrapolate=list(data=cbind(size,female),
+                   extrapolate=list(data=with(gator, cbind(size,female)),
                                     cfact=xhyp$x[xhyp$x$female==0,],
                                     omit.extrapolated=FALSE),
                    col="blue",
@@ -113,7 +113,7 @@ trace2 <- lineplot(x=xhyp$x$size[xhyp$x$female==0],
                    lower=mlogit.qoi1$lower[xhyp$x$female==0,2,],
                    upper=mlogit.qoi1$upper[xhyp$x$female==0,2,],
                    ci=list(mark="shaded"),
-                   extrapolate=list(data=cbind(size,female),
+                   extrapolate=list(data=with(gator, cbind(size,female)),
                                     cfact=xhyp$x[xhyp$x$female==0,],
                                     omit.extrapolated=FALSE),
                    col="red",
@@ -125,7 +125,7 @@ trace3 <- lineplot(x=xhyp$x$size[xhyp$x$female==0],
                    lower=mlogit.qoi1$lower[xhyp$x$female==0,3,],
                    upper=mlogit.qoi1$upper[xhyp$x$female==0,3,],
                    ci=list(mark="shaded"),
-                   extrapolate=list(data=cbind(size,female),
+                   extrapolate=list(data=with(gator, cbind(size,female)),
                                     cfact=xhyp$x[xhyp$x$female==0,],
                                     omit.extrapolated=FALSE),
                    col="green",
@@ -137,7 +137,7 @@ trace4 <- lineplot(x=xhyp$x$size[xhyp$x$female==1],
                    lower=mlogit.qoi1$lower[xhyp$x$female==1,1,],
                    upper=mlogit.qoi1$upper[xhyp$x$female==1,1,],
                    ci=list(mark="shaded"),
-                   extrapolate=list(data=cbind(size,female),
+                   extrapolate=list(data=with(gator, cbind(size,female)),
                                     cfact=xhyp$x[xhyp$x$female==1,],
                                     omit.extrapolated=FALSE),
                    col="blue",
@@ -149,7 +149,7 @@ trace5 <- lineplot(x=xhyp$x$size[xhyp$x$female==1],
                    lower=mlogit.qoi1$lower[xhyp$x$female==1,2,],
                    upper=mlogit.qoi1$upper[xhyp$x$female==1,2,],
                    ci=list(mark="shaded"),
-                   extrapolate=list(data=cbind(size,female),
+                   extrapolate=list(data=with(gator, cbind(size,female)),
                                     cfact=xhyp$x[xhyp$x$female==1,],
                                     omit.extrapolated=FALSE),
                    col="red",
@@ -161,7 +161,7 @@ trace6 <- lineplot(x=xhyp$x$size[xhyp$x$female==1],
                    lower=mlogit.qoi1$lower[xhyp$x$female==1,3,],
                    upper=mlogit.qoi1$upper[xhyp$x$female==1,3,],
                    ci=list(mark="shaded"),
-                   extrapolate=list(data=cbind(size,female),
+                   extrapolate=list(data=with(gator, cbind(size,female)),
                                     cfact=xhyp$x[xhyp$x$female==1,],
                                     omit.extrapolated=FALSE),
                    col="green",

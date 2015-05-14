@@ -26,15 +26,7 @@ interest to be reported}
 constant, or NA for no constant}
 
 \item{period}{scalar or vector, the length of the period over which the
-count is simulated}
-
-\item{labels}{string vector, names of each scenario (overrides any names in
-\code{x})}
-
-\item{xpre}{vector or matrix, counterfactual final values of the covariates.
-Include multiple rows to simulate different counterfactual scenarios; rows
-must match \code{x}.  Not needed is \code{x} is a list containing
-\code{xpre}}
+count is simulated.}
 }
 \value{
 Returns a list with four components \item{pe}{vector, the point

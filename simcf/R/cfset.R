@@ -1,13 +1,13 @@
 #' Create a set of counterfactuals using a factorial design
-#' 
+#'
 #' Converts multiple sets of hypothetical covariate values into a single
 #' dataframe with all possible combinations of covariate values
-#' 
+#'
 #' Useful for creating counterfactuals to input into the post-estimation
 #' simulation functions of the \code{simcf} package or into \code{whatif} in
 #' the \code{WhatIf} package.
-#' 
-#' @param \dots vectors of hypothetical values for each of several covariates.
+#'
+#' @param ... vectors of hypothetical values for each of several covariates.
 #' \bold{Must} be provided in \code{tag} = \code{value} format, where
 #' \code{tag} matches the name of the original (ie, factual) data
 #' @param formula forumla object, the model estimated
@@ -35,125 +35,125 @@
 #' @author Christopher Adolph <\email{cadolph@@u.washington.edu}>
 #' @keywords design manip
 #' @examples
-#' 
-#' 
+#'
+#'
 #' # Simple example
 #' xhyp <- c(1,2,3)
 #' whyp <- c(TRUE, FALSE)
 #' zhyp <- c("a","b","c")
 #' scenarios <- cfFactorial(x = xhyp, w = whyp, z = zhyp)
 #' print(scenarios$x)
-#' 
+#'
 #' # Complex example
-#' 
-#' 
+#'
+#'
 #' # Multinomial Logistic Regression of alligator food;
 #' # Tiled lineplots using factorial design of counterfactuals,
 #' # with extrapolation outside the convex hull flagged
 #' #
 #' # For an alternative method, using cfMake and cfChange instead of cfFactorial,
 #' # see help(lineplot) in the tile package
-#' 
-#' data(gator)
-#' require(MASS)
-#' require(nnet)
-#' require(tile)
-#' require(WhatIf)
-#' 
+#'
+#' data("gator")
+#' require("MASS")
+#' require("nnet")
+#' require("tile")
+#' require("WhatIf")
+#'
 #' # Estimate MNL using the nnet library
-#' mlogit.result <- multinom(food ~ size + female, Hess=TRUE)
+#' mlogit.result <- multinom(food ~ size + female, Hess=TRUE, data = gator)
 #' pe <- mlogit.result$wts[c(6,7,8,10,11,12)]
 #'                                       # point estimates
 #' vc <- solve(mlogit.result$Hess)       # var-cov matrix
-#' 
+#'
 #' # Simulate parameters from predictive distributions
 #' sims <- 10000
 #' simbetas <- mvrnorm(sims,pe,vc)       # draw parameters, using MASS::mvrnorm
 #' simb <- array(NA, dim = c(sims,3,2))  # re-arrange simulates to array format
 #' simb[,,1] <- simbetas[,1:3]           #   for MNL simulation
 #' simb[,,2] <- simbetas[,4:6]
-#' 
+#'
 #' # Create full factorial set of counterfactuals
 #' sizerange <- seq(1,4,by=0.1)          # range of counterfactual sizes
 #' femalerange <- c(0,1)                 # range of counterfactual sexes
 #' xhyp <- cfFactorial(size = sizerange, female = femalerange)
-#'                                       
+#'
 #' # Simulate expected probabilities
 #' mlogit.qoi1 <- mlogitsimev(xhyp,simb,ci=0.67)
-#' 
+#'
 #' # Create one trace for each predicted category of the response, and each sex
 #' trace1 <- lineplot(x=xhyp$x$size[xhyp$x$female==0],
 #'                    y=mlogit.qoi1$pe[xhyp$x$female==0,1],
 #'                    lower=mlogit.qoi1$lower[xhyp$x$female==0,1,],
 #'                    upper=mlogit.qoi1$upper[xhyp$x$female==0,1,],
 #'                    ci=list(mark="shaded"),
-#'                    extrapolate=list(data=cbind(size,female),
+#'                    extrapolate=list(data=with(gator, cbind(size,female)),
 #'                                     cfact=xhyp$x[xhyp$x$female==0,],
 #'                                     omit.extrapolated=FALSE),
 #'                    col="blue",
 #'                    plot=1
 #'                    )
-#' 
+#'
 #' trace2 <- lineplot(x=xhyp$x$size[xhyp$x$female==0],
 #'                    y=mlogit.qoi1$pe[xhyp$x$female==0,2],
 #'                    lower=mlogit.qoi1$lower[xhyp$x$female==0,2,],
 #'                    upper=mlogit.qoi1$upper[xhyp$x$female==0,2,],
 #'                    ci=list(mark="shaded"),
-#'                    extrapolate=list(data=cbind(size,female),
+#'                    extrapolate=list(data=with(gator, cbind(size,female)),
 #'                                     cfact=xhyp$x[xhyp$x$female==0,],
 #'                                     omit.extrapolated=FALSE),
 #'                    col="red",
 #'                    plot=1
 #'                    )
-#' 
+#'
 #' trace3 <- lineplot(x=xhyp$x$size[xhyp$x$female==0],
 #'                    y=mlogit.qoi1$pe[xhyp$x$female==0,3],
 #'                    lower=mlogit.qoi1$lower[xhyp$x$female==0,3,],
 #'                    upper=mlogit.qoi1$upper[xhyp$x$female==0,3,],
 #'                    ci=list(mark="shaded"),
-#'                    extrapolate=list(data=cbind(size,female),
+#'                    extrapolate=list(data=with(gator, cbind(size,female)),
 #'                                     cfact=xhyp$x[xhyp$x$female==0,],
 #'                                     omit.extrapolated=FALSE),
 #'                    col="green",
 #'                    plot=1
 #'                    )
-#' 
+#'
 #' trace4 <- lineplot(x=xhyp$x$size[xhyp$x$female==1],
 #'                    y=mlogit.qoi1$pe[xhyp$x$female==1,1],
 #'                    lower=mlogit.qoi1$lower[xhyp$x$female==1,1,],
 #'                    upper=mlogit.qoi1$upper[xhyp$x$female==1,1,],
 #'                    ci=list(mark="shaded"),
-#'                    extrapolate=list(data=cbind(size,female),
+#'                    extrapolate=list(data=with(gator, cbind(size,female)),
 #'                                     cfact=xhyp$x[xhyp$x$female==1,],
 #'                                     omit.extrapolated=FALSE),
 #'                    col="blue",
 #'                    plot=2
 #'                    )
-#' 
+#'
 #' trace5 <- lineplot(x=xhyp$x$size[xhyp$x$female==1],
 #'                    y=mlogit.qoi1$pe[xhyp$x$female==1,2],
 #'                    lower=mlogit.qoi1$lower[xhyp$x$female==1,2,],
 #'                    upper=mlogit.qoi1$upper[xhyp$x$female==1,2,],
 #'                    ci=list(mark="shaded"),
-#'                    extrapolate=list(data=cbind(size,female),
+#'                    extrapolate=list(data=with(gator, cbind(size,female)),
 #'                                     cfact=xhyp$x[xhyp$x$female==1,],
 #'                                     omit.extrapolated=FALSE),
 #'                    col="red",
 #'                    plot=2
 #'                    )
-#' 
+#'
 #' trace6 <- lineplot(x=xhyp$x$size[xhyp$x$female==1],
 #'                    y=mlogit.qoi1$pe[xhyp$x$female==1,3],
 #'                    lower=mlogit.qoi1$lower[xhyp$x$female==1,3,],
 #'                    upper=mlogit.qoi1$upper[xhyp$x$female==1,3,],
 #'                    ci=list(mark="shaded"),
-#'                    extrapolate=list(data=cbind(size,female),
+#'                    extrapolate=list(data=with(gator, cbind(size,female)),
 #'                                     cfact=xhyp$x[xhyp$x$female==1,],
 #'                                     omit.extrapolated=FALSE),
 #'                    col="green",
 #'                    plot=2
 #'                    )
-#' 
+#'
 #' linelabels <- textTile(labels=c("Invertebrates",
 #'                                  "Fish",
 #'                                  "Other"),
@@ -163,10 +163,10 @@
 #'                          cex = 0.75,
 #'                          plot=c(1,2)
 #'                          )
-#' 
+#'
 #' at.x <- c(1,2,3,4)
 #' at.y <- c(0,0.2,0.4,0.6,0.8,1)
-#' 
+#'
 #' # Plot traces using tile
 #' tile(trace1,
 #'      trace2,
@@ -189,8 +189,8 @@
 #'      gridlines = list(type="xy"),
 #'      frame=TRUE
 #'      )
-#' 
-#' 
+#'
+#'
 #' @export
 cfFactorial <- function(...,formula=NULL,data=NULL,names=NULL,hull=FALSE,f="mean") {
                   #,trim.exptrapolated=FALSE,data=NULL) {
@@ -219,10 +219,10 @@ cfFactorial <- function(...,formula=NULL,data=NULL,names=NULL,hull=FALSE,f="mean
         }
         list(ctr=ctr,nexttoincr=nexttoincr)
     }
-    
+
     factors <- list(...)
     vars <- names(factors)
-    
+
     nfact <- length(factors)
     if (nfact>1) {
         ufact <- list()
@@ -232,13 +232,13 @@ cfFactorial <- function(...,formula=NULL,data=NULL,names=NULL,hull=FALSE,f="mean
             maxctr <- c(maxctr,length(ufact[[i]]))
         }
         cfact <- as.data.frame(t(rep(NA,length(vars))))
-        colnames(cfact) <- vars    
+        colnames(cfact) <- vars
         ctr <- rep(1,nfact)
         nexttoincr <- 1
         done <- all(ctr==maxctr)
         while (!done) {
             newcfact <- NULL
-            for (i in 1:nfact) newcfact <- c(newcfact, ufact[[i]][ctr[i]])        
+            for (i in 1:nfact) newcfact <- c(newcfact, ufact[[i]][ctr[i]])
             cfact <- rbind(cfact,newcfact)
             done <- all(ctr==maxctr)
             if (!done) {
@@ -250,7 +250,7 @@ cfFactorial <- function(...,formula=NULL,data=NULL,names=NULL,hull=FALSE,f="mean
         cfact <- cfact[2:nrow(cfact),]
     } else {
         cfact <- as.data.frame(factors[[1]])
-        colnames(cfact) <- vars   
+        colnames(cfact) <- vars
     }
         row.names(cfact) <- seq(1:nrow(cfact))
     if (!is.null(names)) {
@@ -270,11 +270,11 @@ cfFactorial <- function(...,formula=NULL,data=NULL,names=NULL,hull=FALSE,f="mean
             sdata <- na.omit(sdata)
             xmean <- apply(sdata,2,f)
             cfact2 <- as.data.frame(matrix(data=xmean,nrow=nrow(cfact),ncol=ncol(sdata),byrow=TRUE))
-            colnames(cfact2) <- colnames(sdata)   
+            colnames(cfact2) <- colnames(sdata)
         }
     }
 
-    # Construct list    
+    # Construct list
     xscen <- list(x=NULL,xpre=NULL)
     if (is.null(cfact2))
         xscen$x <- cfact
@@ -308,19 +308,19 @@ cfFactorial <- function(...,formula=NULL,data=NULL,names=NULL,hull=FALSE,f="mean
         }
     }
 
-    
+
     xscen
 }
 
 #' Create or modify a set of counterfactuals
-#' 
+#'
 #' Functions for creating and modifying sets of counterfactuals, usable as
 #' input for post-estimation prediction
-#' 
+#'
 #' Useful for creating counterfactuals to input into the post-estimation
 #' simulation functions of the \code{simcf} package (e.g., for plotting with
 #' the \code{tile} package) or into \code{whatif} in the \code{WhatIf} package.
-#' 
+#'
 #' @param formula forumla object, the model estimated.  Compatible with
 #' \code{logBound()} and \code{logitBound()}.
 #' @param data matrix or dataframe, the actual data used to estimate the
@@ -343,6 +343,10 @@ cfFactorial <- function(...,formula=NULL,data=NULL,names=NULL,hull=FALSE,f="mean
 #' calculating first differences
 #' @param scen scalar or string, the row (number or name) of the scenario to be
 #' modified
+#' @param hull logical. Check for extrapolation in the scenarios?
+#' @param name string, the name of the scenario, e.g.,
+#' to label them on plots or tables; saved as the row name of the appropriate
+#' scenario.
 #' @return A list object containing the following components: \item{x}{A
 #' dataframe of counterfactuals, with \code{nscen} rows and a column for each
 #' column in \code{data}} \item{xpre}{A dataframe of initial counterfactuals
@@ -352,15 +356,15 @@ cfFactorial <- function(...,formula=NULL,data=NULL,names=NULL,hull=FALSE,f="mean
 #' @author Christopher Adolph <\email{cadolph@@u.washington.edu}>
 #' @keywords design manip
 #' @examples
-#' 
+#'
 #' # Linear, Poisson, and Negative Binomial regression using UScrime data
-#' 
-#' # Uses simcf and ropeladders to show how the expected crime rate varies 
-#' # in response to changes in 7 covariates under each of four estimation 
-#' # methods.  
-#' 
+#'
+#' # Uses simcf and ropeladders to show how the expected crime rate varies
+#' # in response to changes in 7 covariates under each of four estimation
+#' # methods.
+#'
 #' # See example for ropeladder in package tile for more plots
-#' 
+#'
 #' # Load data and libraries; set up specification
 #' require(tile)
 #' require(MASS)
@@ -369,84 +373,84 @@ cfFactorial <- function(...,formula=NULL,data=NULL,names=NULL,hull=FALSE,f="mean
 #'               + log(LF) + log(M.F) + log(Pop) + log(NW) +log(U1)
 #'               + log(U2) + log(GDP) + log(Ineq) + log(Prob) +
 #'               log(Time))
-#' 
+#'
 #' # Estimate Linear regression model
 #' lm1.res <- lm(model, data = UScrime)
 #' lm1.pe <- lm1.res$coefficients        # point estimates
 #' lm1.vc <- vcov(lm1.res)               # var-cov matrix
-#' 
+#'
 #' # Estimate Robust and resistant regression model
 #' mm1.res <- rlm(model, data = UScrime, method="MM")
 #' mm1.pe <- mm1.res$coefficients        # point estimates
 #' mm1.vc <- vcov(mm1.res)               # var-cov matrix
-#' 
+#'
 #' # Estimate Poisson model
 #' po1.res <- glm(model, family=poisson, data = UScrime)
 #' po1.pe <- po1.res$coefficients         # point estimates
 #' po1.vc <- vcov(po1.res)                # var-cov matrix
-#' 
+#'
 #' # Estimate Negative Binomial model
 #' nb1.res <- glm.nb(model, data = UScrime)
 #' nb1.pe <- nb1.res$coefficients         # point estimates
 #' nb1.vc <- vcov(nb1.res)                # var-cov matrix
-#' 
+#'
 #' # Use the simcf package to simulate first differences in crime rate
 #' # given changes in each of the seven covariates
-#' 
+#'
 #' # Initialize 7 different scenarios to the mean values of the covariates
 #' xscen <- cfMake(model, data=UScrime, nscen=7)
-#' 
+#'
 #' # Configure scenario 1:  Raise Probability of Imprisonment by 1/2 standard deviation
 #' xscen <- cfName(xscen, "Pr(Prison) +0.5 sd", scen=1)
 #' xscen <- cfChange(xscen, "Prob", x = mean(UScrime$Prob) +
 #' 0.5*sd(UScrime$Prob), scen=1)
-#' 
+#'
 #' # Configure scenario 2:  Raise Police Spending by 1/2 standard deviation
 #' xscen <- cfName(xscen, "Police Spending +0.5 sd", scen=2)
 #' xscen <- cfChange(xscen, "Po1", x = mean(UScrime$Po1) + 0.5*sd(UScrime$Po1),
 #' scen=2)
-#' 
+#'
 #' # Configure scenario 3:  Raise Unemployment (Age 35-39)  by 1/2 standard deviation
 #' xscen <- cfName(xscen, "Unemployment (t-2) +0.5 sd", scen=3)
 #' xscen <- cfChange(xscen, "U2", x = mean(UScrime$U2) + 0.5*sd(UScrime$U2),
 #' scen=3)
-#' 
+#'
 #' # Configure scenario 4:  Raise Non-white population by 1/2 standard deviation
 #' xscen <- cfName(xscen, "Non-White Pop +0.5 sd", scen=4)
 #' xscen <- cfChange(xscen, "NW", x = mean(UScrime$NW) + 0.5*sd(UScrime$NW), scen=4)
-#' 
+#'
 #' # Configure scenario 5:  Raise Male Pop by 1/2 standard deviation
 #' xscen <- cfName(xscen, "Male Pop +0.5 sd", scen=5)
 #' xscen <- cfChange(xscen, "M", x = mean(UScrime$M) + 0.5*sd(UScrime$M), scen=5)
-#' 
+#'
 #' # Configure scenario 6:  Raise Education by 1/2 standard deviation
 #' xscen <- cfName(xscen, "Education +0.5 sd", scen=6)
 #' xscen <- cfChange(xscen, "Ed", x = mean(UScrime$Ed) + 0.5*sd(UScrime$Ed), scen=6)
-#' 
+#'
 #' # Configure scenario 7:  Raise Inequality by 1/2 standard deviation
 #' xscen <- cfName(xscen, "Inequality +0.5 sd", scen=7)
 #' xscen <- cfChange(xscen, "Ineq", x = mean(UScrime$Ineq) +
 #' 0.5*sd(UScrime$Ineq), scen=7)
-#' 
+#'
 #' # Simulate conditional expectations for these counterfactuals
 #' sims <- 10000
-#' 
+#'
 #' # Linear regression simulations
 #' simbetas.lm <- mvrnorm(sims, lm1.pe, lm1.vc)       # draw parameters, using MASS::mvrnorm
 #' lm1.qoi <- linearsimfd(xscen, simbetas.lm, ci=0.95)
-#' 
+#'
 #' # Robust regression simulations
 #' simbetas.mm <- mvrnorm(sims, mm1.pe, mm1.vc)       # draw parameters, using MASS::mvrnorm
 #' mm1.qoi <- linearsimfd(xscen, simbetas.mm, ci=0.95)
-#' 
+#'
 #' # Poisson simulations
 #' simbetas.po <- mvrnorm(sims, po1.pe, po1.vc)       # draw parameters, using MASS::mvrnorm
 #' po1.qoi <- loglinsimfd(xscen, simbetas.po, ci=0.95)
-#' 
+#'
 #' # Negative Binomial simulations
 #' simbetas.nb <- mvrnorm(sims, nb1.pe, nb1.vc)       # draw parameters, using MASS::mvrnorm
 #' nb1.qoi <- loglinsimfd(xscen, simbetas.nb, ci=0.95)
-#' 
+#'
 #' # Create ropeladder traces of first differences from each model
 #' trace1 <- ropeladder(x=lm1.qoi$pe,
 #'                      lower=lm1.qoi$lower,
@@ -455,39 +459,39 @@ cfFactorial <- function(...,formula=NULL,data=NULL,names=NULL,hull=FALSE,f="mean
 #'                      #extrapolate=list(model, data=UScrime, cfact=xscen$x),
 #'                      plot=1
 #'                      )
-#' 
+#'
 #' trace2 <- ropeladder(x=mm1.qoi$pe,
 #'                      lower=mm1.qoi$lower,
 #'                      upper=mm1.qoi$upper,
 #'                      plot=2
 #'                      )
-#' 
+#'
 #' trace3 <- ropeladder(x=po1.qoi$pe,
 #'                      lower=po1.qoi$lower,
-#'                      upper=po1.qoi$upper,                   
+#'                      upper=po1.qoi$upper,
 #'                      plot=3
 #'                      )
-#' 
+#'
 #' trace4 <- ropeladder(x=nb1.qoi$pe,
 #'                      lower=nb1.qoi$lower,
 #'                      upper=nb1.qoi$upper,
 #'                      plot=4
 #'                      )
-#' 
+#'
 #' rug1 <- rugTile(x = UScrime$y - mean(UScrime$y),
 #'                 plot = 1:4
 #'                 )
-#'                 
+#'
 #' vertmark <- linesTile(x = c(0,0),
 #'                       y = c(0,1),
 #'                       lty = "solid",
 #'                       plot = 1:4
 #'                       )
-#' 
+#'
 #' # Create plot
 #' tc <- tile(trace1, trace2, trace3, trace4,
 #'            rug1, vertmark,
-#'            #output = list(file = "ropeladderEx1"),          
+#'            #output = list(file = "ropeladderEx1"),
 #'            xaxistitle = list(labels="E(crime rate per 100,000)"),
 #'            topaxis= list(at = mean(UScrime$y)*c(0.5, 1, 1.5, 2) - mean(UScrime$y),
 #'                          labels = c("0.5x","1x","1.5x","2x"),
@@ -500,8 +504,8 @@ cfFactorial <- function(...,formula=NULL,data=NULL,names=NULL,hull=FALSE,f="mean
 #'                             labels4 = "Neg Bin"),
 #'            gridlines=list(type="t")
 #'            )
-#' 
-#' 
+#'
+#'
 #' @rdname cfMake
 #' @name cfMake
 #' @export
@@ -526,11 +530,11 @@ cfMake <- function(formula=NULL,data,nscen=1,names=NULL,hull=FALSE,f="mean",...)
 
       # Get terms attribute
       tl <- attributes(terms(formula))$term.labels
-      
+
       # Loop over terms
       for (i in 1:length(tl)) {
         tlCur <- tl[i]
-      
+
         # Check for logitBound transformations
         if (substr(tlCur,1,11)=="logitBound(") {
           # if found, check number of terms needed.
@@ -538,7 +542,7 @@ cfMake <- function(formula=NULL,data,nscen=1,names=NULL,hull=FALSE,f="mean",...)
           subform <- as.formula(paste("~",varname,"-1"))
           toLT <- as.vector(model.matrix(subform,data=data))
           testLT <- as.matrix(logitBound(toLT))
-        
+
           # revise formula so logitBound() call includes "forceAny" and/or "forceAll" as needed
           if (any(colnames(testLT)=="any")) {
             tlCur <- paste(substr(tlCur,start=1,stop=nchar(tlCur)-1), ", forceAny=TRUE)",sep="")
@@ -552,13 +556,13 @@ cfMake <- function(formula=NULL,data,nscen=1,names=NULL,hull=FALSE,f="mean",...)
           newform <- as.formula(paste("lhs ~", rhs), env=.GlobalEnv)
           newform[[2L]] <- formula[[2L]]
           formula <- newform
-        }    
+        }
 
         # Check for logBound transformations
         if (substr(tlCur,1,9)=="logBound(") {
           # if found, check number of terms needed.
           varname <- substr(tlCur,start=10,stop=nchar(tlCur)-1)
-          subform <- as.formula(paste("~",varname,"-1"))          
+          subform <- as.formula(paste("~",varname,"-1"))
           toLT <- as.vector(model.matrix(subform,data=data))
           testLT <- as.matrix(logitBound(toLT))
           # revise formula so logBound() call includes "forceAny" as needed
@@ -572,14 +576,14 @@ cfMake <- function(formula=NULL,data,nscen=1,names=NULL,hull=FALSE,f="mean",...)
           formula <- newform
         }
       }
-      
+
       xscen$model <- formula
     }
     class(xscen) <- c("list","counterfactual")
 
     # Check for extrapolation
     if (hull&&(!is.null(formula))&&(!is.null(data))) {
-        wi <- whatif(formula=formula, data=data, cfact=xscen$x)        
+        wi <- whatif(formula=formula, data=data, cfact=xscen$x)
         xscen$extrapolatex <- !wi$in.hull
         wi <- whatif(formula=formula, data=data, cfact=xscen$xpre)
         xscen$extrapolatexpre <- !wi$in.hull
@@ -629,7 +633,7 @@ cfChange <- function(xscen,covname,x=NULL,xpre=NULL,scen=1) {
         }
 
     }
-        
+
     xscen
   }
 
@@ -645,12 +649,12 @@ cfName <- function(xscen,name,scen=1) {
 
 
 #' Ratio-preserving counterfactuals
-#' 
+#'
 #' Change one element of a vector with a fixed sum without changing the sum or
 #' the ratios of the other elements
-#' 
+#'
 #' XXX
-#' 
+#'
 #' @param x n x p matrix of n compositions with p categories each.  All rows of
 #' x must sum to the \code{constraint}.
 #' @param c k vector of the numbers of columns to adjust by delta.  k must be
@@ -660,14 +664,12 @@ cfName <- function(xscen,name,scen=1) {
 #' listed in \code{c}.  The requested adjustments must be logically possible;
 #' ie, respect the \code{constraint}. The default is 1, which often will be an
 #' infeasibly large change.
-#' @param constraint scalar or k vector of logically required sums for each
-#' composition.  The default is 1.
 #' @param scale character, whether the adjustments in requested in \code{delta}
 #' are in units of x (\code{unit}, the default) or standard deviations of x
 #' (\code{sd}).
 #' @author Christopher Adolph <\email{cadolph@@u.washington.edu}>
 #' @keywords design manip
-#' @export 
+#' @export
 rpcf <- function(x,   # Data matrix
                  c,   # Column(s) to adjust
                  delta=1,  # Adjustment
@@ -696,13 +698,13 @@ rpcf <- function(x,   # Data matrix
 
 
 #' Extract from a dataframe all variables used in a formula
-#' 
+#'
 #' Extracts from a dataframe all variables used in a formula, saves these
 #' variables to a new dataframe, adds additional variables if requested, and
 #' listwise deletes if desired.  Useful for creating a fully observed dataset
 #' without deleting on unused variables.
-#' 
-#' 
+#'
+#'
 #' @param formula An formula object.
 #' @param data A dataframe containing all the variables used in \code{formula}.
 #' @param extra Either a dataframe with additional variables to add to the
@@ -741,11 +743,11 @@ extractdata <- function(formula, data, extra=NULL, na.rm = FALSE) {
 
 #' Log transform a variable, creating a dummy variable to record out of bound
 #' cases
-#' 
+#'
 #' If given a variable to log transform which contains values less than or
 #' equal to 0, logBound creates a dummy variable indicating the out of bound
 #' cases, and collects them in a matrix with the log transformed variable.
-#' 
+#'
 #' Computes the log transformation, log(x).  Instead of reporting out of bounds
 #' cases as -Inf or NaN, reports out of bounds cases as 0s, but includes a
 #' dummy variable indicating the lower boundary is breeched.  Including the
@@ -753,10 +755,10 @@ extractdata <- function(formula, data, extra=NULL, na.rm = FALSE) {
 #' user to log transform even variables which are exactly 0 by treating those
 #' cases as sui generis exceptions.  Analogous to treating x as a hurdle
 #' variable.
-#' 
+#'
 #' LogBound transformed variables will work in the other functions in the simcf
 #' package, but may fail when used in predict commands.
-#' 
+#'
 #' @param x A vector of data to be log tranformed.  Need not be restricted to
 #' the interval (0,Inf).
 #' @param base The logarithmic base for transformation
@@ -787,12 +789,12 @@ logBound <- function(x, base=exp(1), forceAny=FALSE) {
 
 #' Logit transform a variable, creating dummy variables to record out of bound
 #' cases
-#' 
+#'
 #' If given a variable to logit transform which contains values less than or
 #' equal to 0 or greater than or equal to 1, logitBound creates dummy variables
 #' indicating the out of bound cases, and collects them in a matrix with the
 #' logit transformed variable.
-#' 
+#'
 #' Computes the logit transformation, ln(x/(1-x).  Instead of reporting out of
 #' bounds cases as -Inf or Inf, reports out of bounds cases as 0s, but includes
 #' dummy variables indicating which boundary is breeched.  Including the output
@@ -800,10 +802,10 @@ logBound <- function(x, base=exp(1), forceAny=FALSE) {
 #' to logit transform even variables which are exactly 0 or 1 by treating those
 #' cases as sui generis exceptions.  Analogous to treating x as a hurdle
 #' variable.
-#' 
+#'
 #' LogitBound transformed variables will work in the other functions in the
 #' simcf package, but may fail when used in predict commands.
-#' 
+#'
 #' @param x A vector of data to be logit tranformed.  Need not be restricted to
 #' the interval (0,1).
 #' @param base The logarithmic base for transformation
@@ -850,11 +852,11 @@ logitBound <- function(x, base=exp(1), forceAny=FALSE, forceAll=FALSE) {
 
 
 #' Paste without separators
-#' 
+#'
 #' Paste without separators
-#' 
+#'
 #' Calls paste with sep="".
-#' 
+#'
 #' @param ... character strings to be pasted together, or numeric data to be
 #' coerced to character
 #' @author Christopher Adolph <\email{cadolph@@uw.edu}>

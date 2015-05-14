@@ -26,6 +26,8 @@ original model}
 to label them on plots or tables; saved as the row name of the appropriate
 scenario}
 
+\item{hull}{logical. Check for extrapolation in the scenarios?}
+
 \item{f}{function, applied to columns of covariate data to produce the
 baseline counterfactual; default is to take the mean of each covariate}
 
@@ -44,6 +46,10 @@ calculating first differences}
 
 \item{scen}{scalar or string, the row (number or name) of the scenario to be
 modified}
+
+\item{name}{string, the name of the scenario, e.g.,
+to label them on plots or tables; saved as the row name of the appropriate
+scenario.}
 
 \item{\dots}{additional inputs to \code{f}}
 }

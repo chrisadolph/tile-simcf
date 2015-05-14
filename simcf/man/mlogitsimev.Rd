@@ -9,6 +9,12 @@ logit}
 \usage{
 mlogitsimev(x, b, ci = 0.95, constant = 1, z = NULL, g = NULL,
   predict = FALSE, sims = 10)
+
+mlogitsimfd(x, b, ci = 0.95, constant = 1, xpre = NULL, z = NULL,
+  zpre = NULL, g = NULL)
+
+mlogitsimrr(x, b, ci = 0.95, constant = 1, xpre = NULL, z = NULL,
+  zpre = NULL, g = NULL)
 }
 \arguments{
 \item{x}{vector or matrix, counterfactual values of covariates with
@@ -34,16 +40,16 @@ any reference categories here)}
 model, one column per parameter, and one "sheet" for all categories (do not
 omit any reference categories here)}
 
+\item{predict}{logical. If \code{TRUE}, simulate predicted values if requested}
+
+\item{sims}{scalar, the number of draws taken from the predictive
+distribution of the response.  Only used if sigma2 is provided.}
+
 \item{xpre}{vector or matrix, counterfactual \emph{initial} values of
 covariates with category-specific parameters.  Include multiple rows to
 simulate different counterfactual scenarios}
 
 \item{zpre}{3d array, counterfactual \emph{initial} values of covariates
-specific to the response category.  Include one row for each counterfactual
-scenario, one column for each parameter, and one "sheet" for each category
-(do not omit any reference categories here)}
-
-\item{zpost}{3d array, counterfactual \emph{final} values of covariates
 specific to the response category.  Include one row for each counterfactual
 scenario, one column for each parameter, and one "sheet" for each category
 (do not omit any reference categories here)}
@@ -89,12 +95,12 @@ already in hand.
 # See tile package function lineplot for graphical presentation of this example
 
 # Load data and libraries
-data(gator)
-require(MASS)
-require(nnet)
+data("gator")
+require("MASS")
+require("nnet")
 
 # Estimate MNL using the nnet library
-mlogit.result <- multinom(food ~ size + female, Hess=TRUE)
+mlogit.result <- multinom(food ~ size + female, Hess=TRUE, data = gator)
 pe <- mlogit.result$wts[c(6,7,8,10,11,12)]
                                       # point estimates
 vc <- solve(mlogit.result$Hess)       # var-cov matrix

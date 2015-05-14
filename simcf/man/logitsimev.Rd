@@ -22,10 +22,6 @@ interest to be reported}
 
 \item{constant}{scalar, the column of \code{b} containing the model
 constant, or \code{NA} for no constant}
-
-\item{xpre}{vector or matrix, counterfactual initial values of the
-covariates.  Rows must match \code{x}.  Not needed when \code{x} is a
-\code{counterfactual} object.}
 }
 \value{
 Returns a list with three components \item{pe}{vector, the point

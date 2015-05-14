@@ -10,7 +10,7 @@
 #' The y-axis plots studentized residuals.  Values outside the [-2,2] range
 #' should occur by chance for only 1 in 20 observations.
 #' 
-#' @param object A regression object, e.g., as produced by \code{\link{lm}}.
+#' @param res A regression object, e.g., as produced by \code{\link{lm}}.
 #' @param names An optional vector of observation names for interactively
 #' labeling points.
 #' @param identify Logical, allow interactive labeling of points.  If

@@ -8,6 +8,8 @@ influencePlot(res, names = NULL, identify = TRUE, pdf = NULL,
   main = NULL, box = FALSE, ...)
 }
 \arguments{
+\item{res}{A regression object, e.g., as produced by \code{\link{lm}}.}
+
 \item{names}{An optional vector of observation names for interactively
 labeling points.}
 
@@ -22,8 +24,6 @@ instead of plotting to a screen device.  Default is no pdf.}
 \item{box}{Logical, draw a box around the plotting area.  Default is FALSE.}
 
 \item{...}{Other options passed to \code{\link{pdf}}.}
-
-\item{object}{A regression object, e.g., as produced by \code{\link{lm}}.}
 }
 \value{
 Creates a plot; no object returned.

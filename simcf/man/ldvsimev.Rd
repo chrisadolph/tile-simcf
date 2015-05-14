@@ -3,8 +3,6 @@
 \name{ldvsimev}
 \alias{ldvsimev}
 \alias{ldvsimfd}
-\alias{ldvsimpd}
-\alias{ldvsimpr}
 \alias{ldvsimpv}
 \alias{ldvsimrr}
 \title{Simulate quantities of interest and confidence intervals for linear time
@@ -13,6 +11,16 @@ series models including ARIMA or lagged dependent variable processes}
 ldvsimev(x, b, ci = 0.95, constant = 1, phi = NULL, lagY = NULL,
   transform = "none", initialY = NULL, cumulate = FALSE, discount = 0,
   nscen = 1)
+
+ldvsimfd(x, b, ci = 0.95, constant = 1, xpre = NULL, phi = NULL,
+  lagY = NULL, transform = "none", cumulate = FALSE, discount = 0)
+
+ldvsimrr(x, b, ci = 0.95, constant = 1, xpre = NULL, phi = NULL,
+  lagY = NULL, transform = "none", cumulate = FALSE, discount = 0)
+
+ldvsimpv(x, b, ci = 0.95, constant = 1, phi = NULL, lagY = NULL,
+  rho = NULL, lagEps = NULL, sigma = NULL, transform = "none",
+  initialY = NULL, cumulate = FALSE, discount = 0, nscen = 1)
 }
 \arguments{
 \item{x}{vector or matrix, counterfactual values of the covariates.  Include
@@ -36,9 +44,7 @@ first; must match number of columns of \code{phi}}
 \item{transform}{string, transformation applied to the dependent variable in
 the original model; \code{log}, for the natural log, \code{diff}, for
 differencing; \code{difflog}, for differencing of a logged variable;
-\code{logit} for the logistic transformation; \code{difflogit} for the
-differencing of a logit transformed variable; and \code{none} for no
-transformation (default)}
+\code{logit} for the logistic transformation; \code{difflogit} for the}
 
 \item{initialY}{vector, for differenced models, the original level of the
 response}
@@ -51,18 +57,19 @@ periods in calculating cumulative quantities of interest; default is 0 for
 no discounting.  Set as a proportion, so that 0.05 would be a 5 percent
 discount rate.}
 
+\item{nscen}{ignored unless x is NULL; else number of periods to iterate
+differencing of a logit transformed variable; and \code{none} for no
+transformation (default)}
+
 \item{xpre}{vector or matrix, counterfactual initial values of the
-covariates.  Include multiple rows to simulate different counterfactual
-scenarios; rows must match \code{x}; redundant and ignored if \code{x} is a
-\code{counterfactual object}}
+covariates.  Rows must match \code{x}.  Not needed when \code{x} is a
+\code{counterfactual} object.}
 
-\item{rho}{scalar of point estimate, or matrix of simulated, MA parameters}
+\item{rho}{Matrix of MA parameters; ncol must match length lagEps.}
 
-\item{lagY}{scalar or vector, the prior levels of the error term, most
-recent first; must match number of columns of \code{rho}}
+\item{lagEps}{prior values of error term, most recent first; length much match ncol of rho}
 
-\item{sigma}{scalar of point estimate, or matrix of simulated, white noise
-parameter or standard error of the regression}
+\item{sigma}{scalar; the std err of the regression}
 }
 \value{
 Returns a list with at least four and as many as eight components:

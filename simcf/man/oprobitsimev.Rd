@@ -7,6 +7,10 @@
 \title{Simulate quantities of interest and confidence intervals for ordered probit}
 \usage{
 oprobitsimev(x, b, ci = 0.95, constant = 1, cat = 3)
+
+oprobitsimfd(x, b, ci = 0.95, constant = 1, cat = 3, xpre = NULL)
+
+oprobitsimrr(x, b, ci = 0.95, constant = 1, cat = 3, xpre = NULL)
 }
 \arguments{
 \item{x}{list, a counterfactual object created by \code{cfMake}, or a vector

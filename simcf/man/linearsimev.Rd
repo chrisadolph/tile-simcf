@@ -29,16 +29,15 @@ regression, or a vector of simulated sigma2's drawn from the model
 posterior.  Only required if predicted values are desired.}
 
 \item{sims}{scalar, the number of draws taken from the predictive
-distribution of the response.  Only used if sigma2 is provided.  Default is
-10 draws.}
+distribution of the response.  Only used if sigma2 is provided.}
 
 \item{save}{logical, whether to save the simulated expected values (and
 predicted values, if any), in addition to the point estimates and requested
 intervals.  Default is FALSE.}
 
-\item{xpre}{vector or matrix, counterfactual initial values of the
-covariates.  Rows must match \code{x}.  Not needed when \code{x} is a
-\code{counterfactual} object.}
+\item{nscen}{ignored unless x is NULL; else number of periods to iterate
+differencing of a logit transformed variable; and \code{none} for no
+transformation (default)}
 }
 \value{
 Returns a list with at least three components, and as many as seven:

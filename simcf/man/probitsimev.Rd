@@ -7,6 +7,10 @@
 \title{Simulate quantities of interest and confidence intervals for binary probit}
 \usage{
 probitsimev(x, b, ci = 0.95, constant = 1)
+
+probitsimfd(x, b, ci = 0.95, constant = 1, xpre = NULL)
+
+probitsimrr(x, b, ci = 0.95, constant = 1, xpre = NULL)
 }
 \arguments{
 \item{x}{list, a counterfactual object created by \code{cfMake}, or a vector
@@ -21,7 +25,7 @@ model, and one column per parameter, including any constants}
 interest to be reported}
 
 \item{constant}{scalar, the column of \code{b} containing the model
-constant, or \code{NA} for no constant}
+constant, or \code{NA} for no constant.}
 
 \item{xpre}{vector or matrix, counterfactual initial values of the
 covariates.  Rows must match \code{x}.  Not needed when \code{x} is a

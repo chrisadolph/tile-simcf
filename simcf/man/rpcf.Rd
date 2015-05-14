@@ -22,9 +22,6 @@ infeasibly large change.}
 \item{scale}{character, whether the adjustments in requested in \code{delta}
 are in units of x (\code{unit}, the default) or standard deviations of x
 (\code{sd}).}
-
-\item{constraint}{scalar or k vector of logically required sums for each
-composition.  The default is 1.}
 }
 \description{
 Change one element of a vector with a fixed sum without changing the sum or

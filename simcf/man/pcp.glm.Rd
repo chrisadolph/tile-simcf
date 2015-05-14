@@ -8,6 +8,12 @@
 \title{Prediction-based goodness of fit measures for categorical models}
 \usage{
 pcp.glm(res, y, type = "model")
+
+pcp.oprobit(x, y, b, constant = 1, ncat = 3, type = "model")
+
+concord.glm(res, y, type = "model")
+
+concord.oprobit(x, y, b, constant = 1, ncat = 3, type = "model")
 }
 \arguments{
 \item{res}{A glm object, e.g., as produced by \code{\link{glm}}.}
