@@ -7,7 +7,9 @@
 #  Compositional data (RHS/ LHS)         rp/tern
 #  Moving windows                        lp
 
-# Append a vector into a matrix
+#' Append a vector into a matrix
+#' 
+#' @export
 appendmatrix <- function(x,values,after=ncol(x)) {
     nrowx <- nrow(x)
     ncolx <- ncol(x)
@@ -90,6 +92,7 @@ appendmatrix <- function(x,values,after=ncol(x)) {
 #' @author Christopher Adolph <\email{cadolph@@u.washington.edu}>
 #' @seealso \code{\link{cfMake}}, \code{\link{cfChange}}, \code{\link{cfName}}
 #' @keywords models
+#' @export
 linearsimev <- function(x,b,ci=0.95,constant=1,sigma2=NULL,sims=10,save=FALSE,nscen=1) {
   if (is.null(x)) {
     if (is.na(constant))
@@ -176,7 +179,9 @@ linearsimev <- function(x,b,ci=0.95,constant=1,sigma2=NULL,sims=10,save=FALSE,ns
 }
 
 
-# Simulate first difference of expected probabilities for linear models
+#' Simulate first difference of expected probabilities for linear models
+#' 
+#' @export
 linearsimfd <- function(x,b,ci=0.95,constant=1,xpre=NULL) {
   if (any(class(x)=="counterfactual")&&!is.null(x$model)) {
     xpre <- model.matrix(x$model,x$xpre)     
@@ -247,7 +252,9 @@ linearsimfd <- function(x,b,ci=0.95,constant=1,xpre=NULL) {
 
 
 
-# Simulate relative risk of expected probabilities for linear models
+#' Simulate relative risk of expected probabilities for linear models
+#'
+#' @export
 linearsimrr <- function(x,b,ci=0.95,constant=1,xpre=NULL) {
   if (any(class(x)=="counterfactual")&&!is.null(x$model)) {
     xpre <- model.matrix(x$model,x$xpre)   
@@ -369,6 +376,7 @@ linearsimrr <- function(x,b,ci=0.95,constant=1,xpre=NULL) {
 #' @seealso \code{\link{probitsimev}}, \code{\link{mlogitsimev}},
 #' \code{\link{cfMake}}, \code{\link{cfChange}}, \code{\link{cfName}}
 #' @keywords models
+#' @export 
 logitsimev <- function(x,b,ci=0.95,constant=1) {
     if (any(class(x)=="counterfactual")&&!is.null(x$model)) {
         x <- model.matrix(x$model,x$x)
@@ -417,7 +425,9 @@ logitsimev <- function(x,b,ci=0.95,constant=1) {
 }
 
 
-# Simulate first difference of expected probabilities for logit
+#' Simulate first difference of expected probabilities for logit
+#' 
+#' @export
 logitsimfd <- function(x,b,ci=0.95,constant=1,xpre=NULL) {
   if (any(class(x)=="counterfactual")&&!is.null(x$model)) {
     xpre <- model.matrix(x$model,x$xpre)     
@@ -488,7 +498,9 @@ logitsimfd <- function(x,b,ci=0.95,constant=1,xpre=NULL) {
 
 
 
-# Simulate relative risk of expected probabilities for logit
+#' Simulate relative risk of expected probabilities for logit
+#' 
+#' @export 
 logitsimrr <- function(x,b,ci=0.95,constant=1,xpre=NULL) {
   if (any(class(x)=="counterfactual")&&!is.null(x$model)) {
     xpre <- model.matrix(x$model,x$xpre)   
@@ -610,6 +622,7 @@ logitsimrr <- function(x,b,ci=0.95,constant=1,xpre=NULL) {
 #' @seealso \code{\link{logitsimev}}, \code{\link{mlogitsimev}},
 #' \code{\link{cfMake}}, \code{\link{cfChange}}, \code{\link{cfName}}
 #' @keywords models
+#' @export 
 probitsimev <- function(x,b,ci=0.95,constant=1) {
     if (any(class(x)=="counterfactual")&&!is.null(x$model)) {
         x <- model.matrix(x$model,x$x)
@@ -658,7 +671,9 @@ probitsimev <- function(x,b,ci=0.95,constant=1) {
 }
 
 
-# Simulate first difference of expected probabilities for probit
+#' Simulate first difference of expected probabilities for probit
+#'
+#' @export 
 probitsimfd <- function(x,b,ci=0.95,constant=1,xpre=NULL) {
     if (any(class(x)=="counterfactual")&&!is.null(x$model)) {
       xpre <- model.matrix(x$model,x$xpre)     
@@ -727,7 +742,9 @@ probitsimfd <- function(x,b,ci=0.95,constant=1,xpre=NULL) {
     res
   }
 
-# Simulate relative risk of expected probabilities for probit
+#' Simulate relative risk of expected probabilities for probit
+#'
+#' @export 
 probitsimrr <- function(x,b,ci=0.95,constant=1,xpre=NULL) {
     if (any(class(x)=="counterfactual")&&!is.null(x$model)) {
       xpre <- model.matrix(x$model,x$xpre)    
@@ -796,7 +813,9 @@ probitsimrr <- function(x,b,ci=0.95,constant=1,xpre=NULL) {
     res
 }
 
-# Likelihood for ordered probit
+#' Likelihood for ordered probit
+#'
+#' @export 
 llk.oprobit <- function(param, x, y) {
   # preliminaries
     x <- as.matrix(x)
@@ -930,7 +949,8 @@ llk.oprobit <- function(param, x, y) {
 #' #   Must set constant = NA to predict from polr
 #' yhyp.plr <- oprobitsimev(xhyp, simbetas.plr, constant=NA, cat=3)
 #' print(yhyp.plr)
-#' 
+#'
+#' @export
 oprobitsimev <- function(x,b,ci=0.95,constant=1,cat=3) {
   if (cat<3) { stop("cat must be at least 3 for ordered probit") }
     if (any(class(x)=="counterfactual")&&!is.null(x$model)) {
@@ -1024,7 +1044,9 @@ oprobitsimev <- function(x,b,ci=0.95,constant=1,cat=3) {
 }
 
 
-# Simulate first differences for ordered probit
+#' Simulate first differences for ordered probit
+#' 
+#' @export
 oprobitsimfd <- function(x,b,ci=0.95,constant=1,cat=3,xpre=NULL) {
   if (cat<3) { stop("cat must be at least 3 for ordered probit") }
 
@@ -1154,7 +1176,9 @@ oprobitsimfd <- function(x,b,ci=0.95,constant=1,cat=3,xpre=NULL) {
 }
 
 
-# Simulate risk ratio for ordered probit
+#' Simulate risk ratio for ordered probit
+#' 
+#' @export 
 oprobitsimrr <- function(x,b,ci=0.95,constant=1,cat=3,xpre=NULL) {
   if (cat<3) { stop("cat must be at least 3 for ordered probit") }
 
@@ -1340,6 +1364,7 @@ oprobitsimrr <- function(x,b,ci=0.95,constant=1,cat=3,xpre=NULL) {
 #' \item{labels}{string vector, the names of each scenario (optional)}
 #' @author Christopher Adolph <\email{cadolph@@u.washington.edu}>
 #' @keywords models
+#' @export 
 loglinsimev <- function(x,b,ci=0.95,constant=1,period=1) {
   if (any(class(x)=="counterfactual")&&!is.null(x$model)) {
     x <- model.matrix(x$model,x$x)
@@ -1387,7 +1412,9 @@ loglinsimev <- function(x,b,ci=0.95,constant=1,period=1) {
 }
 
 
-# Simulate first difference of expected counts for a log-linear model
+#' Simulate first difference of expected counts for a log-linear model
+#' 
+#' @export 
 loglinsimfd <- function(x,b,ci=0.95,constant=1,xpre=NULL,period=1,labels=NULL) {
     if (any(class(x)=="counterfactual")&&!is.null(x$model)) {
         if (is.null(labels))
@@ -1461,7 +1488,9 @@ loglinsimfd <- function(x,b,ci=0.95,constant=1,xpre=NULL,period=1,labels=NULL) {
 }
 
 
-# Simulate relative rate of expected counts for a log-linear model
+#' Simulate relative rate of expected counts for a log-linear model
+#'
+#' @export 
 loglinsimrr <- function(x,b,ci=0.95,constant=1,xpre=NULL,period=1,labels=NULL) {
     if (any(class(x)=="counterfactual")&&!is.null(x$model)) {
         if (is.null(labels))
@@ -1639,7 +1668,8 @@ loglinsimrr <- function(x,b,ci=0.95,constant=1,xpre=NULL,period=1,labels=NULL) {
 #' # Simulate expected probabilities
 #' mlogit.qoi1 <- mlogitsimev(xhyp,simb,ci=0.67)
 #' print(mlogit.qoi1)
-#' 
+#'
+#' @export
 mlogitsimev <- function(x,b,ci=0.95,constant=1,z=NULL,g=NULL,predict=FALSE,sims=10) {
     if (!is.array(b)) {
         stop("b must be an array")
@@ -1758,10 +1788,13 @@ mlogitsimev <- function(x,b,ci=0.95,constant=1,z=NULL,g=NULL,predict=FALSE,sims=
     res
 }
 
-# Simulate first differences for multinomial logit
-# NEED to add x null case
+#' Simulate first differences for multinomial logit
+#' 
+#' @export 
 mlogitsimfd <- function(x,b,ci=0.95,constant=1,xpre=NULL,
                         z=NULL,zpre=NULL,g=NULL) {
+
+    # NEED to add x null case
 
     if (!is.array(b)) {
         stop("b must be an array")
@@ -1902,11 +1935,14 @@ mlogitsimfd <- function(x,b,ci=0.95,constant=1,xpre=NULL,
     res
 }
 
-# Simulate relative risks for multinomial logit
-# NEED to add x null case
+#' Simulate relative risks for multinomial logit
+#'
+#' @export
 mlogitsimrr <- function(x,b,ci=0.95,constant=1,xpre=NULL,
                         z=NULL,zpre=NULL,g=NULL) {
 
+    # NEED to add x null case
+    
     if (!is.array(b)) {
         stop("b must be an array")
     }
@@ -2048,7 +2084,9 @@ mlogitsimrr <- function(x,b,ci=0.95,constant=1,xpre=NULL,
 
 
 # FIX THIS BELOW XXX
-# Simulate expected values from heteroskedastic normal
+#' Simulate expected values from heteroskedastic normal
+#' 
+#' @export 
 hetnormsimev <- function(x,b,z,g,ci=0.95,constant=1,varconstant=1, predict=TRUE, sims=XXX) {
     if (any(class(x)=="counterfactual")&&!is.null(x$model)) {
         x <- model.matrix(x$model,x$x)
@@ -2204,6 +2242,7 @@ hetnormsimev <- function(x,b,z,g,ci=0.95,constant=1,varconstant=1, predict=TRUE,
 #' @seealso \code{\link{cfMake}}, \code{\link{cfChange}}, \code{\link{cfName}},
 #' \code{\link{linearsimev}}
 #' @keywords models
+#' @export
 hetnormsimpv <- function(x,b,z,g,ci=0.95,constant=1,varconstant=1) {
     if (any(class(x)=="counterfactual")&&!is.null(x$model)) {
         x <- model.matrix(x$model,x$x)
@@ -2354,6 +2393,7 @@ hetnormsimpv <- function(x,b,z,g,ci=0.95,constant=1,varconstant=1) {
 #' \item{se.cumulative}{}
 #' @author Christopher Adolph <\email{cadolph@@uw.edu}>
 #' @keywords models
+#' @export
 ldvsimev <- function(x,                  # A counterfactual object, or the matrix of hypothetical x's,
                                          #    one for each period
                      b,                  # The matrix of simulated parameters
@@ -2535,8 +2575,9 @@ ldvsimev <- function(x,                  # A counterfactual object, or the matri
 }
 
 
-# Simulate lagged dependent variable models out to t periods, first difference
-# 
+#' Simulate lagged dependent variable models out to t periods, first difference
+#'
+#' @export
 ldvsimfd <- function(x,                  # A counterfactual object, or the matrix of hypothetical x's
                                          #   one row per period to simulate
                      b,                  # The matrix of simulated betas
@@ -2727,8 +2768,9 @@ ldvsimfd <- function(x,                  # A counterfactual object, or the matri
 
 
 
-# Simulate lagged dependent variable models out to t periods, ratio to xpre
-# 
+#' Simulate lagged dependent variable models out to t periods, ratio to xpre
+#'
+#' @export
 ldvsimrr <- function(x,                  # A counterfactual object, or the matrix of hypothetical x's
                                          #   one row per period to simulate
                      b,                  # The matrix of simulated betas
@@ -2961,7 +3003,9 @@ ldvsimrr <- function(x,                  # A counterfactual object, or the matri
 
 
 
-# Simulate lagged dependent variable models out to t periods, predicted values
+#' Simulate lagged dependent variable models out to t periods, predicted values
+#' 
+#' @export
 ldvsimpv <- function(x,                  # A counterfactual object, or the matrix of hypothetical x's,
                                          #    one for each period
                      b,                  # The matrix of simulated parameters

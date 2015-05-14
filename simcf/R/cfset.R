@@ -191,7 +191,7 @@
 #'      )
 #' 
 #' 
-#' 
+#' @export
 cfFactorial <- function(...,formula=NULL,data=NULL,names=NULL,hull=FALSE,f="mean") {
                   #,trim.exptrapolated=FALSE,data=NULL) {
 
@@ -667,6 +667,7 @@ cfName <- function(xscen,name,scen=1) {
 #' (\code{sd}).
 #' @author Christopher Adolph <\email{cadolph@@u.washington.edu}>
 #' @keywords design manip
+#' @export 
 rpcf <- function(x,   # Data matrix
                  c,   # Column(s) to adjust
                  delta=1,  # Adjustment
@@ -712,6 +713,7 @@ rpcf <- function(x,   # Data matrix
 #' @return A data frame.
 #' @author Christopher Adolph <\email{cadolph@@u.washington.edu}>
 #' @keywords manip
+#' @export
 extractdata <- function(formula, data, extra=NULL, na.rm = FALSE) {
   subdata <- get_all_vars(formula,data)
   if (!is.null(extra)) {
@@ -767,6 +769,7 @@ extractdata <- function(formula, data, extra=NULL, na.rm = FALSE) {
 #' @author Christopher Adolph <\email{cadolph@@u.washington.edu}>
 #' @seealso \code{\link{logitBound}}
 #' @keywords manip
+#' @export
 logBound <- function(x, base=exp(1), forceAny=FALSE) {
   any <- as.numeric(x>0)
   log <- suppressWarnings(log(x,base=base))
@@ -816,6 +819,7 @@ logBound <- function(x, base=exp(1), forceAny=FALSE) {
 #' @author Christopher Adolph <\email{cadolph@@u.washington.edu}>
 #' @seealso \code{\link{logBound}}
 #' @keywords manip
+#' @export
 logitBound <- function(x, base=exp(1), forceAny=FALSE, forceAll=FALSE) {
 
   # Can't include below because of simulation use of logitBound()
@@ -855,4 +859,5 @@ logitBound <- function(x, base=exp(1), forceAny=FALSE, forceAll=FALSE) {
 #' coerced to character
 #' @author Christopher Adolph <\email{cadolph@@uw.edu}>
 #' @keywords manip
+#' @export
 glue <- function (...){paste(...,sep="")}

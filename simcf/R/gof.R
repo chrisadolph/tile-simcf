@@ -1,9 +1,3 @@
-pcp.glm <- function(res, y, type="model") { # other types:  null, improve
-  
-
-
-
-
 #' Prediction-based goodness of fit measures for categorical models
 #' 
 #' Compute percent correctly predicted and concordance indexes for logistic
@@ -29,6 +23,8 @@ pcp.glm <- function(res, y, type="model") { # other types:  null, improve
 #' index, or the percent improvement in these goodness of fit measures.
 #' @author Christopher Adolph <\email{cadolph@@u.washington.edu}>
 #' @keywords htest
+#' @export
+pcp.glm <- function(res, y, type="model") { # other types:  null, improve
   pcp <- mean(round(predict(res,type="response"))==y)
   pcpNull <- max(mean(y), mean(1-y))
   pcpImprove <- (pcp-pcpNull)/(1-pcpNull)

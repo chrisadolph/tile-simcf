@@ -16,4 +16,5 @@ Imports:
   WhatIf,
   tile,
   verification
-Suggests: MASS
+Suggests: MASS,
+  nnet

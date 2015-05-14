@@ -43,6 +43,7 @@
 #' @return Returns an n x k matrix of data, lagged by t periods
 #' @author Christopher Adolph <\email{cadolph@@u.washington.edu}>
 #' @keywords design manip
+#' @export
 lagpanel <- function(x,c,t,lagnum) {
   outclass <- "matrix"
   if (any(class(x)=="data.frame")) outclass <- "data.frame"

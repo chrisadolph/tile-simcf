@@ -12,6 +12,7 @@
 #' and one column for each group
 #' @author Christopher Adolph <\email{cadolph@@u.washington.edu}>
 #' @keywords design
+#' @export
 makeFEdummies <- function(unit,names=NULL) {
   fe <- model.matrix(~factor(unit)-1)
   if (is.null(names)) {

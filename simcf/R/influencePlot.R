@@ -23,6 +23,7 @@
 #' @return Creates a plot; no object returned.
 #' @author Christopher Adolph <\email{cadolph@@u.washington.edu}>
 #' @keywords hplot,robust
+#' @export
 influencePlot <- function(res,names=NULL,identify=TRUE,pdf=NULL,main=NULL,box=FALSE,...) {
   hatscore <- hatvalues(res)/mean(hatvalues(res))
   rstu <- rstudent(res)

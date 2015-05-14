@@ -1,5 +1,8 @@
 
-# Likelihood for ordered probit
+#' Likelihood for ordered probit
+#'
+#' 
+#' @export 
 llk.oprobit <- function(param, x, y) {
   # preliminaries
     x <- as.matrix(x)
