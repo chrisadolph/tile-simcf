@@ -1,0 +1,1 @@
+glue <- function (...){paste(...,sep="")}

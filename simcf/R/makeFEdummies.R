@@ -1,5 +1,3 @@
-
-
 makeFEdummies <- function(unit,names=NULL) {
   fe <- model.matrix(~factor(unit)-1)
   if (is.null(names)) {

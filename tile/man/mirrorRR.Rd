@@ -34,4 +34,3 @@ mirrorRR(limits, reference, type="auto", fd=TRUE,
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 \keyword{dplot}
-

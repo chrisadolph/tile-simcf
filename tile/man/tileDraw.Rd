@@ -39,4 +39,3 @@ grob.  It invisibly returns the grob after drawing.
 \author{Christopher Adolph <\email{cadolph@uw.edu}>}
 \seealso{\code{\link{tile}}}
 \keyword{hplot}
-
