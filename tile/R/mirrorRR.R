@@ -1,4 +1,3 @@
-
 # Test code for function below
 #baseline <- 1
 #limits <- matrix(c(0.00001, 0.0001, 0.001, 0.01, 0.1, 0.2, 0.5, 0.7, 0.8, 0.9, 0.95,
@@ -8,6 +7,28 @@
 #for (i in 1:nrow(limits))
 #  print(c(limits[i,],"Mirror RR", mirrorRR(limits[i,],baseline)))
 
+
+
+#' Label a relative risk axis on a plot of probabilities
+#' 
+#' If given probabilities which the user wishes to plot, suggests tick marks
+#' and labels for axes showing relative risks across the range of probabilities
+#' with respect to a reference level
+#' 
+#' 
+#' @param limits
+#' @param reference
+#' @param type
+#' @param fd
+#' @param cut
+#' @param base
+#' @return A list object containing \code{at}, a vector of locations for the
+#' relative risk tick marks, and \code{labels}, a vector of labels to plot at
+#' those tick marks.
+#' @author Christopher Adolph \email{cadolph@@uw.edu}
+#' @seealso \link{tile}
+#' @keywords dplot
+#' @export mirrorRR
 mirrorRR <- function(limits, reference, type="auto", fd=TRUE,
                      # types:  hundredths, tenths, quarters, halves, units, logscale, powers
                      cut=c(1.175, 1.4, 2, 3.5, 11, 50, 500),

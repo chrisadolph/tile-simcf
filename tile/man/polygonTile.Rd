@@ -86,4 +86,3 @@ In addition to these \code{polygonTile}-specific parameters, users may provide a
 % R documentation directory.
 \keyword{dplot}
 \keyword{list}
-
